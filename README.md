@@ -1,8 +1,5 @@
-# React + Vite
+# EduLinker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Study Material Sharing Platform that connects sellers and buyers of educational resources. 
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Study Material Sharing Platform that connects sellers and buyers of educational resources. Sellers can upload notes, books, or study materials in PDF format, set their prices, and manage their listings. Buyers can browse, purchase materials, and access a real-time chat feature to ask questions or clarify doubts with the seller.
