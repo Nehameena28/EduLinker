@@ -1,17 +1,33 @@
-
-import Navbar from "./Component/Menus/Navbar";
+import { BrowserRouter } from "react-router-dom";
+import {Routes , Route} from "react-router-dom"
 import Home from "./Component/Menus/Home";
-import HeroHome from "./Component/Menus/HeroHome";
-import Footer from "./Component/Menus/Footer";
+import About from "./Component/Menus/About"
+import Contact from "./Component/Menus/Contact"
+import Navbar from "./Component/Menus/Navbar"
+// import NavbarSB from "./Component/Home/NavbarSB";
+// import Buyer from "./Component/Home/Buyer";
+// import Seller from "./Component/Home/Seller";
+import Login from "./Component/Enter/Login"
+import Signup from "./Component/Enter/Signup"
+
 
 function App() {
 
   return (
     <>
-    <Navbar></Navbar>
-    <Home></Home>
-    <HeroHome></HeroHome>
-    <Footer></Footer>
+     
+     
+ 
+      <Navbar></Navbar>
+      <Routes>
+        <Route path="/Home" element={<Home />}></Route>
+        <Route path="/About" element={<About />}></Route>
+        <Route path="/Contact" element={<Contact />}></Route>
+        <Route path="/Login" element={<Login />}></Route>
+        <Route path="/Signup" element={<Signup />}></Route>
+      </Routes>
+    {/* <Buyer></Buyer> */}
+    {/* <Seller></Seller> */}
     </>
   )
 }

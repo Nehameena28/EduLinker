@@ -1,11 +1,16 @@
 import React from "react";
+import Navbar from "./Navbar";
+import Hero from "./Hero"
+import Footer from "./Footer"
 
 const Home = () => {
   return (
+    <>
     <div className="relative w-full h-screen mt-1">
+ 
       {/* Background image */}
       <div
-        className="absolute inset-0 bg-cover sm:bg-cover h-screen md:bg-cover lg:bg-cover bg-center"
+        className="absolute inset-0 bg-cover sm:bg-cover h-screen md:bg-cover lg:bg-cover bg-center "
         style={{
           backgroundImage: "url('/Home-Img/myImage.jpg')",
           opacity: 0.8,
@@ -24,12 +29,15 @@ const Home = () => {
           study materials.
         </h1>
         <button
-          className="px-6 py-3 bg-amber-500 text-white font-semibold rounded-lg shadow-md hover:bg-amber-600 transition duration-300 active:scale-90"
+          className="px-6 py-3 bg-amber-800 text-white font-semibold rounded-lg shadow-md hover:bg-amber-700 transition duration-300 active:scale-90"
         >
           EXPLORE MORE
         </button>
       </div>
     </div>
+     <Hero></Hero>
+     <Footer></Footer>
+    </>
   );
 };
 
