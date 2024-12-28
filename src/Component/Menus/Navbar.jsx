@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {Link} from "react-router-dom"
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 const Navbar = () => {
@@ -12,7 +13,9 @@ const Navbar = () => {
     };
 
 
+    const {user , loginWithRedirect } = useAuth0();
 
+    console.log("current user ", user);
 
 
     return (
@@ -40,7 +43,7 @@ const Navbar = () => {
                             <Link to="/Contact">Contact</Link>
                             {/* <a class="menus" href="#Help" >Help</a> */}
                             {/* <button  className="font-bold pr-5 font-extrabold"><i class="ri-sun-line"></i></button> */}
-                            <Link  to="/Login"><button className="hover:underline">Log in</button></Link>
+                            {/* <Link  to="/Login"><button onClick={(e)=>loginWithRedirect()} className="hover:underline">Log in</button></Link> */}
                             <Link  to="/Signup"><button className="px-6 py-3  mr-10   bg-amber-700 text-white font-semibold rounded-lg shadow-md hover:bg-amber-600 transition duration-300 active:scale-90">Sign up</button></Link>
                         </div>
 
