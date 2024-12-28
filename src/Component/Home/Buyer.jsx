@@ -1,10 +1,10 @@
 import React from "react";
-import NavbarSB from "../Home/NavbarSB"
+// import NavbarSB from "../Home/NavbarSB"
 import Footer from "../Menus/Footer";
 const Buyer = () => {
     return (
         <>
-            <NavbarSB></NavbarSB>
+            {/* <NavbarSB></NavbarSB> */}
             <div className="relative w-full h-screen mt-1">
                 {/* Background image */}
                 <div

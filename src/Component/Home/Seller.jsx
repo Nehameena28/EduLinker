@@ -4,7 +4,7 @@ import Footer from "../Menus/Footer";
 const Seller = () => {
     return (
         <>
-            <NavbarSB></NavbarSB>
+            {/* <NavbarSB></NavbarSB> */}
             <div className="relative w-full h-screen mt-1">
                 {/* Background image */}
                 <div

@@ -26,8 +26,8 @@ const Navbar = () => {
                     <nav1 class="nav1" className="flex justify-end items-center h-5 text-center text-white font-semibold  bg-gray-900">
 
 
-                        <a className=' underline text-sm pr-10' href="seller">forSeller</a>
-                        <a className='underline text-sm pr-10' href="Buyer.jsx">forBuyer</a>
+                        <Link className=' underline text-sm pr-10' to="seller">forSeller</Link>
+                        <Link className='underline text-sm pr-10' to="Buyer">forBuyer</Link>
 
                     </nav1>
 
