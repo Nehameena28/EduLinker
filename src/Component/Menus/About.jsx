@@ -14,7 +14,7 @@ const About = () => {
         </div>
         <div className="hero-img mt-5">
         <img
-            src="about/about.avif"
+            src="public/img/about.avif"
             alt="about-img"
           />
         </div>
@@ -46,7 +46,7 @@ const About = () => {
           <h2 className="text-3xl font-semibold text-custom-blue text-center">
             Join EduLinker Today!
           </h2>
-          <p className="mt-4 text-lg text-gray-500">
+          <p className="mt-4 text-lg  p-5 text-gray-500 text-center">
             Whether you're a seller or a buyer, EduLinker is the perfect place to share and discover study materials. Start browsing or uploading today and be a part of our growing community!
           </p>
         </div>
@@ -54,5 +54,5 @@ const About = () => {
   )
 }
 
-export default About
+export default About;
 

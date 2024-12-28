@@ -33,7 +33,7 @@ const Buyer = () => {
 
                 {/* <div className="pt-24 bg-sky-200 rounded "> */}
                 {/* <p className="flex  justify-center items-center font-bold text-3xl">Real  choices,  real  value,  real  people.</p> */}
-                <div className="flex justify-evenly items-center bg-sky-200 rounded p-24">
+                {/* <div className="flex justify-evenly items-center bg-sky-200 rounded p-24">
                 
                  <div className=" h-auto  w-auto rounded bg-white font-serif text-xl text-center p-24 leading-relaxed ">
                    Buy high-quality study notes from top students and educators, all in one place. Access affordable, well-organized resources to enhance your learning experience
@@ -52,7 +52,7 @@ const Buyer = () => {
                    </div> */}
                   
                 {/* </div> */}
-                </div>
+                {/* </div> */} 
                 <Footer></Footer>
             </div>
            

@@ -81,7 +81,7 @@
 .i1:hover,
 .i2:hover,
 .i3:hover{
-  color:rgb(238, 156, 101);
+  color:rgb(29, 127, 198);
   transform: scale(1.2); 
   transition: all 0.2s ease-in;
 }
