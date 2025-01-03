@@ -1,12 +1,13 @@
 // import React from 'react'
 import './About.css'
+import Footer from './Footer';
 
 const About = () => {
   return (
     <div className='hero' >
-      <div className="heading">
+      {/* <div className="heading">
         <h1>About Us</h1>
-      </div>
+      </div> */}
       <div className="container" >
         <div className="hero-content">
           <b><h2>Welcome to EduLinker</h2></b>
@@ -50,6 +51,7 @@ const About = () => {
             Whether you're a seller or a buyer, EduLinker is the perfect place to share and discover study materials. Start browsing or uploading today and be a part of our growing community!
           </p>
         </div>
+        <Footer/>
      </div>
   )
 }
