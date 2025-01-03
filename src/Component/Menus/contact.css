@@ -1,31 +1,17 @@
 
-.contact-section {
+/* .contact-section {
   overflow-x: hidden;  
-}
+} */
 
 .contact-bg {
   background-image: url("https://t4.ftcdn.net/jpg/04/82/89/97/360_F_482899787_2087qcGiSModQ22zW51N41vLfjsFs9E7.jpg");
   height: 300px;
   background-repeat: no-repeat;
   background-size: cover;
-  position: relative;
-  overflow: hidden; 
+  /* position: relative; */
+  /* overflow: hidden;  */
 }
 
-.head1 {
-  animation: h1-fade 3s ease-in-out;
-}
-
-@keyframes h1-fade {
-  0% {
-    opacity: 0;
-    transform: translateX(0px); 
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0px); 
-  }
-}
 
 .head2 {
   animation: h2-fade 3s ease-in-out;
@@ -66,7 +52,7 @@
 
 .contact-img {
   flex: 1;
-  min-width: 300px;
+  min-width: 200px;
   object-fit: cover;
 }
 
@@ -92,21 +78,6 @@
   animation: img-fade 3s ease;
   animation-delay: 1s;
 }
-.contact-img:hover{
-  transform: scale(1.1); 
-  transition: all 0.2s ease-in;
-}
-@keyframes img-fade {
-  0% {
-    opacity: 0;
-    transform: translateX(10px); 
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0px); 
-  }
-}
-
 
 
 
