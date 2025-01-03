@@ -1,0 +1,8 @@
+h1 {
+  font-size: 3em; /* Adjust size as needed */
+  font-weight: bold; /* Optional */
+  text-align: center; /* Optional */
+  background: linear-gradient(to right, #000000, #995019); /* Replace with your colors */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
