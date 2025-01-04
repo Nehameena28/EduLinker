@@ -7,7 +7,7 @@ const Hero = () => {
 
       <div
         id="RemoveScrlbr"
-        className="grid grid-cols-1 sm:grid-cols-2   md:grid-cols-2 lg:grid-cols-4     p-10   gap-2 w-full"
+        className="grid grid-cols-1 sm:grid-cols-2   md:grid-cols-2 lg:grid-cols-4     p-20   gap-2 w-full"
       >
         {/* First Div */}
         <div className="flex flex-col items-center p-4 rounded-xl hover:scale-105 transition-all duration-300 ease-in-out">

@@ -11,15 +11,10 @@ import Login from "./Component/Enter/Login"
 import Signup from "./Component/Enter/Signup"
 
 
-function App() {
-
-
-  
+function App() {  
   return (
-    <>
-     
-     
- 
+    <>   
+      
       <Navbar></Navbar>
       <Routes>
       <Route path="/" element={<Home />}></Route>
