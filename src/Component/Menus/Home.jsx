@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <>
     {/* <Navbar></Navbar> */}
-    <div className="relative w-full h-screen mt-1">
+    <div className="relative w-full h-screen ">
  
       {/* Background image */}
       <div

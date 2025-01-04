@@ -3,11 +3,12 @@ import React from 'react';
 const Hero = () => {
   return (
     <>
-      <b><h1 className="text-5xl text-center mt-24 ">Features </h1></b>
+    
+      <b><h1 className="text-5xl  text-center  bg-violet-100 p-20 ">Features </h1></b>
 
       <div
         id="RemoveScrlbr"
-        className="grid grid-cols-1 sm:grid-cols-2   md:grid-cols-2 lg:grid-cols-4     p-20   gap-2 w-full"
+        className="grid grid-cols-1 sm:grid-cols-2   md:grid-cols-2 lg:grid-cols-4   bg-violet-100	  p-5   gap-2 w-full"
       >
         {/* First Div */}
         <div className="flex flex-col items-center p-4 rounded-xl hover:scale-105 transition-all duration-300 ease-in-out">
