@@ -47,8 +47,7 @@ MongoDB
 Others
 
 JWT for Authentication
-Payment Gateway Integration (e.g., Razorpay/Stripe)
-Cloud Storage (e.g., AWS S3) for storing PDF files
+Payment Gateway Integration (Razorpay)
 
 
 📧 Contact
