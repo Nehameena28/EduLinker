@@ -17,9 +17,6 @@ function App() {
   
   return (
     <>
-     
-     
- 
       <Navbar></Navbar>
       <Routes>
       <Route path="/" element={<Home />}></Route>
@@ -31,10 +28,8 @@ function App() {
         <Route path="/Buyer" element={<Buyer />}></Route>
         <Route path="/Seller" element={<Seller />}></Route>
       </Routes>
-    {/* <Buyer></Buyer> */}
-    {/* <Seller></Seller> */}
     </>
   )
 }
 
-export default App
+export default App;
