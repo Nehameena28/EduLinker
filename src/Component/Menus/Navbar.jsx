@@ -35,12 +35,12 @@ const Navbar = () => {
                     </nav1>
 
 
-                    <div class="nav2" className="flex justify-between items-center text-center  h-20 text-white font-semibold text-center bg-cyan-700 ">
+                    <div class="nav2" className="flex justify-between items-center h-20 text-white font-semibold text-center bg-cyan-700 ">
 
                         <a class="img" className="  md:visible  text-center  mr-auto" href="#"><img className=" h-32 object-cover mb-10 " src="/icon.png" alt="Logo" /></a>
 
 
-                        <div className="  hidden md:flex  flex  justify-end items-center  text-center gap-10 space-x-8">
+                        <div className="  hidden md:flex   justify-end items-center  text-center gap-10 space-x-8">
                             <Link to="/Home">Home</Link>
                             <Link to="/About">About</Link>
                             <Link to="/Contact">Contact</Link>
