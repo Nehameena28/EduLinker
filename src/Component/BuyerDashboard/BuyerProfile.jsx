@@ -1,5 +1,18 @@
 
 import { Link } from "react-router-dom";
+// import {Routes , Route} from "react-router-dom";
+
+// import B_Shop from "./Component/BuyerDashboard/B_Shop"
+// import B_Payment from "./Component/BuyerDashboard/B_Payment"
+// import B_History from "./Component/BuyerDashboard/B_History"
+// import B_Purchased from "./Component/BuyerDashboard/B_Purchased"
+
+      // <Routes>
+        {/* <Route path="/B_Shop" element={<B_Shop/>}></Route>
+        <Route path="/B_Purchased" element={<B_Purchased/>}></Route>
+        <Route path="/B_History" element={<B_History/>}></Route>
+        <Route path="/B_Payment" element={<B_Payment/>}></Route> */}
+      // </Routes>
 
 const BuyerProfile = () => {
   return (
@@ -28,7 +41,7 @@ const BuyerProfile = () => {
         {/* Main Content */}
         <div className="bg-stone-300 flex-1 p-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-12 lg:gap-24 text-center m-6 md:m-12">
-            <Link to="/Upload">
+            <Link to="/B_Shop">
               <div className="h-40 w-full max-w-xs mx-auto border-2 rounded-lg bg-amber-700 text-white flex flex-col justify-center items-center cursor-pointer font-bold">
                 <p className="text-3xl">
                   <i className="ri-upload-cloud-fill"></i>
@@ -36,7 +49,7 @@ const BuyerProfile = () => {
                 <span className="mt-2 text-base md:text-lg">Shop now</span>
               </div>
             </Link>
-            <Link to="/Sell">
+            <Link to="/B_Purchased">
               <div className="h-40 w-full max-w-xs mx-auto border-2 rounded-lg bg-cyan-700 text-white flex flex-col justify-center items-center cursor-pointer font-bold">
                 <p className="text-3xl">
                   <i className="ri-money-rupee-circle-fill"></i>
@@ -44,7 +57,7 @@ const BuyerProfile = () => {
                 <span className="mt-2 text-base md:text-lg">Purchased Material</span>
               </div>
             </Link>
-            <Link to="/History">
+            <Link to="/B_History">
               <div className="h-40 w-full max-w-xs mx-auto border-2 rounded-lg bg-cyan-700 text-white flex flex-col justify-center items-center cursor-pointer font-bold">
                 <p className="text-3xl">
                   <i className="ri-chat-history-fill"></i>
@@ -52,7 +65,7 @@ const BuyerProfile = () => {
                 <span className="mt-2 text-base md:text-lg">Purchase History</span>
               </div>
             </Link>
-            <Link to="/Buyerpayment">
+            <Link to="/B_Payment">
               <div className="h-40 w-full max-w-xs mx-auto border-2 rounded-lg bg-amber-700 text-white flex flex-col justify-center items-center cursor-pointer font-bold">
                 <p className="text-3xl">
                   <i className="ri-secure-payment-line"></i>
