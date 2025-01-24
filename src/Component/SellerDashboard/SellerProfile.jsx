@@ -28,23 +28,23 @@ const SellerProfile = () => {
         {/* Main Content */}
         <div className="bg-stone-300 flex-1 p-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-12 lg:gap-24 text-center m-6 md:m-12">
-            <Link to="/Upload">
+            <Link to="/S_Upload">
               <div className="h-40 w-full max-w-xs mx-auto border-2 rounded-lg bg-amber-700 text-white flex flex-col justify-center items-center cursor-pointer font-bold">
                 <p className="text-3xl">
                   <i className="ri-upload-cloud-fill"></i>
                 </p>
-                <span className="mt-2 text-base md:text-lg">Uploaded Material</span>
+                <span className="mt-2 text-base md:text-lg">Upload Docs</span>
               </div>
             </Link>
-            <Link to="/Sell">
+            <Link to="/S_Sell">
               <div className="h-40 w-full max-w-xs mx-auto border-2 rounded-lg bg-cyan-700 text-white flex flex-col justify-center items-center cursor-pointer font-bold">
                 <p className="text-3xl">
                   <i className="ri-money-rupee-circle-fill"></i>
                 </p>
-                <span className="mt-2 text-base md:text-lg">Sell New</span>
+                <span className="mt-2 text-base md:text-lg">Uploaded Document</span>
               </div>
             </Link>
-            <Link to="/History">
+            <Link to="/S_History">
               <div className="h-40 w-full max-w-xs mx-auto border-2 rounded-lg bg-cyan-700 text-white flex flex-col justify-center items-center cursor-pointer font-bold">
                 <p className="text-3xl">
                   <i className="ri-chat-history-fill"></i>
@@ -52,7 +52,7 @@ const SellerProfile = () => {
                 <span className="mt-2 text-base md:text-lg">Sell's History</span>
               </div>
             </Link>
-            <Link to="/Sellerpayment">
+            <Link to="/S_payment">
               <div className="h-40 w-full max-w-xs mx-auto border-2 rounded-lg bg-amber-700 text-white flex flex-col justify-center items-center cursor-pointer font-bold">
                 <p className="text-3xl">
                   <i className="ri-secure-payment-line"></i>
