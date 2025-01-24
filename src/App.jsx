@@ -40,7 +40,7 @@ function App() {
         <Route path="/Buyer" element={<Buyer />}></Route>
         <Route path="/Seller" element={<Seller />}></Route>
         <Route path="/S_Upload" element={<S_Upload/>}></Route>
-        <Route path="/S_sell" element={<S_Sell />}></Route>
+        <Route path="/S_Sell" element={<S_Sell />}></Route>
         <Route path="/S_History" element={<S_History />}></Route>
         <Route path="/S_payment" element={<S_Payment />}></Route>
         <Route path="/B_Shop" element={<B_Shop/>}></Route>
