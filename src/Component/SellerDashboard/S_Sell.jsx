@@ -1,10 +1,10 @@
-const S_sell = () =>{
+const S_Sell = () =>{
     return(
         <>
-            <h1>S_sell</h1>
+            <h1>S_Sell</h1>
         </>
     )
 }
 
 
-export default S_sell;
+export default S_Sell;
