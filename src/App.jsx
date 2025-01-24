@@ -9,13 +9,17 @@ import Buyer from "./Component/Home/Buyer";
 import Seller from "./Component/Home/Seller";
 import Login from "./Component/Enter/Login"
 import Signup from "./Component/Enter/Signup"
-import Upload from "./Component/SellerDashboard/Upload"
-import Sell from "./Component/SellerDashboard/Sell"
-import History from "./Component/SellerDashboard/History"
-import Payment from "./Component/SellerDashboard/Sellerpayment"
 import SellerProfile from "./Component/SellerDashboard/SellerProfile"
+import S_Upload from "./Component/SellerDashboard/S_Upload"
+import S_Sell from "./Component/SellerDashboard/S_Sell"
+import S_History from "./Component/SellerDashboard/S_History"
+import S_Payment from "./Component/SellerDashboard/S_payment"
 import BuyerProfile  from "./Component/BuyerDashboard/BuyerProfile";
-import Sellerpayment from "./Component/SellerDashboard/Sellerpayment";
+import B_Shop from "./Component/BuyerDashboard/B_Shop"
+import B_Payment from "./Component/BuyerDashboard/B_Payment"
+import B_History from "./Component/BuyerDashboard/B_History"
+import B_Purchased from "./Component/BuyerDashboard/B_Purchased"
+
 
 function App() {
 
@@ -23,22 +27,26 @@ function App() {
   
   return (
     <>
+      {/* <Navbar></Navbar> */}
       {/* <SellerProfile/> */}
       <BuyerProfile/> 
-      {/* //<Navbar></Navbar> */}
       <Routes>
-      {/* <Route path="/" element={<Home />}></Route>
+      <Route path="/" element={<Home />}></Route>
         <Route path="/Home" element={<Home />}></Route>
         <Route path="/About" element={<About />}></Route>
         <Route path="/Contact" element={<Contact />}></Route>
         <Route path="/Login" element={<Login />}></Route>
         <Route path="/Signup" element={<Signup />}></Route>
         <Route path="/Buyer" element={<Buyer />}></Route>
-        <Route path="/Seller" element={<Seller />}></Route> */}
-        <Route path="/Upload" element={<Upload/>}></Route>
-        <Route path="/sell" element={<Sell />}></Route>
-        <Route path="/history" element={<History />}></Route>
-        <Route path="/Sellerpayment" element={<Sellerpayment />}></Route>
+        <Route path="/Seller" element={<Seller />}></Route>
+        <Route path="/S_Upload" element={<S_Upload/>}></Route>
+        <Route path="/S_sell" element={<S_Sell />}></Route>
+        <Route path="/S_History" element={<S_History />}></Route>
+        <Route path="/S_payment" element={<S_Payment />}></Route>
+        <Route path="/B_Shop" element={<B_Shop/>}></Route>
+        <Route path="/B_Purchased" element={<B_Purchased/>}></Route>
+        <Route path="/B_History" element={<B_History/>}></Route>
+        <Route path="/B_Payment" element={<B_Payment/>}></Route>
       </Routes>
     </>
   )
