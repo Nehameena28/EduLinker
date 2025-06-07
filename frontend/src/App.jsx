@@ -7,7 +7,6 @@ import Navbar from "./Component/Menus/Navbar"
 // import NavbarSB from "./Component/Home/NavbarSB";
 // import Buyer from "./Component/Home/Buyer";
 // import Seller from "./Component/Home/Seller";
-import Login from "./Component/Enter/Login"
 import Signup from "./Component/Enter/Signup"
 // import SellerProfile from "./Component/SellerDashboard/SellerProfile"
 // import S_Upload from "./Component/SellerDashboard/S_Upload"
@@ -21,7 +20,7 @@ import Signup from "./Component/Enter/Signup"
 // import B_Purchased from "./Component/BuyerDashboard/B_Purchased"
 
 
-function App() {
+function App() {    
 
 
   
@@ -32,11 +31,10 @@ function App() {
       {/* /<BuyerProfile/>  */}
       <Routes>
       <Route path="/" element={<Home />}></Route>
-        <Route path="/Home" element={<Home />}></Route>
-        <Route path="/About" element={<About />}></Route>
-        <Route path="/Contact" element={<Contact />}></Route>
-        <Route path="/Login" element={<Login />}></Route>
-        <Route path="/Signup" element={<Signup />}></Route>
+        <Route path="/Home" element={<Home/>}></Route>
+        <Route path="/About" element={<About/>}></Route>
+        <Route path="/Contact" element={<Contact/>}></Route>
+        <Route path="/Signup" element={<Signup/>}></Route>
         {/* <Route path="/Buyer" element={<Buyer />}></Route>
         <Route path="/Seller" element={<Seller />}></Route>
         <Route path="/S_Upload" element={<S_Upload/>}></Route>

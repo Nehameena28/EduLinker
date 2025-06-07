@@ -18,7 +18,7 @@ const Navbar = () => {
         <>
             <div>
                 <header>
-                    <nav1 className="flex justify-end items-center h-5 text-center text-white font-semibold  bg-gray-900">
+                    <nav1 className="flex justify-end  items-center h-5 text-center text-white font-semibold  bg-gray-900">
                         {/* <Link className={`underline text-sm pr-10 ${location.pathname === "/seller" ? "font-bold" : ""}`} to="/seller">forSeller</Link> */}
                         {/* <Link className={`underline text-sm pr-10 ${location.pathname === "/Buyer" ? "font-bold" : ""}`} to="/Buyer">forBuyer</Link> */}
                     </nav1>
@@ -28,10 +28,10 @@ const Navbar = () => {
                             <img className="h-32 object-cover mb-10" src="/icon.png" alt="Logo" />
                         </a>
 
-                        <div className="hidden md:flex justify-end items-center text-center gap-10 space-x-8">
-                            <Link className={`${location.pathname === "/Home" ? "underline font-bold" : ""}`} to="/Home">Home</Link>
-                            <Link className={`${location.pathname === "/About" ? "underline font-bold" : ""}`} to="/About">About</Link>
-                            <Link className={`${location.pathname === "/Contact" ? "underline font-bold" : ""}`} to="/Contact">Contact</Link>
+                        <div className="hidden md:flex  justify-end  items-center text-center gap-10 space-x-8">
+                            <Link className={`${location.pathname === "/Home" ? "underline font-bold " : ""}`} to="/Home">Home</Link>
+                            <Link className={`${location.pathname === "/About" ? "underline font-bold  " : ""}`} to="/About">About</Link>
+                            <Link className={`${location.pathname === "/Contact" ? "underline font-bold " : ""}`} to="/Contact">Contact</Link>
 
                             <Link to="/Signup">
                                 <button 
@@ -47,7 +47,7 @@ const Navbar = () => {
                     </div>
 
                     <div className={isHidden ? "hidden" : "block"}>
-                        <div className="fixed bg-cyan-700 inset-0">
+                        <div className="fixed bg-cyan-700   inset-0">
                             <div className="flex justify-between">
                                 <a className="flex justify-between items-center text-center mr-auto" href="#">
                                     <img className="h-32 object-cover mb-10" src="/icon.png" alt="Logo" />
