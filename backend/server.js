@@ -5,7 +5,7 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
-const User = require("./models/User"); 
+const User = require("./models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -37,11 +37,11 @@ app.get("/", (req, res) => {
 // Signup Route
 app.post("/api/Signup", async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
     console.log("Request body:", req.body);
 
     // 1. Validate
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !role) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -57,45 +57,128 @@ app.post("/api/Signup", async (req, res) => {
     console.log("Password hashed:", hashedPassword);
 
     // 4. Create new user
-    const newUser = new User({ name, email, password: hashedPassword });
+    const newUser = new User({ name, email, password: hashedPassword, role });
     await newUser.save();
     console.log("New user saved:", newUser);
 
     // 5. Generate JWT Token
     console.log("Generating token...");
     const token = jwt.sign(
-      { email: newUser.email, id: newUser._id },
-      process.env.JWT_SECRET ,
+      { email: newUser.email, id: newUser._id, role: newUser.role },
+      process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
     // res.cookie("token",token);
     res.cookie("token", token, {
-  httpOnly: true,
-  secure: false, // use true only with HTTPS
-  sameSite: "lax", // or "none" if using HTTPS
-  maxAge: 60 * 60 * 1000, // 1 hour
-});
+      httpOnly: true,
+      secure: false, // use true only with HTTPS
+      sameSite: "lax", // or "none" if using HTTPS
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
 
     console.log("Token:", token);
 
     // 6. Send response
-    res.status(201).json({
-      message: "Signup successful",
-      user: newUser,
-      token: token
-    });
+  //   res.status(201).json({
+  //      role: user.role,
+  //     // message: "Signup successful",
+  //     // user: newUser,
+  //     token: token
+  //   });
 
-  } catch (error) {
+  // }
+  res.status(201).json({
+  user: {
+    id: newUser._id,
+    name: newUser.name,
+    email: newUser.email,
+    role: newUser.role
+  },
+  token
+});
+  }
+   catch (error) {
     console.error("Error during signup:", error);
     res.status(500).json({ message: "Something went wrong", error: error.message });
   }
 
-let data = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
-  console.log(data);
-
 
 
 });
+
+
+// Login Route
+app.post("/api/Login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // 1. Validate fields
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
+    // 2. Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // 3. Compare passwords
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    // 4. Generate JWT token
+    const token = jwt.sign(
+      { email: user.email, id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    // 5. Set token in cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
+
+    // 6. Send response
+    // res.status(200).json({
+    //   message: "Login successful",
+    //   user,
+    //   token
+    // });
+    res.status(200).json({
+      message: "Login successful",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role, // this is important
+      },
+      token
+    });
+
+
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.status(500).json({ message: "Something went wrong", error: error.message });
+  }
+});
+
+
+
+app.get("/api/logout", (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: false, // same as you set during login
+    sameSite: "lax",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+});
+
 
 // Start server
 app.listen(PORT, () => {
