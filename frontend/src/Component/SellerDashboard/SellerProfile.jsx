@@ -316,7 +316,7 @@ const SellerProfile = () => {
 
       <div className="container mx-auto flex">
         {/* Sidebar */}
-        <div className="w-64 p-4 hidden md:block">
+        {/* <div className="w-64 p-4 hidden md:block">
           <div className="bg-white rounded-xl shadow-sm p-4 sticky top-4">
             <nav className="space-y-2">
               <NavItem 
@@ -353,9 +353,8 @@ const SellerProfile = () => {
 
            
           </div>
-        </div>
+        </div> */}
 
-        {/* Main Content */}
         <div className="flex-1 p-4">
           {activeTab === 'dashboard' && (
             <motion.div
@@ -439,18 +438,7 @@ const SellerProfile = () => {
             </motion.div>
           )}
 
-          {activeTab === 'upload' && (
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-[rgb(221,167,123)]/20">
-              <h2 className="text-xl font-bold text-[rgb(31,91,120)] mb-6">Upload New Material</h2>
-              <div className="border-2 border-dashed border-[rgb(221,167,123)] rounded-xl p-8 text-center">
-                <UploadIcon className="mx-auto w-12 h-12 text-[rgb(148,93,94)]" />
-                <p className="mt-4 text-[rgb(31,91,120)]">Drag and drop your files here or click to browse</p>
-                <button className="mt-4 px-6 py-2 bg-[rgb(148,93,94)] text-white rounded-lg hover:bg-[rgb(148,93,94)]/90 transition-colors">
-                  Browse Files
-                </button>
-              </div>
-            </div>
-          )}
+         
         </div>
       </div>
     </div>
