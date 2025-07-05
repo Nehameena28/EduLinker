@@ -1,6 +1,6 @@
 
 require('dotenv').config();
-
+const noteRoutes = require("./routes/noteRoutes");
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -12,6 +12,8 @@ const jwt = require("jsonwebtoken");
 const connectdb = require("./db");
 
 const app = express();
+
+app.use("/api/notes", noteRoutes);
 
 app.use(cookieParser());
 app.use(express.json());
