@@ -1,93 +1,262 @@
+// import React, { useState } from "react";
+
+// const S_Upload = () => {
+//   const [title, setTitle] = useState("");
+//   const [description, setDescription] = useState("");
+//   const [category, setCategory] = useState("");
+//   const [price, setPrice] = useState("");
+//   const [pdfFile, setPdfFile] = useState(null);
+//   const [coverImage, setCoverImage] = useState(null);
+
+//   const predefinedCategories = [
+//     "Physics",
+//     "Chemistry",
+//     "Mathematics",
+//     "Biology",
+//     "Computer Science",
+//     "English",
+//     "History",
+//     "Geography",
+//     "Economics"
+//   ];
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+
+//     if (!pdfFile || !coverImage || !title || !description || !category || !price) {
+//       alert("Please fill all the fields and upload both files.");
+//       return;
+//     }
+
+//     const formData = new FormData();
+//     formData.append("title", title);
+//     formData.append("description", description);
+//     formData.append("category", category);
+//     formData.append("price", price);
+//     formData.append("pdf", pdfFile);
+//     formData.append("cover", coverImage);
+
+//     // Example: axios.post("/api/upload", formData)
+//     console.log("Form submitted");
+
+//     // Reset form
+//     setTitle("");
+//     setDescription("");
+//     setCategory("");
+//     setPrice("");
+//     setPdfFile(null);
+//     setCoverImage(null);
+//     e.target.reset();
+//   };
+
+//   return (
+//     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
+//       <h2 className="text-2xl font-bold text-center mb-6 text-blue-600">Upload Study Material</h2>
+//       <form onSubmit={handleSubmit} className="space-y-6">
+//         <div>
+//           <label className="block mb-2 font-medium text-gray-700">Title</label>
+//           <input
+//             type="text"
+//             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-500"
+//             placeholder="Enter title"
+//             value={title}
+//             onChange={(e) => setTitle(e.target.value)}
+//             required
+//           />
+//         </div>
+
+//         <div>
+//           <label className="block mb-2 font-medium text-gray-700">Description</label>
+//           <textarea
+//             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-500"
+//             placeholder="Enter description"
+//             value={description}
+//             onChange={(e) => setDescription(e.target.value)}
+//             required
+//           />
+//         </div>
+
+//         <div>
+//           <label className="block mb-2 font-medium text-gray-700">Select Category</label>
+//           <select
+//             value={category}
+//             onChange={(e) => setCategory(e.target.value)}
+//             required
+//             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-500"
+//           >
+//             <option value="">-- Select Category --</option>
+//             {predefinedCategories.map((cat, index) => (
+//               <option key={index} value={cat}>
+//                 {cat}
+//               </option>
+//             ))}
+//           </select>
+//         </div>
+
+//         <div>
+//           <label className="block mb-2 font-medium text-gray-700">Price (in ₹)</label>
+//           <input
+//             type="number"
+//             className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-500"
+//             placeholder="Enter price"
+//             value={price}
+//             onChange={(e) => setPrice(e.target.value)}
+//             required
+//             min="0"
+//           />
+//         </div>
+
+//         <div>
+//           <label className="block mb-2 font-medium text-gray-700">Upload PDF</label>
+//           <input
+//             type="file"
+//             accept=".pdf"
+//             onChange={(e) => setPdfFile(e.target.files[0])}
+//             required
+//             className="w-full"
+//           />
+//         </div>
+
+//         <div>
+//           <label className="block mb-2 font-medium text-gray-700">Upload Cover Image</label>
+//           <input
+//             type="file"
+//             accept="image/*"
+//             onChange={(e) => setCoverImage(e.target.files[0])}
+//             required
+//             className="w-full"
+//           />
+//         </div>
+
+//         <button
+//           type="submit"
+//           className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300"
+//         >
+//           Upload
+//         </button>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default S_Upload;
+
+
+
 import React, { useState } from "react";
+import axios from "axios";
 
 const S_Upload = () => {
-  const [pdfFile, setPdfFile] = useState(null);
-  const [coverPhoto, setCoverPhoto] = useState(null);
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
+  const [pdfFile, setPdfFile] = useState(null);
+  const [coverImage, setCoverImage] = useState(null);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (e.target.name === "pdf") {
-      setPdfFile(file);
-    } else if (e.target.name === "coverPhoto") {
-      setCoverPhoto(file);
+  const predefinedCategories = [
+    "Physics", "Chemistry", "Mathematics", "Biology",
+    "Computer Science", "English", "History", "Geography", "Economics", "JavaScript"
+  ];
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!pdfFile || !coverImage || !title || !description || !category || !price) {
+      alert("Please fill all the fields and upload both files.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("category", category);
+    formData.append("price", price);
+    formData.append("pdf", pdfFile);       // key must match multer name
+    formData.append("cover", coverImage);  // key must match multer name
+
+    try {
+      const response = await axios.post("http://localhost:7000/api/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true, // if your backend sets cookies
+      });
+
+      alert("Upload successful!");
+      console.log(response.data);
+
+      // Reset form
+      setTitle("");
+      setDescription("");
+      setCategory("");
+      setPrice("");
+      setPdfFile(null);
+      setCoverImage(null);
+      e.target.reset();
+
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Upload failed. Check console for details.");
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("PDF File:", pdfFile);
-    console.log("Cover Photo:", coverPhoto);
-    console.log("Title:", title);
-    console.log("Price:", price);
-    alert("Material uploaded successfully!");
-  };
-
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 border rounded-lg shadow-lg bg-white">
-      <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
-        Upload Material
-      </h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
+      <h2 className="text-2xl font-bold text-center mb-6 text-blue-600">Upload Study Material</h2>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Title */}
+        <div>
+          <label className="block mb-2 font-medium text-gray-700">Title</label>
+          <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-500"
+          />
+        </div>
+
+        {/* Description */}
+        <div>
+          <label className="block mb-2 font-medium text-gray-700">Description</label>
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} required
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-500"
+          />
+        </div>
+
+        {/* Category */}
+        <div>
+          <label className="block mb-2 font-medium text-gray-700">Select Category</label>
+          <select value={category} onChange={(e) => setCategory(e.target.value)} required
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-500"
+          >
+            <option value="">-- Select Category --</option>
+            {predefinedCategories.map((cat, index) => (
+              <option key={index} value={cat}>{cat}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Price */}
+        <div>
+          <label className="block mb-2 font-medium text-gray-700">Price (in ₹)</label>
+          <input type="number" min="0" value={price} onChange={(e) => setPrice(e.target.value)} required
+            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:border-blue-500"
+          />
+        </div>
+
         {/* PDF Upload */}
         <div>
-          <label className="block text-gray-700 font-medium mb-2">
-            Upload PDF Document:
-          </label>
-          <input
-            type="file"
-            name="pdf"
-            accept=".pdf"
-            onChange={handleFileChange}
-            className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <label className="block mb-2 font-medium text-gray-700">Upload PDF</label>
+          <input type="file" accept=".pdf" onChange={(e) => setPdfFile(e.target.files[0])} required className="w-full" />
         </div>
 
-        {/* Cover Photo Upload */}
+        {/* Cover Image Upload */}
         <div>
-          <label className="block text-gray-700 font-medium mb-2">
-            Upload Cover Photo:
-          </label>
-          <input
-            type="file"
-            name="coverPhoto"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <label className="block mb-2 font-medium text-gray-700">Upload Cover Image</label>
+          <input type="file" accept="image/*" onChange={(e) => setCoverImage(e.target.files[0])} required className="w-full" />
         </div>
 
-        {/* Title Input */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Title:</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter title"
-            className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        {/* Price Input */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">Price:</label>
-          <input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            placeholder="Enter price"
-            className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition duration-200"
+        {/* Submit */}
+        <button type="submit"
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300"
         >
-          Sell
+          Upload
         </button>
       </form>
     </div>
@@ -95,5 +264,3 @@ const S_Upload = () => {
 };
 
 export default S_Upload;
-
-        

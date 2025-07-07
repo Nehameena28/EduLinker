@@ -1,19 +1,23 @@
 
 require('dotenv').config();
-// const noteRoutes = require("./routes/noteRoutes");
+
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
-const User = require("./models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+
+//  Models 
+const User = require("./models/User");
+const StudyMaterial = require("./models/StudyMaterial.js");
+
+
 
 const connectdb = require("./db");
 
 const app = express();
-
-app.use("/api/notes", noteRoutes);
 
 app.use(cookieParser());
 app.use(express.json());
@@ -22,6 +26,7 @@ app.use(cors({
   origin: "http://localhost:5173", // frontend origin
   credentials: true,              // allow cookies
 }));
+
 
 // Connect to DB
 connectdb();
@@ -80,15 +85,8 @@ app.post("/api/Signup", async (req, res) => {
 
     console.log("Token:", token);
 
-    // 6. Send response
-  //   res.status(201).json({
-  //      role: user.role,
-  //     // message: "Signup successful",
-  //     // user: newUser,
-  //     token: token
-  //   });
-
-  // }
+  
+ 
   res.status(201).json({
   user: {
     id: newUser._id,
@@ -146,12 +144,7 @@ app.post("/api/Login", async (req, res) => {
       maxAge: 60 * 60 * 1000, // 1 hour
     });
 
-    // 6. Send response
-    // res.status(200).json({
-    //   message: "Login successful",
-    //   user,
-    //   token
-    // });
+    
     res.status(200).json({
       message: "Login successful",
       user: {
@@ -171,7 +164,7 @@ app.post("/api/Login", async (req, res) => {
 });
 
 
-
+// Log out Route
 app.get("/api/logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
@@ -182,7 +175,41 @@ app.get("/api/logout", (req, res) => {
 });
 
 
+//  Upload Study Material
+const upload = multer({ storage: multer.memoryStorage() });
+
+app.post("/api/upload", upload.fields([{ name: "pdf" }, { name: "cover" }]), async (req, res) => {
+  try {
+    const { title, description, category, price } = req.body;
+
+    const newMaterial = new StudyMaterial({
+      title,
+      description,
+      category,
+      price,
+      pdf: {
+        data: req.files["pdf"][0].buffer,
+        contentType: req.files["pdf"][0].mimetype,
+      },
+      cover: {
+        data: req.files["cover"][0].buffer,
+        contentType: req.files["cover"][0].mimetype,
+      },
+    });
+
+    await newMaterial.save();
+    res.status(201).json({ message: "Material uploaded successfully" });
+
+  } catch (error) {
+    console.error("Upload error:", error);
+    res.status(500).json({ message: "Upload failed", error: error.message });
+  }
+});
+
+
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
+
