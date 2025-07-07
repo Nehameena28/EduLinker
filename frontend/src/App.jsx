@@ -81,8 +81,10 @@ import S_Upload from "./Component/SellerDashboard/S_Upload";
 import S_Sell from "./Component/SellerDashboard/S_Sell";
 import S_History from "./Component/SellerDashboard/S_History";
 import S_Payment from "./Component/SellerDashboard/S_Payment";
+import BuyerProfile from "./Component/BuyerDashboard/BuyerProfile";
 
 function App() {
+ 
   useEffect(() => {
     AOS.init({ duration: 1000 });
   }, []);
@@ -97,6 +99,7 @@ function App() {
         <Route path="/Contact" element={<Contact />} />
         <Route path="/Signup" element={<Signup />} />
         <Route path="/Login" element={<Login />} />
+          <Route path="/buyer" element={<BuyerProfile />} />
 
         {/* Seller Dashboard with sidebar layout */}
         <Route path="/seller" element={<SellerLayout />}>

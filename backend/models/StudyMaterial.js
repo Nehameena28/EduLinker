@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
+
 
 const StudyMaterialSchema = new mongoose.Schema({
   title: String,
@@ -19,4 +20,4 @@ const StudyMaterialSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("StudyMaterial", StudyMaterialSchema);
+module.exports = mongoose.model("StudyMaterial", StudyMaterialSchema);
