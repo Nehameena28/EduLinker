@@ -9,6 +9,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 
+
 //  Models 
 const User = require("./models/User");
 const StudyMaterial = require("./models/StudyMaterial.js");
@@ -34,7 +35,10 @@ connectdb();
 const PORT = process.env.PORT || 7000;
 
 console.log("PORT:", PORT);
+
 console.log("MONGO_URI:", process.env.MONGO_URI);
+
+
 
 // Root route
 app.get("/", (req, res) => {
@@ -206,6 +210,16 @@ app.post("/api/upload", upload.fields([{ name: "pdf" }, { name: "cover" }]), asy
   }
 });
 
+
+// GET /api/seller/notes
+app.get("/seller/notes", async (req, res) => {
+  try {
+    const notes = await StudyMaterial.find(); // Replace with your actual model
+    res.json(notes);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch notes" });
+  }
+});
 
 
 // Start server

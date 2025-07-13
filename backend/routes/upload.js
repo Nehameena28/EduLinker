@@ -1,6 +1,6 @@
-import express from "express";
-import multer from "multer";
-import StudyMaterial from "../models/StudyMaterial.js";
+const  express =  require("express");
+const multer = require("multer");
+const StudyMaterial = require("../models/StudyMaterial.js");
 
 const router = express.Router();
 const storage = multer.memoryStorage();
@@ -33,4 +33,4 @@ router.post("/", upload.fields([{ name: "pdf" }, { name: "cover" }]), async (req
   }
 });
 
-export default router;
+module.exports = router;
