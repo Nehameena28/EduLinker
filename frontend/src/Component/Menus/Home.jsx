@@ -3,6 +3,7 @@ import Navbar from "./Navbar";
 import Hero from "./Hero"
 import Footer from "./Footer"
 import './home.css'
+import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
@@ -29,11 +30,13 @@ const Home = () => {
           <br />
           study materials.
         </h1>
-        <button
+
+        <Link to="/Sellspage"><button
           className="px-6 py-3 bg-amber-800 text-white font-semibold rounded-lg shadow-md hover:bg-amber-700 transition duration-300 active:scale-90"
         >
           EXPLORE MORE
         </button>
+        </Link>
       </div>
     </div>
      <Hero></Hero>

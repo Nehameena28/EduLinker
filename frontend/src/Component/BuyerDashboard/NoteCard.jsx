@@ -61,23 +61,25 @@ const NoteCard = ({
 
         {/* Buttons */}
         <div className="flex justify-between items-center">
-          <button className="flex items-center text-sm text-gray-600 hover:text-[rgb(31,91,120)] transition">
+          {/* <button className="flex items-center text-sm text-gray-600 hover:text-[rgb(31,91,120)] transition">
             <FaHeart className="mr-1" /> Save
-          </button>
+          </button> */}
 
           <div className="flex items-center gap-3">
+            <button
+              onClick={onDownload}
+              className="bg-gray-100 hover:bg-gray-300 text-[rgb(31,91,120)] font-medium py-2 px-4 rounded-lg text-sm transition"
+            >
+              <FaDownload className="inline-block mr-1" />
+              Download
+            </button>
+
+            
             {/* ✅ Price shown here before download */}
             <span className="text-sm font-semibold text-[rgb(148,93,94)]">
               ₹{price}
             </span>
 
-            <button
-              onClick={onDownload}
-              className="bg-gray-200 hover:bg-gray-300 text-[rgb(31,91,120)] font-medium py-2 px-5 rounded-lg text-sm transition"
-            >
-              <FaDownload className="inline-block mr-1" />
-              Download
-            </button>
 
             <button
               onClick={onBuy}
