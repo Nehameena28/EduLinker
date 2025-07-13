@@ -40,10 +40,15 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(res.data.user));
       localStorage.setItem("token", res.data.token);
 
+      localStorage.setItem("username", res.data.user.name);  // ✅ Save name
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+
       if (res.data.user.role === "seller") {
-        navigate("/seller");
+        navigate("/seller/dashboard");
       } else {
-        navigate("/buyer");
+        navigate("/buyer/dashboard");
       }
 
     } catch (error) {

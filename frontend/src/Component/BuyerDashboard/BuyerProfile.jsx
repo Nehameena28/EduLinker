@@ -1,140 +1,109 @@
-
-// import { Download, CreditCard, BookOpen } from "lucide-react";
-
-// const BuyerProfile = () => {
-//   const purchasedNotes = [
-//     {
-//       id: 1,
-//       title: "JavaScript Basics",
-//       price: "₹199",
-//       downloadLink: "#",
-//     },
-//     {
-//       id: 2,
-//       title: "React Hooks Deep Dive",
-//       price: "₹299",
-//       downloadLink: "#",
-//     },
-//   ];
-
-//   return (
-//     <div className="min-h-screen bg-white text-custom-blue p-6">
-//       <h2 className="text-3xl font-bold mb-6">Dashboard</h2>
-
-//       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-//         {/* Purchased Notes */}
-//         <div className="col-span-2 bg-white border shadow-md rounded-xl p-4">
-//           <h3 className="text-xl font-semibold mb-4">Purchased Notes</h3>
-//           {purchasedNotes.length === 0 ? (
-//             <p className="text-gray-500">You have not purchased any notes yet.</p>
-//           ) : (
-//             purchasedNotes.map((note) => (
-//               <div
-//                 key={note.id}
-//                 className="flex items-center justify-between py-3 border-b border-gray-200"
-//               >
-//                 <div className="flex items-center gap-3">
-//                   <BookOpen className="text-custom-blue" />
-//                   <span className="font-medium">{note.title}</span>
-//                 </div>
-//                 <div className="flex items-center gap-4">
-//                   <span className="text-custom-brown font-semibold">{note.price}</span>
-//                   <a href={note.downloadLink}>
-//                     <button className="bg-custom-i-berry text-white hover:opacity-90 px-4 py-1 rounded-md flex items-center gap-1">
-//                       <Download className="w-4 h-4" />
-//                       Download
-//                     </button>
-//                   </a>
-//                 </div>
-//               </div>
-//             ))
-//           )}
-//         </div>
-
-//         {/* Payment Info */}
-//         <div className="bg-white border shadow-md rounded-xl p-4">
-//           <h3 className="text-xl font-semibold mb-4">Payment Summary</h3>
-//           <div className="flex flex-col gap-3">
-//             <div className="flex items-center justify-between">
-//               <span>Total Spent</span>
-//               <span className="font-bold text-custom-brown">₹498</span>
-//             </div>
-//             <div className="flex justify-between items-center">
-//   <span>Payment Method</span>
-//   <span className="flex items-center gap-2 text-custom-blue font-semibold">
-//     <img
-//       src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Razorpay_logo.svg"
-//       alt="Razorpay"
-//       className="w-5 h-5 object-contain"
-//     />
-//     Razorpay
-//   </span>
-// </div>
-
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Explore More */}
-//       <div className="mt-8">
-//         <button className="bg-custom-blue hover:opacity-90 text-white px-6 py-2 rounded-md">
-//           Explore More Notes
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default BuyerProfile;
-
-
-
-import { BookOpen } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import SellsPage from "./Sellspage";
+// import axios from "axios"; // make sure axios is installed
 
 const BuyerProfile = () => {
-  const username = "Neha"; // You can replace this with dynamic data
+  // const [username, setUsername] = useState("User");
+  const username = localStorage.getItem("username") || "User";
+
+  const stats = [
+    { title: "Purchased Docs", value: "5", change: "+25%" },
+    { title: "Saved Docs", value: "8", change: "+10%" },
+  ];
+
+  const recentActivity = [
+    { id: 1, title: "Maths Notes - Algebra", status: "Downloaded", date: "Jul 11" },
+    { id: 2, title: "Physics Guide - Motion", status: "Saved", date: "Jul 10" },
+  ];
+
+  // useEffect(() => {
+  //   const fetchUsername = async () => {
+  //     const userId = localStorage.getItem("userId"); // assuming you saved it at login
+  //     if (!userId) return;
+
+  //     try {
+  //       const res = await axios.get(`http://localhost:7000/api/users/${userId}`);
+  //       setUsername(res.data.username); // adapt to your backend response
+  //     } catch (err) {
+  //       console.error("Failed to fetch user data:", err);
+  //     }
+  //   };
+
+  //   fetchUsername();
+  // }, []);
 
   return (
     <div className="min-h-screen bg-white text-custom-blue px-6 py-10">
       {/* Header with greeting and Explore button */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
         <h2 className="text-3xl md:text-4xl font-bold">
-          Hello, {username}!
+          👋 Hello , {username} !
         </h2>
-        <button className="bg-custom-i-berry text-white hover:opacity-90 px-6 py-3 rounded-lg text-lg flex items-center gap-2">
-          <BookOpen className="w-5 h-5" />
-          Explore Notes
-        </button>
+        <Link to="/Sellspage">
+          <button className="bg-custom-i-berry text-white hover:opacity-90 px-6 py-3 rounded-lg text-lg">
+            Explore Notes
+          </button>
+        </Link>
       </div>
 
-      {/* Purchased Notes Table */}
-      <div className="bg-white border shadow-md rounded-xl p-6">
-        <h3 className="text-2xl font-semibold mb-4">Your Purchased Notes</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full table-auto border-collapse">
-            <thead>
-              <tr className="bg-custom-blue text-white text-left">
-                <th className="p-3">Note Title</th>
-                <th className="p-3">Price</th>
-                <th className="p-3">Payment</th>
-                <th className="p-3">Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b hover:bg-gray-50">
-                <td className="p-3">DSA Notes - Level 1</td>
-                <td className="p-3 text-custom-brown font-semibold">₹149</td>
-                <td className="p-3">Razorpay</td>
-                <td className="p-3 text-sm text-gray-500">2025-07-03</td>
-              </tr>
-              <tr className="border-b hover:bg-gray-50">
-                <td className="p-3">Full Stack Roadmap</td>
-                <td className="p-3 text-custom-brown font-semibold">₹199</td>
-                <td className="p-3">Razorpay</td>
-                <td className="p-3 text-sm text-gray-500">2025-07-04</td>
-              </tr>
-            </tbody>
-          </table>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        {stats.map((stat, index) => (
+          <div
+            key={index}
+            className="bg-white p-4 rounded-xl shadow-sm border border-[rgb(221,167,123)]/20 hover:shadow-md transition-shadow"
+          >
+            <div className="flex justify-between">
+              <div>
+                <p className="text-sm text-[rgb(31,91,120)]/70">{stat.title}</p>
+                <p className="text-2xl font-bold text-[rgb(31,91,120)] mt-1">
+                  {stat.value}
+                </p>
+                <p
+                  className={`text-xs mt-1 ${
+                    stat.change.startsWith("+")
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }`}
+                >
+                  {stat.change} this month
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Recent Activity */}
+      <div className="bg-white p-4 rounded-xl shadow-sm border border-[rgb(221,167,123)]/20">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="font-semibold text-[rgb(31,91,120)]">
+            Recent Activity
+          </h3>
+          <button className="text-sm text-[rgb(148,93,94)] hover:underline">
+            View All
+          </button>
+        </div>
+        <div className="space-y-4">
+          {recentActivity.map((item) => (
+            <div
+              key={item.id}
+              className="flex justify-between items-center p-3 hover:bg-[rgb(221,167,123)]/5 rounded-lg transition-colors"
+            >
+              <div>
+                <h4 className="font-medium text-[rgb(31,91,120)]">
+                  {item.title}
+                </h4>
+                <p className="text-xs text-gray-500">
+                  {item.status} • {item.date}
+                </p>
+              </div>
+              <span className="text-[rgb(148,93,94)] font-semibold">
+                {item.status}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
