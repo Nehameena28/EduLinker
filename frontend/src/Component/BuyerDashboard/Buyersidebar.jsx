@@ -22,12 +22,12 @@ const SavedIcon = () => (
   </svg>
 );
 
-const DownloadIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-      d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
-  </svg>
-);
+// const DownloadIcon = () => (
+//   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+//       d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+//   </svg>
+// );
 
 const PaymentIcon = () => (
   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,7 +66,7 @@ const Buyersidebar = () => {
           <NavItem icon={<DashboardIcon />} title="Dashboard" to="/buyer/dashboard" />
           <NavItem icon={<PurchasedIcon />} title="Purchased Docs" to="/buyer/B_purchased" />
           <NavItem icon={<SavedIcon />} title="Saved" to="/buyer/B_Saved" />
-          <NavItem icon={<DownloadIcon />} title="Downloade's" to="/buyer/B_Downloaded" />
+          {/* <NavItem icon={<DownloadIcon />} title="Downloade's" to="/buyer/B_Downloaded" /> */}
           <NavItem icon={<PaymentIcon />} title="Payment History" to="/buyer/B_Payment" />
         </nav>
 

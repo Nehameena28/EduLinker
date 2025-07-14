@@ -25,7 +25,7 @@
   import BuyerProfile from "./Component/BuyerDashboard/BuyerProfile";
   import B_Purchased from "./Component/BuyerDashboard/B_Purchased";
   import B_Saved from "./Component/BuyerDashboard/B_Saved";
-  import B_Downloaded from "./Component/BuyerDashboard/B_Downloaded";
+  // import B_Downloaded from "./Component/BuyerDashboard/B_Downloaded";
   import B_Payment from "./Component/BuyerDashboard/B_Payment";
  
 import SellsPage from "./Component/BuyerDashboard/Sellspage";
@@ -66,7 +66,7 @@ import SellsPage from "./Component/BuyerDashboard/Sellspage";
             <Route path="dashboard" element={<BuyerProfile />} />
             <Route path="B_Purchased" element={<B_Purchased />} />
             <Route path="B_Saved" element={<B_Saved />} />
-            <Route path="B_Downloaded" element={<B_Downloaded />} />
+            {/* <Route path="B_Downloaded" element={<B_Downloaded />} /> */}
             <Route path="B_payment" element={<B_Payment />} />
           </Route>
           
