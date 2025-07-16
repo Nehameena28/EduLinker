@@ -7,7 +7,7 @@
     "start": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\""
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.2.0"
   },
   "dependencies": {
     "@fontsource/pacifico": "^5.2.5",
