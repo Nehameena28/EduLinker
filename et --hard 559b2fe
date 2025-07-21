@@ -1,0 +1,76 @@
+[33m9c5fd98[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Added Cloudinary upload support
+[33m559b2fe[m Add the changes according to features in Notecard.jsx
+[33m91b950a[m Update the ui of about page
+[33m874f957[m Update backend routes and other project files
+[33mb9422ba[m Get notes from backend or show in frontend
+[33mc13ac5a[m resolve the problem
+[33m6ae7dc4[m resolve the seller profile issue
+[33md816749[m update materialRoutes.js
+[33mc54e320[m Add authentication routes in server.js
+[33m5005db1[m Import route in server.js
+[33maab9f3c[m Created AI agent to know more about Edulinker chatbase
+[33m6de8a7f[m update the seller dashboard
+[33m92f54cc[m made new schema
+[33m61c13e0[m Resove the merge conflict
+[33m386b540[m Change th ui or feature sign up or log in page
+[33m83d75b1[m update the seller dashboard
+[33m625b8d6[m Implement User rendering Navbar profile icon or Logout route
+[33m6c169a5[m Update README.md
+[33m7b2e6d4[m Authentication or Autherization by JWT
+[33mc25b9d4[m update root folder
+[33me718c57[m install node module
+[33mf66c990[m add Buyerdashboard pages
+[33m54af226[m delete images from asset folder
+[33m3bd2438[m update readme file
+[33m7f573f7[m update package.json in frontend
+[33m1ace29a[m Update README.md
+[33m9fc7611[m Update README.md
+[33mc8499f6[m Create README.md
+[33m52a8c28[m delete files or update
+[33m47951ff[m add app.jsx
+[33m7228a9e[m add sell
+[33meb9f61e[m Deleted files from the repository
+[33mdeb02a3[m Deleted unnecessary files and modified App.jsx
+[33mc883dcc[m add router in Seller dashboard
+[33m4ef935d[m add router in Buyerdashboard
+[33mdc5098e[m add seller dashboard
+[33m13ce08c[m Add buyerdashboard
+[33m71fbbbe[m impliment dashboard fro seller and buyer
+[33mebf2e09[m add changes in public
+[33mce9bd8b[m add changes
+[33mbde64b3[m add favicon vite.svg
+[33m727b3c0[m solve error and update vite.config
+[33m80be304[m Update Navbar.jsx
+[33mce59f49[m Update app.jsx
+[33me705552[m Update README.md
+[33m1ad062d[m Update README.md
+[33m6663bc5[m git add changes
+[33m9ee86b4[m nav changes
+[33m04d959f[m merge all changes
+[33m74f51e8[m Your commit message
+[33m79c00be[m add Auth0Config in root folder
+[33ma127e94[m add Auth0 in main.jsx
+[33mb4bd017[m Add Auth0 in Navbar
+[33m11272ef[m changes inside tailwing.config.js
+[33m966c376[m changes inside contact.css
+[33m864e478[m Changes inside contact.jsx
+[33m41a252f[m commit of Footer.jsx
+[33mfd71fa4[m changes inside Hero.jsx
+[33m7322a9c[m changes in home.css
+[33m0a70c59[m changes in home.jsx
+[33m053c64d[m updated code of About.css
+[33m2fd3ffc[m its the changes inside about.jsx
+[33m8a18628[m Add assets folder
+[33m2730a09[m add hero
+[33m2adfeae[m img add in features
+[33mdbeef1c[m add images
+[33m9b9cc0d[m clone repo
+[33m774f83b[m push all new changes from nehapc
+[33me273080[m add icons in feature
+[33mbe30449[m add changes in navbar
+[33mb82ec63[m add Router
+[33mbe63b2c[m new commit
+[33me447460[m add new changes
+[33ma34feb6[m add new files
+[33mafda295[m Update README.md
+[33m065b8c8[m Initial commit
