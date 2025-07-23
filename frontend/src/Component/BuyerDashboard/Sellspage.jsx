@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import NoteCard from "./NoteCard";
+ 
 
 const Sellspage = () => {
   const [notes, setNotes] = useState([]);
@@ -106,60 +107,118 @@ const Sellspage = () => {
   );
 
   return (
+    // <div className="min-h-screen bg-white text-custom-blue">
+    //   {/* 🎯 Hero Section */}
+    //   <div className="relative bg-cover bg-center h-[440px] flex items-center justify-center px-6">
+    //     <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+    //     <div className="relative z-10 text-center w-full max-w-3xl mx-auto">
+    //       <h1 className="text-4xl sm:text-5xl font-bold text-white drop-shadow-lg mb-4">
+    //         Turn Your Knowledge Into Income
+    //       </h1>
+    //       <p className="text-white text-lg mb-6">
+    //         Upload your notes, reach learners around the world, and start earning today with EduLinker.
+    //       </p>
+
+    //       {/* 🔍 Search Input Only */}
+    //       <div className="flex items-center bg-white rounded-full shadow-md overflow-hidden w-full">
+    //         <input
+    //           type="text"
+    //           placeholder="Search uploaded notes..."
+    //           value={searchTerm}
+    //           onChange={(e) => setSearchTerm(e.target.value)}
+    //           className="flex-grow px-5 py-3 text-gray-700 focus:outline-none"
+    //         />
+    //         <button className="bg-custom-blue text-white px-6 py-3 font-medium hover:bg-opacity-90 transition">
+    //           Search
+    //         </button>
+    //       </div>
+    //     </div>
+    //   </div>
+
+    //   {/* 📚 Notes Section */}
+    //   <div className="px-6 py-14">
+    //     <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+    //       {filteredNotes.length > 0 ? (
+    //         filteredNotes.map((note, index) => (
+    //           <NoteCard
+    //             key={index}
+    //             title={note.title}
+    //             description={note.description}
+    //             price={note.price}
+    //             category={note.category}
+    //             fileName={note.pdfUrl?.split("/").pop() || "Preview PDF"}
+    //             onDownload={() =>
+    //               window.open(`http://localhost:7000${note.pdfUrl}`, "_blank")
+    //             }
+    //             onBuy={() => handleBuyNow(note)}
+    //           />
+    //         ))
+    //       ) : (
+    //         <p className="text-center text-gray-600 col-span-full">
+    //           No notes found matching your search.
+    //         </p>
+    //       )}
+    //     </div>
+    //   </div>
+    
+    // </div>
+
     <div className="min-h-screen bg-white text-custom-blue">
-      {/* 🎯 Hero Section */}
-      <div className="relative bg-cover bg-center h-[440px] flex items-center justify-center px-6">
-        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        <div className="relative z-10 text-center w-full max-w-3xl mx-auto">
-          <h1 className="text-4xl sm:text-5xl font-bold text-white drop-shadow-lg mb-4">
-            Turn Your Knowledge Into Income
-          </h1>
-          <p className="text-white text-lg mb-6">
-            Upload your notes, reach learners around the world, and start earning today with EduLinker.
-          </p>
+  {/* 🎯 Hero Section */}
+  <div className="relative bg-cover bg-center h-[440px] flex items-center justify-center px-4 sm:px-6">
+    <div className="absolute inset-0 bg-black bg-opacity-40"></div>
 
-          {/* 🔍 Search Input Only */}
-          <div className="flex items-center bg-white rounded-full shadow-md overflow-hidden w-full">
-            <input
-              type="text"
-              placeholder="Search uploaded notes..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-grow px-5 py-3 text-gray-700 focus:outline-none"
-            />
-            <button className="bg-custom-blue text-white px-6 py-3 font-medium hover:bg-opacity-90 transition">
-              Search
-            </button>
-          </div>
-        </div>
-      </div>
+    <div className="relative z-10 text-center w-full max-w-3xl mx-auto">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg mb-4">
+        Turn Your Knowledge Into Income
+      </h1>
+      <p className="text-white text-base sm:text-lg mb-6 px-2 sm:px-0">
+        Upload your notes, reach learners around the world, and start earning today with EduLinker.
+      </p>
 
-      {/* 📚 Notes Section */}
-      <div className="px-6 py-14">
-        <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
-          {filteredNotes.length > 0 ? (
-            filteredNotes.map((note, index) => (
-              <NoteCard
-                key={index}
-                title={note.title}
-                description={note.description}
-                price={note.price}
-                category={note.category}
-                fileName={note.pdfUrl?.split("/").pop() || "Preview PDF"}
-                onDownload={() =>
-                  window.open(`http://localhost:7000${note.pdfUrl}`, "_blank")
-                }
-                onBuy={() => handleBuyNow(note)}
-              />
-            ))
-          ) : (
-            <p className="text-center text-gray-600 col-span-full">
-              No notes found matching your search.
-            </p>
-          )}
-        </div>
+      {/* 🔍 Responsive Search Input */}
+      <div className="flex flex-col sm:flex-row items-center bg-white rounded-full shadow-md overflow-hidden w-full">
+        <input
+          type="text"
+          placeholder="Search uploaded notes..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="flex-grow px-5 py-3 text-gray-700 focus:outline-none w-full sm:w-auto"
+        />
+        <button className="bg-custom-blue text-white w-full sm:w-auto px-6 py-3 font-medium hover:bg-opacity-90 transition">
+          Search
+        </button>
       </div>
     </div>
+  </div>
+
+  {/* 📚 Notes Section */}
+  <div className="px-4 sm:px-6 py-14">
+    <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+      {filteredNotes.length > 0 ? (
+        filteredNotes.map((note, index) => (
+          <NoteCard
+            key={index}
+            title={note.title}
+            description={note.description}
+            price={note.price}
+            category={note.category}
+            fileName={note.pdfUrl?.split("/").pop() || "Preview PDF"}
+            onDownload={() =>
+              window.open(`http://localhost:7000${note.pdfUrl}`, "_blank")
+            }
+            onBuy={() => handleBuyNow(note)}
+          />
+        ))
+      ) : (
+        <p className="text-center text-gray-600 col-span-full">
+          No notes found matching your search.
+        </p>
+      )}
+    </div>
+  </div>
+</div>
+
   );
 };
 

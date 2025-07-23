@@ -1,7 +1,6 @@
 import React from "react";
 import Navbar from "./Navbar";
 import Hero from "./Hero"
-import Footer from "./Footer"
 import './home.css'
 import { Link } from "react-router-dom";
 
@@ -40,7 +39,7 @@ const Home = () => {
       </div>
     </div>
      <Hero></Hero>
-    
+     
     </>
   );
 };

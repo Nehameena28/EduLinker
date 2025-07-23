@@ -4,6 +4,9 @@
   import AOS from 'aos';
   import 'aos/dist/aos.css';
   import { useEffect } from "react";
+  import { useLocation } from "react-router-dom";
+
+
 
   import Home from "./Component/Menus/Home";
   import About from "./Component/Menus/About";
@@ -12,6 +15,7 @@
   import Signup from "./Component/Enter/Signup";
   import Login from "./Component/Enter/Login";
   import Footer from "./Component/Menus/Footer";
+ 
 
   import SellerLayout from "./Component/SellerDashboard/SellerLayout";
   import SellerProfile from "./Component/SellerDashboard/SellerProfile";
@@ -36,6 +40,9 @@ import SellsPage from "./Component/BuyerDashboard/Sellspage";
     useEffect(() => {
       AOS.init({ duration: 1000 });
     }, []);
+
+    const location = useLocation();
+
 
     return (
       <>
@@ -73,7 +80,11 @@ import SellsPage from "./Component/BuyerDashboard/Sellspage";
         
 
         </Routes>
-        <Footer></Footer>
+
+  {location.pathname !== "/Login" && location.pathname !== "/Signup" && <Footer />}
+
+
+        
       </>
     );
   }

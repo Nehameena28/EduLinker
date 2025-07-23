@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import Footer from "./Footer";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -9,10 +8,10 @@ const About = () => {
   }, []);
 
   return (
-    <section className="bg-white text-gray-800">
+    <section className="bg-white text-gray-800 overflow-y-scroll scrollbar-hide">
       {/* Hero Section with background image */}
       <div
-        className="relative bg-cover bg-center py-36 px-6 text-center"
+        className="relative  bg-cover  bg-center py-36 px-6 text-center"
         style={{
           backgroundImage: "url('/about-bg.png')",
           backgroundSize: "cover",
@@ -158,6 +157,7 @@ const About = () => {
   </p>
 </div>
  
+   
     </section>
   );
 };
