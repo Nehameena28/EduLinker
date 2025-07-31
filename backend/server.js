@@ -1,6 +1,7 @@
 
 require('dotenv').config();
 
+
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -9,9 +10,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 
-// const cloudinary = require("cloudinary");
+const cloudinary = require("cloudinary");
 
-// const { Readable } = require("stream");
+const { Readable } = require("stream");
 
 
 
@@ -23,8 +24,17 @@ const upload = multer({ storage: multer.memoryStorage() });
 const User = require("./models/User");
 const StudyMaterial = require("./models/StudyMaterial.js");
 
+const SavedNote = require("./models/SaveNotes.js"); 
 
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+
+ 
 const connectdb = require("./db");
 
 const app = express();
@@ -36,6 +46,8 @@ app.use(cors({
   origin: "http://localhost:5173", // frontend origin
   credentials: true,              // allow cookies
 }));
+// app.options("*", cors());
+
 
 
 // Connect to DB
@@ -249,45 +261,6 @@ app.post("/api/upload", upload.fields([{ name: "pdf" }, { name: "cover" }]), asy
 
 
 
-//  Upload Study Material
-// const upload = multer({ storage: multer.memoryStorage() });
-
-// app.post("/api/upload", upload.fields([{ name: "pdf" }, { name: "cover" }]), async (req, res) => {
-//   try {
-//     const { title, description, category, price } = req.body;
-
-//     const newMaterial = new StudyMaterial({
-//       title,
-//       description,
-//       category,
-//       price,
-     
-//         pdf: {
-//   url: req.files["pdf"][0].path,
-//   public_id: req.files["pdf"][0].filename,
-// },
-
-    
-//      cover: {
-//   url: req.files["cover"][0].path,
-//   public_id: req.files["cover"][0].filename,
-// },
-
-//     });
-
-//     await newMaterial.save();
-//     res.status(201).json({ message: "Material uploaded successfully" });
-
-//   } catch (error) {
-//     console.error("Upload error:", error);
-//     res.status(500).json({ message: "Upload failed", error: error.message });
-//   }
-// });
-
-
-
-
-
 
 // GET /api/seller/notes
 app.get("/seller/notes", async (req, res) => {
@@ -296,6 +269,50 @@ app.get("/seller/notes", async (req, res) => {
     res.json(notes);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch notes" });
+  }
+});
+
+
+
+app.post("/api/save-note", async (req, res) => {
+  try {
+    const { userId, title, description, category, price, fileName, previewUrl } = req.body;
+
+    // Prevent duplicates
+    const existing = await SavedNote.findOne({ userId, title });
+    if (existing) {
+      return res.status(409).json({ message: "Note already saved" });
+    }
+
+    const newNote = new SavedNote({ userId, title, description, category, price, fileName, previewUrl });
+    await newNote.save();
+
+    res.status(201).json({ message: "Note saved" });
+  } catch (error) {
+    res.status(500).json({ message: "Save failed", error: error.message });
+  }
+});
+
+
+
+
+app.get("/api/saved-notes/:userId", async (req, res) => {
+  try {
+    const notes = await SavedNote.find({ userId: req.params.userId });
+    res.status(200).json(notes);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching saved notes", error: err.message });
+  }
+});
+
+
+
+app.delete("/api/saved-notes/:id", async (req, res) => {
+  try {
+    await SavedNote.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Note unsaved successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to unsave note" });
   }
 });
 

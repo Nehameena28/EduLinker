@@ -1,5 +1,4 @@
 
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import NoteCard from "./NoteCard";
@@ -7,23 +6,80 @@ import NoteCard from "./NoteCard";
 
 const Sellspage = () => {
   const [notes, setNotes] = useState([]);
+  
+const [isLoading, setIsLoading] = useState(true);
+
   const [searchTerm, setSearchTerm] = useState("");
 
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user?.id;
+  
+
+
+
+
+ const handleSave = async (note) => {
+  try {
+    await axios.post("http://localhost:7000/api/save-note", {
+      userId,
+      title: note.title,
+      description: note.description,
+      category: note.category,
+      price: note.price,
+      // fileName: note.pdfUrl?.split("/").pop() || "Note",
+      // previewUrl: note.pdfUrl
+      fileName: note.pdf?.url?.split("/").pop() || "Note",
+      previewUrl: note.pdf?.url
+    });
+
+    alert("Note saved successfully!");
+  } catch (err) {
+    if (err.response?.status === 409) {
+      alert("Note already saved.");
+    } else {
+      console.error("Failed to save note", err);
+      alert("Error saving note.");
+    }
+  }
+};
+
+
+  // useEffect(() => {
+  //   const fetchNotes = async () => {
+  //     try {
+  //       const res = await axios.get("http://localhost:7000/seller/notes", {
+  //         withCredentials: true,
+  //       });
+  //       setNotes(res.data);
+  //     } catch (err) {
+  //       console.error("Failed to fetch notes:", err);
+  //     }
+  //   };
+
+  //   fetchNotes();
+  // }, []);
+
   useEffect(() => {
-    const fetchNotes = async () => {
-      try {
-        const res = await axios.get("http://localhost:7000/seller/notes", {
-          withCredentials: true,
-        });
-        setNotes(res.data);
-      } catch (err) {
-        console.error("Failed to fetch notes:", err);
-      }
-    };
+  const fetchNotes = async () => {
+    try {
+      setIsLoading(true); // Start loading
+      const res = await axios.get("http://localhost:7000/seller/notes", {
+        withCredentials: true,
+      });
+      setNotes(res.data); // Save notes
+    } catch (err) {
+      console.error("Failed to fetch notes:", err);
+    } finally {
+      setIsLoading(false); // End loading
+    }
+  };
 
-    fetchNotes();
-  }, []);
+  fetchNotes();
+}, []);
 
+
+  
   const handleBuyNow = async (note) => {
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -106,63 +162,10 @@ const Sellspage = () => {
     note.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+
+
+  
   return (
-    // <div className="min-h-screen bg-white text-custom-blue">
-    //   {/* 🎯 Hero Section */}
-    //   <div className="relative bg-cover bg-center h-[440px] flex items-center justify-center px-6">
-    //     <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-    //     <div className="relative z-10 text-center w-full max-w-3xl mx-auto">
-    //       <h1 className="text-4xl sm:text-5xl font-bold text-white drop-shadow-lg mb-4">
-    //         Turn Your Knowledge Into Income
-    //       </h1>
-    //       <p className="text-white text-lg mb-6">
-    //         Upload your notes, reach learners around the world, and start earning today with EduLinker.
-    //       </p>
-
-    //       {/* 🔍 Search Input Only */}
-    //       <div className="flex items-center bg-white rounded-full shadow-md overflow-hidden w-full">
-    //         <input
-    //           type="text"
-    //           placeholder="Search uploaded notes..."
-    //           value={searchTerm}
-    //           onChange={(e) => setSearchTerm(e.target.value)}
-    //           className="flex-grow px-5 py-3 text-gray-700 focus:outline-none"
-    //         />
-    //         <button className="bg-custom-blue text-white px-6 py-3 font-medium hover:bg-opacity-90 transition">
-    //           Search
-    //         </button>
-    //       </div>
-    //     </div>
-    //   </div>
-
-    //   {/* 📚 Notes Section */}
-    //   <div className="px-6 py-14">
-    //     <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
-    //       {filteredNotes.length > 0 ? (
-    //         filteredNotes.map((note, index) => (
-    //           <NoteCard
-    //             key={index}
-    //             title={note.title}
-    //             description={note.description}
-    //             price={note.price}
-    //             category={note.category}
-    //             fileName={note.pdfUrl?.split("/").pop() || "Preview PDF"}
-    //             onDownload={() =>
-    //               window.open(`http://localhost:7000${note.pdfUrl}`, "_blank")
-    //             }
-    //             onBuy={() => handleBuyNow(note)}
-    //           />
-    //         ))
-    //       ) : (
-    //         <p className="text-center text-gray-600 col-span-full">
-    //           No notes found matching your search.
-    //         </p>
-    //       )}
-    //     </div>
-    //   </div>
-    
-    // </div>
-
     <div className="min-h-screen bg-white text-custom-blue">
   {/* 🎯 Hero Section */}
   <div className="relative bg-cover bg-center h-[440px] flex items-center justify-center px-4 sm:px-6">
@@ -193,7 +196,7 @@ const Sellspage = () => {
   </div>
 
   {/* 📚 Notes Section */}
-  <div className="px-4 sm:px-6 py-14">
+  {/* <div className="px-4 sm:px-6 py-14">
     <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
       {filteredNotes.length > 0 ? (
         filteredNotes.map((note, index) => (
@@ -208,6 +211,7 @@ const Sellspage = () => {
               window.open(`http://localhost:7000${note.pdfUrl}`, "_blank")
             }
             onBuy={() => handleBuyNow(note)}
+             onSave={() => handleSave(note)}
           />
         ))
       ) : (
@@ -216,7 +220,54 @@ const Sellspage = () => {
         </p>
       )}
     </div>
+  </div> */}
+
+  <div className="px-4 sm:px-6 py-14">
+{isLoading ? (
+  <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+    {[...Array(6)].map((_, index) => (
+      <div
+        key={index}
+        className="animate-pulse bg-white shadow-md rounded-xl p-4 space-y-4"
+      >
+        <div className="h-40 bg-gray-300 rounded-md"></div>
+        <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+        <div className="h-4 bg-gray-200 rounded w-2/4"></div>
+        <div className="h-8 bg-gray-300 rounded w-full mt-4"></div>
+      </div>
+    ))}
   </div>
+)  : (
+    <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+      {filteredNotes.length > 0 ? (
+        filteredNotes.map((note, index) => (
+          
+          <NoteCard
+            key={index}
+            title={note.title}
+            description={note.description}
+            price={note.price}
+            category={note.category}
+            // fileName={note.pdfUrl?.split("/").pop() || "Preview PDF"}
+            // // onDownload={() =>
+            // //   window.open(`http://localhost:7000${note.pdfUrl}`, "_blank")
+            // // }
+            // previewUrl={note.pdf?.url}
+             fileName={note.pdf?.url?.split("/").pop() || "Preview PDF"} // ✅ fixed
+             previewUrl={note.pdf?.url} // ✅ this should exist now
+            onBuy={() => handleBuyNow(note)}
+            onSave={() => handleSave(note)}
+          />
+        ))
+      ) : (
+        <p className="text-center text-gray-600 col-span-full">
+          No notes found matching your search.
+        </p>
+      )}
+    </div>
+  )}
+</div>
+
 </div>
 
   );
