@@ -288,6 +288,17 @@ app.get("/api/materials/count", async (req, res) => {
 app.use("/api/payment", paymentRoutes);
 
 
+// Add this route to your backend (server.js or app.js)
+app.get('/api/all-materials', async (req, res) => {
+  try {
+    // Replace 'StudyMaterial' with your actual model name
+    const materials = await StudyMaterial.find({});
+    res.json(materials);
+  } catch (error) {
+    console.error('Error fetching all materials:', error);
+    res.status(500).json({ error: 'Failed to fetch materials' });
+  }
+});
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
