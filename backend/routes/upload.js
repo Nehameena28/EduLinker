@@ -1,35 +1,79 @@
-const  express =  require("express");
+const express = require("express");
 const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 const StudyMaterial = require("../models/StudyMaterial.js");
 
 const router = express.Router();
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
 
-router.post("/", upload.fields([{ name: "pdf" }, { name: "cover" }]), async (req, res) => {
+// Create uploads directory if it doesn't exist
+const uploadsDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadsDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ 
+  storage,
+  limits: {
+    fileSize: 50 * 1024 * 1024 // 50MB limit
+  }
+});
+
+router.post("/", upload.single("pdf"), async (req, res) => {
   try {
-    const { title, description, category, price } = req.body;
+    console.log("Upload request received");
+    console.log("Request body:", req.body);
+    console.log("Files:", req.files ? Object.keys(req.files) : 'No files');
+    
+    const { title, description, category, price, uploadedBy } = req.body;
 
-    const newMaterial = new StudyMaterial({
+    if (!uploadedBy) {
+      console.log("Missing uploadedBy field");
+      return res.status(400).json({ error: "Uploader email is required" });
+    }
+
+    if (!req.file) {
+      console.log("Missing PDF file");
+      return res.status(400).json({ error: "PDF file is required" });
+    }
+
+    console.log("File saved locally:");
+    console.log("PDF:", req.file.filename);
+
+    const materialData = {
       title,
       description,
       category,
-      price,
+      price: parseFloat(price),
+      uploadedBy,
       pdf: {
-        data: req.files["pdf"][0].buffer,
-        contentType: req.files["pdf"][0].mimetype,
-      },
-      cover: {
-        data: req.files["cover"][0].buffer,
-        contentType: req.files["cover"][0].mimetype,
-      },
-    });
-
+        url: `/uploads/${req.file.filename}`,
+        public_id: req.file.filename
+      }
+    };
+    
+    console.log("Creating new material with data:", materialData);
+    const newMaterial = new StudyMaterial(materialData);
+    
+    console.log("Saving to MongoDB...");
     await newMaterial.save();
-    res.status(201).json({ message: "Material uploaded successfully." });
+    console.log("Material saved successfully:", newMaterial._id);
+    
+    res.status(201).json({ message: "Material uploaded successfully.", id: newMaterial._id, material: newMaterial });
   } catch (err) {
     console.error("Error uploading material:", err);
-    res.status(500).json({ error: "Upload failed" });
+    console.error("Error stack:", err.stack);
+    res.status(500).json({ error: "Upload failed", details: err.message });
   }
 });
 

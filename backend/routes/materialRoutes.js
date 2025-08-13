@@ -30,4 +30,15 @@ router.delete("/materials/:id", async (req, res) => {
 });
 
 
+router.get("/all", async (req, res) => {
+  try {
+    const materials = await StudyMaterial.find().sort({ createdAt: -1 });
+    res.json(materials);
+  } catch (error) {
+    console.error("Error fetching study materials:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 export default router;
