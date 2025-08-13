@@ -7,39 +7,71 @@ const S_Upload = () => {
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [pdfFile, setPdfFile] = useState(null);
-  const [coverImage, setCoverImage] = useState(null);
+
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const predefinedCategories = [
-    "JavaScript", "React", "Node.js", "Python", "Java", "C++", "Data Science"
+    "HTML","CSS","JavaScript", "React", "Node.js", "Python", "Java", "C++", "Data Science"
   ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsUploading(true);
 
-    if (!pdfFile || !coverImage || !title || !description || !category || !price) {
-      alert("Please fill all the fields and upload both files.");
+    const uploadedBy = localStorage.getItem("email"); // seller email from login
+
+    if (!pdfFile || !title || !description || !category || !price || !uploadedBy) {
+      alert("Please fill all the fields and upload PDF file.");
+      setIsUploading(false);
+      return;
+    }
+
+    // Validate file types and sizes
+    if (pdfFile && pdfFile.type !== 'application/pdf') {
+      alert("Please upload a valid PDF file.");
+      setIsUploading(false);
+      return;
+    }
+
+    // Check file size (50MB for PDF)
+    if (pdfFile && pdfFile.size > 50 * 1024 * 1024) {
+      alert("PDF file size should be less than 50MB.");
       setIsUploading(false);
       return;
     }
 
     const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
+    formData.append("title", title.trim());
+    formData.append("description", description.trim());
     formData.append("category", category);
-    formData.append("price", price);
+    formData.append("price", parseFloat(price));
     formData.append("pdf", pdfFile);
-    formData.append("cover", coverImage);
+
+    formData.append("uploadedBy", uploadedBy);
+    
+    // Debug: Log form data
+    console.log("FormData contents:");
+    for (let [key, value] of formData.entries()) {
+      console.log(key, typeof value === 'object' ? value.name : value);
+    }
 
     try {
+      console.log("Starting upload...", { title, category, price, uploadedBy: uploadedBy });
+      
       const response = await axios.post("http://localhost:7000/api/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
+        timeout: 300000, // 5 minute timeout for large files
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setUploadProgress(percentCompleted);
+          console.log(`Upload Progress: ${percentCompleted}%`);
+        }
       });
 
+      console.log("Upload response:", response.data);
       alert("Upload successful!");
-      console.log(response.data);
 
       // Reset form
       setTitle("");
@@ -47,14 +79,30 @@ const S_Upload = () => {
       setCategory("");
       setPrice("");
       setPdfFile(null);
-      setCoverImage(null);
-      e.target.reset();
+      setUploadProgress(0);
+      
+      // Reset file inputs manually
+      const form = e.target;
+      const fileInputs = form.querySelectorAll('input[type="file"]');
+      fileInputs.forEach(input => input.value = '');
 
     } catch (error) {
       console.error("Upload failed:", error);
-      alert("Upload failed. Check console for details.");
+      
+      if (error.code === 'ECONNABORTED') {
+        alert("Upload timeout. Please check your connection and try again.");
+      } else if (error.response) {
+        console.error("Server error:", error.response.data);
+        alert(`Upload failed: ${error.response.data.message || 'Server error'}`);
+      } else if (error.request) {
+        console.error("Network error:", error.request);
+        alert("Network error. Please check if the server is running on port 7000.");
+      } else {
+        alert("Upload failed. Check console for details.");
+      }
     } finally {
       setIsUploading(false);
+      setUploadProgress(0);
     }
   };
 
@@ -74,7 +122,7 @@ const S_Upload = () => {
                   value={title} 
                   onChange={(e) => setTitle(e.target.value)} 
                   required
-                  className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-custom-i-berry"
+                  className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2"
                   placeholder="Enter title"
                 />
               </div>
@@ -87,7 +135,7 @@ const S_Upload = () => {
                   onChange={(e) => setDescription(e.target.value)} 
                   required
                   rows="2"
-                  className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-custom-i-berry"
+                  className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2"
                   placeholder="Brief description"
                 />
               </div>
@@ -100,7 +148,7 @@ const S_Upload = () => {
                     value={category} 
                     onChange={(e) => setCategory(e.target.value)} 
                     required
-                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-custom-i-berry"
+                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2"
                   >
                     <option value="">Select</option>
                     {predefinedCategories.map((cat, index) => (
@@ -118,7 +166,7 @@ const S_Upload = () => {
                     value={price} 
                     onChange={(e) => setPrice(e.target.value)} 
                     required
-                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-custom-i-berry"
+                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2"
                     placeholder="0"
                   />
                 </div>
@@ -129,62 +177,41 @@ const S_Upload = () => {
                 {/* PDF Upload */}
                 <div>
                   <label className="block text-sm font-medium text-custom-blue mb-1">PDF File</label>
-                  <div className="relative">
-                    <input 
-                      type="file" 
-                      accept=".pdf" 
-                      onChange={(e) => setPdfFile(e.target.files[0])} 
-                      required 
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      id="pdf-upload"
-                    />
-                    <label 
-                      htmlFor="pdf-upload"
-                      className="block w-full border border-dashed border-gray-300 rounded-lg px-3 py-2 text-center text-xs hover:border-custom-i-berry"
-                    >
-                      {pdfFile ? (
-                        <span className="text-green-600 font-medium truncate block">{pdfFile.name}</span>
-                      ) : (
-                        <span className="text-gray-500">Click to upload PDF</span>
-                      )}
-                    </label>
-                  </div>
+                  <input 
+                    type="file" 
+                    accept=".pdf" 
+                    onChange={(e) => setPdfFile(e.target.files[0])} 
+                    required
+                    className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 file:mr-4 file:py-1 file:px-2 file:rounded file:border-0 file:text-sm file:bg-custom-i-berry file:text-white hover:file:bg-opacity-90"
+                  />
+                  {pdfFile && <p className="text-xs text-gray-600 mt-1">{pdfFile.name}</p>}
                 </div>
 
-                {/* Cover Image Upload */}
-                <div>
-                  <label className="block text-sm font-medium text-custom-blue mb-1">Cover Image</label>
-                  <div className="relative">
-                    <input 
-                      type="file" 
-                      accept="image/*" 
-                      onChange={(e) => setCoverImage(e.target.files[0])} 
-                      required 
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      id="image-upload"
-                    />
-                    <label 
-                      htmlFor="image-upload"
-                      className="block w-full border border-dashed border-gray-300 rounded-lg px-3 py-2 text-center text-xs hover:border-custom-i-berry"
-                    >
-                      {coverImage ? (
-                        <span className="text-green-600 font-medium truncate block">{coverImage.name}</span>
-                      ) : (
-                        <span className="text-gray-500">Click to upload image</span>
-                      )}
-                    </label>
-                  </div>
-                </div>
+
               </div>
 
               {/* Submit */}
               <div className="pt-2">
+                {isUploading && uploadProgress > 0 && (
+                  <div className="mb-2">
+                    <div className="flex justify-between text-xs text-gray-600 mb-1">
+                      <span>Uploading...</span>
+                      <span>{uploadProgress}%</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-custom-i-berry h-2 rounded-full transition-all duration-300" 
+                        style={{ width: `${uploadProgress}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                )}
                 <button 
                   type="submit"
                   disabled={isUploading}
-                  className={`w-full py-2 px-4 rounded-lg text-sm font-medium ${isUploading ? 'bg-gray-400' : 'bg-custom-i-berry hover:bg-opacity-90'} text-white transition`}
+                  className={`w-full py-2 px-4 rounded-lg text-sm font-medium ${isUploading ? 'bg-gray-400' : 'bg-custom-i-berry hover:bg-opacity-90'} text-white`}
                 >
-                  {isUploading ? 'Uploading...' : 'Upload Material'}
+                  {isUploading ? (uploadProgress > 0 ? `Uploading... ${uploadProgress}%` : 'Preparing...') : 'Upload Material'}
                 </button>
               </div>
             </form>
