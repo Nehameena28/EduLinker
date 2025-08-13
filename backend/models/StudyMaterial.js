@@ -8,16 +8,16 @@ const StudyMaterialSchema = new mongoose.Schema({
 
   pdf: {
     url: { type: String, required: true },
-    public_id: { type: String, required: true }
+    public_id: { type: String, required: true },
   },
 
   cover: {
     url: { type: String, required: false },
-    public_id: { type: String, required: false }
+    public_id: { type: String, required: false },
   },
 
   uploadedBy: { type: String, required: true }, // seller's email or id
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("StudyMaterial", StudyMaterialSchema);
