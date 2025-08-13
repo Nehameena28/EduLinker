@@ -9,14 +9,8 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
+const path = require("path");
 
-const cloudinary = require("cloudinary");
-
-const { Readable } = require("stream");
-
-
-
-const upload = multer({ storage: multer.memoryStorage() });
 
 
 
@@ -26,18 +20,20 @@ const StudyMaterial = require("./models/StudyMaterial.js");
 
 const SavedNote = require("./models/SaveNotes.js"); 
 
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
+// Routes
+const uploadRoutes = require("./routes/upload");
+const paymentRoutes = require("./routes/paymentRoutes");
 
 
  
 const connectdb = require("./db");
 
 const app = express();
+
+// ✅ Increase payload limit
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
 
 app.use(cookieParser());
 app.use(express.json());
@@ -46,7 +42,7 @@ app.use(cors({
   origin: "http://localhost:5173", // frontend origin
   credentials: true,              // allow cookies
 }));
-// app.options("*", cors());
+
 
 
 
@@ -201,73 +197,28 @@ app.get("/api/logout", (req, res) => {
 
 
 
-const streamUpload = (buffer, folder) => {
-  return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(
-      {
-        resource_type: "raw",
-        folder,
-      },
-      (error, result) => {
-        if (result) resolve(result);
-        else reject(error);
-      }
-    );
-
-    const readable = new Readable();
-    readable._read = () => {};
-    readable.push(buffer);
-    readable.push(null);
-    readable.pipe(stream);
-  });
-};
 
 
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Use upload routes
+app.use("/api/upload", uploadRoutes);
 
 
-app.post("/api/upload", upload.fields([{ name: "pdf" }, { name: "cover" }]), async (req, res) => {
-  try {
-    const { title, description, category, price } = req.body;
-
-    const pdfBuffer = req.files["pdf"][0].buffer;
-    const coverBuffer = req.files["cover"][0].buffer;
-
-    // Upload to Cloudinary
-    const uploadedPdf = await streamUpload(pdfBuffer, "edulinker/notes");
-    const uploadedCover = await streamUpload(coverBuffer, "edulinker/covers");
-
-    const newMaterial = new StudyMaterial({
-      title,
-      description,
-      category,
-      price,
-      pdf: {
-        url: uploadedPdf.secure_url,
-        public_id: uploadedPdf.public_id,
-      },
-      cover: {
-        url: uploadedCover.secure_url,
-        public_id: uploadedCover.public_id,
-      },
-    });
-
-    await newMaterial.save();
-    res.status(201).json({ message: "Material uploaded successfully" });
-  } catch (error) {
-    console.error("Upload error:", error);
-    res.status(500).json({ message: "Upload failed", error: error.message });
-  }
-});
-
-
-
-
-// GET /api/seller/notes
+// GET /api/seller/notes - Get user-specific materials
 app.get("/seller/notes", async (req, res) => {
   try {
-    const notes = await StudyMaterial.find(); // Replace with your actual model
+    const { email } = req.query;
+    
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+    
+    const notes = await StudyMaterial.find({ uploadedBy: email });
     res.json(notes);
   } catch (err) {
+    console.error("Failed to fetch notes:", err);
     res.status(500).json({ message: "Failed to fetch notes" });
   }
 });
@@ -315,6 +266,26 @@ app.delete("/api/saved-notes/:id", async (req, res) => {
     res.status(500).json({ message: "Failed to unsave note" });
   }
 });
+
+
+app.get("/api/materials/count", async (req, res) => {
+  try {
+    const email = req.query.email;
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const count = await StudyMaterial.countDocuments({ uploadedBy: email });
+    res.json({ count });
+  } catch (error) {
+    console.error("Error fetching material count:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+// Payment routes
+app.use("/api/payment", paymentRoutes);
 
 
 // Start server
