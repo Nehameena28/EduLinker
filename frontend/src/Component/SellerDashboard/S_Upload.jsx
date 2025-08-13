@@ -10,6 +10,7 @@ const S_Upload = () => {
 
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [pdfUrl, setPdfUrl] = useState("");
 
   const predefinedCategories = [
     "HTML","CSS","JavaScript", "React", "Node.js", "Python", "Java", "C++", "Data Science"
@@ -71,7 +72,22 @@ const S_Upload = () => {
       });
 
       console.log("Upload response:", response.data);
-      alert("Upload successful!");
+      
+      // Get PDF URL from response
+      let uploadedPdfUrl = response.data.pdfUrl || response.data.fileUrl || response.data.url || response.data.filename;
+      
+      // If it's just a filename, construct full URL
+      if (uploadedPdfUrl && !uploadedPdfUrl.startsWith('http')) {
+        uploadedPdfUrl = `http://localhost:7000/uploads/${uploadedPdfUrl}`;
+      }
+      
+      if (uploadedPdfUrl) {
+        setPdfUrl(uploadedPdfUrl);
+        console.log("PDF URL:", uploadedPdfUrl);
+        alert(`Upload successful! PDF URL: ${uploadedPdfUrl}`);
+      } else {
+        alert("Upload successful!");
+      }
 
       // Reset form
       setTitle("");
@@ -187,7 +203,15 @@ const S_Upload = () => {
                   {pdfFile && <p className="text-xs text-gray-600 mt-1">{pdfFile.name}</p>}
                 </div>
 
-
+                {/* Display PDF URL after upload */}
+                {pdfUrl && (
+                  <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <p className="text-sm font-medium text-green-800 mb-1">PDF Uploaded Successfully!</p>
+                    <p className="text-xs text-green-600 break-all">
+                      URL: <a href={pdfUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-green-800">{pdfUrl}</a>
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Submit */}
@@ -223,3 +247,6 @@ const S_Upload = () => {
 };
 
 export default S_Upload;
+
+
+

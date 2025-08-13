@@ -1,85 +1,131 @@
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import S_NoteCard from "./S_NoteCard";
+import NoteCard from "./S_NoteCard";
 
 const S_Sell = () => {
   const [notes, setNotes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userEmail = localStorage.getItem("email");
 
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const res = await axios.get("http://localhost:7000/seller/notes", {
+        setIsLoading(true);
+        const res = await axios.get(`http://localhost:7000/seller/notes?email=${userEmail}`, {
           withCredentials: true,
         });
         setNotes(res.data);
       } catch (err) {
         console.error("Failed to fetch notes:", err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchNotes();
-  }, []);
+    if (userEmail) {
+      fetchNotes();
+    }
+  }, [userEmail]);
 
-  // Filter notes based on search input
   const filteredNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleViewPdf = (pdfUrl) => {
+    if (!pdfUrl) {
+      alert("PDF not available");
+      return;
+    }
+    
+    console.log("Original PDF URL:", pdfUrl);
+    
+    // Construct full URL
+    let fullUrl = pdfUrl;
+    if (!pdfUrl.startsWith('http')) {
+      // If URL already starts with /uploads/, don't add it again
+      if (pdfUrl.startsWith('/uploads/')) {
+        fullUrl = `http://localhost:7000${pdfUrl}`;
+      } else {
+        fullUrl = `http://localhost:7000/uploads/${pdfUrl}`;
+      }
+    }
+    
+    console.log("Final PDF URL:", fullUrl);
+    
+    // Open PDF in new tab
+    window.open(fullUrl, '_blank');
+  };
+
   return (
-
-<>
-
-    {/* <div className="min-h-screen bg-white text-custom-blue"> */}
-       <div className="relative bg-cover bg-center h-[40px] flex items-center justify-center px-6">
-
-          {/* 🔍 Search Bar */}
-          <div className="flex items-center bg-white rounded-full shadow-md overflow-hidden w-full">
+    <div className="min-h-screen bg-white text-custom-blue">
+      {/* Search Bar - No vertical spacing */}
+      <div className="flex justify-center items-center px-4 py-4">
+        <div className="w-full max-w-3xl">
+          <div className="flex flex-col sm:flex-row items-center bg-white rounded-full shadow-md overflow-hidden">
             <input
               type="text"
-              placeholder="Search your uploaded notes..."
+              placeholder="Search uploaded notes..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-grow px-5 py-3 text-gray-700 focus:outline-none"
+              className="flex-grow px-5 py-3 text-gray-700 focus:outline-none w-full sm:w-auto"
             />
-            <button className="bg-custom-blue text-white px-6 py-3 font-medium hover:bg-opacity-90 transition">
+            <button className="bg-custom-blue text-white w-full sm:w-auto px-6 py-3 font-medium hover:bg-opacity-90 transition">
               Search
             </button>
           </div>
         </div>
-      {/* </div> */}
-
-      {/* 💼 Uploaded Notes */}
-      <div className="px-6 py-14">
-        <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
-          {filteredNotes.length > 0 ? (
-            filteredNotes.map((note, index) => (
-              <S_NoteCard
-                key={index}
-                title={note.title}
-                description={note.description}
-                price={note.price}
-                category={note.category}
-                fileName={note.pdfUrl?.split("/").pop() || "Preview PDF"}
-                onDownload={() =>
-                  window.open(`http://localhost:7000${note.pdfUrl}`, "_blank")
-                }
-                onBuy={() => alert("Redirecting to Buy Page")}
-              />
-            ))
-          ) : (
-            <p className="text-center text-gray-600 col-span-full">
-              No notes found matching your search.
-            </p>
-          )}
-        </div>
       </div>
-    
 
- </> 
+      {/* Notes Display Section */}
+      <div className="px-4 sm:px-6 pb-14">
+        {isLoading ? (
+          <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+            {[...Array(6)].map((_, index) => (
+              <div
+                key={index}
+                className="animate-pulse bg-white shadow-md rounded-xl p-4 space-y-4"
+              >
+                <div className="h-40 bg-gray-300 rounded-md"></div>
+                <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-200 rounded w-2/4"></div>
+                <div className="h-8 bg-gray-300 rounded w-full mt-4"></div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+            {filteredNotes.length > 0 ? (
+              filteredNotes.map((note, index) => (
+                <NoteCard
+                  key={index}
+                  title={note.title}
+                  description={note.description}
+                  price={note.price}
+                  category={note.category}
+                  fileName={note.pdf?.url?.split("/").pop() || "Preview PDF"}
+                  previewUrl={note.pdf?.url}
+                  onViewPdf={() => handleViewPdf(note.pdf?.url)}
+                />
+              ))
+            ) : (
+              <p className="text-center text-gray-600 col-span-full">
+                No notes found matching your search.
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
   );
-
 };
 
 export default S_Sell;
+
+
+
+
+
+

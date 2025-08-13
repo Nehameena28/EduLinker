@@ -127,7 +127,7 @@ const S_NoteCard = ({
   category,
   fileName,
   previewUrl,
-  
+  onViewPdf,
 }) => {
   return (
     <div className=" overflow-hidden transition-all duration-300">
@@ -155,20 +155,18 @@ const S_NoteCard = ({
         <div className="h-0.5 bg-gradient-to-r from-transparent via-[rgb(221,167,123)] to-transparent my-4" />
 
         {/* PDF Preview */}
-        <a href={previewUrl} target="_blank" rel="noopener noreferrer">
-          <div className="mb-4">
-            <h3 className="text-sm font-semibold text-[rgb(148,93,94)] mb-2">
-              PDF PREVIEW
-            </h3>
-            <div className="border-2 border-dashed border-[rgb(221,167,123)] rounded-lg h-24 bg-[rgba(221,167,123,0.05)] flex items-center justify-center hover:bg-[rgba(221,167,123,0.1)] transition-all duration-200 cursor-pointer">
-              <div className="text-center">
-                <FaFilePdf className="text-2xl text-[rgb(148,93,94)] mb-1 mx-auto" />
-                <p className="text-xs font-medium text-gray-700">{fileName}</p>
-                <p className="text-xs text-gray-500">Click to preview</p>
-              </div>
+        <div className="mb-4" onClick={onViewPdf}>
+          <h3 className="text-sm font-semibold text-[rgb(148,93,94)] mb-2">
+            PDF PREVIEW
+          </h3>
+          <div className="border-2 border-dashed border-[rgb(221,167,123)] rounded-lg h-24 bg-[rgba(221,167,123,0.05)] flex items-center justify-center hover:bg-[rgba(221,167,123,0.1)] transition-all duration-200 cursor-pointer">
+            <div className="text-center">
+              <FaFilePdf className="text-2xl text-[rgb(148,93,94)] mb-1 mx-auto" />
+              <p className="text-xs font-medium text-gray-700">{fileName}</p>
+              <p className="text-xs text-gray-500">Click to preview</p>
             </div>
           </div>
-        </a>
+        </div>
 
         {/* Bottom Actions */}
         <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-3 mt-4">

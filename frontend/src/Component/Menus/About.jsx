@@ -18,14 +18,17 @@ const About = () => {
           backgroundPosition: "center",
         }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div className="absolute inset-0 bg-black bg-opacity-20"></div>
         <div className="relative z-10">
           <h1
             className="text-5xl font-extrabold mb-4 text-white drop-shadow-md"
-            data-aos="fade-up"
+             data-aos="fade-up"
+            
           >
             Learn. Share. Grow.
           </h1>
+
+         
           <p
             className="max-w-3xl mx-auto text-lg text-gray-200"
             data-aos="fade-up"

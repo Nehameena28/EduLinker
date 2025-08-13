@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -27,6 +26,8 @@ const Navbar = () => {
 
       localStorage.removeItem("user");
       localStorage.removeItem("token");
+      localStorage.removeItem("email");
+      localStorage.removeItem("username");
       setUser(null);
       navigate("/Home");
     } catch (error) {
@@ -40,7 +41,7 @@ const Navbar = () => {
 
   return (
     <header className="w-full bg-cyan-700 text-white font-semibold shadow">
-    <nav className="flex justify-end items-center h-5 text-white font-semibold bg-gray-900"></nav>
+      <nav className="flex justify-end items-center h-5 text-white font-semibold bg-gray-900"></nav>
       <div className="max-w-7xl mx-auto flex justify-between items-center h-20 px-4 md:px-8">
         {/* Logo */}
         <button>
@@ -49,21 +50,53 @@ const Navbar = () => {
 
         {/* Desktop Links */}
         <div className="hidden md:flex space-x-8 items-center">
-          <Link to="/Home" className={`${location.pathname === "/Home" ? "underline font-bold" : ""}`}>Home</Link>
+          {/* <Link to="/Home" className={`${location.pathname === "/Home" ? "underline font-bold" : ""}`}>Home</Link>
           <Link to="/About" className={`${location.pathname === "/About" ? "underline font-bold" : ""}`}>About</Link>
-          <Link to="/Contact" className={`${location.pathname === "/Contact" ? "underline font-bold" : ""}`}>Contact</Link>
+          <Link to="/Contact" className={`${location.pathname === "/Contact" ? "underline font-bold" : ""}`}>Contact</Link> */}
+          {!user && (
+            <>
+              <Link
+                to="/Home"
+                className={`${
+                  location.pathname === "/Home" ? "underline font-bold" : ""
+                }`}
+              >
+                Home
+              </Link>
+              <Link
+                to="/About"
+                className={`${
+                  location.pathname === "/About" ? "underline font-bold" : ""
+                }`}
+              >
+                About
+              </Link>
+              <Link
+                to="/Contact"
+                className={`${
+                  location.pathname === "/Contact" ? "underline font-bold" : ""
+                }`}
+              >
+                Contact
+              </Link>
+            </>
+          )}
 
           {!user ? (
             <>
               <Link to="/Signup">
-                <button className="px-5 py-2 border border-white rounded-lg transition active:scale-90">Sign up</button>
+                <button className="px-5 py-2 border border-white rounded-lg transition active:scale-90">
+                  Sign up
+                </button>
               </Link>
               <Link to="/Login">
-                <button className="px-5 py-2 border border-white rounded-lg transition active:scale-90">Log in</button>
+                <button className="px-5 py-2 border border-white rounded-lg transition active:scale-90">
+                  Log in
+                </button>
               </Link>
             </>
           ) : (
-            <div className="flex space-x-8 items-center">
+            <div className="flex items-center justify-end w-full space-x-4">
               {/* Profile Icon (clickable) */}
               <button
                 onClick={() => {
@@ -98,17 +131,35 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-cyan-800 w-full px-6 pb-4">
           <div className="flex flex-col space-y-4">
-            <Link to="/Home" onClick={toggleMenu}>Home</Link>
+            {/* <Link to="/Home" onClick={toggleMenu}>Home</Link>
             <Link to="/About" onClick={toggleMenu}>About</Link>
-            <Link to="/Contact" onClick={toggleMenu}>Contact</Link>
+            <Link to="/Contact" onClick={toggleMenu}>Contact</Link> */}
+
+            {!user && (
+              <>
+                <Link to="/Home" onClick={toggleMenu}>
+                  Home
+                </Link>
+                <Link to="/About" onClick={toggleMenu}>
+                  About
+                </Link>
+                <Link to="/Contact" onClick={toggleMenu}>
+                  Contact
+                </Link>
+              </>
+            )}
 
             {!user ? (
               <>
                 <Link to="/Signup" onClick={toggleMenu}>
-                  <button className="w-full py-2 border border-white rounded-lg">Sign up</button>
+                  <button className="w-full py-2 border border-white rounded-lg">
+                    Sign up
+                  </button>
                 </Link>
                 <Link to="/Login" onClick={toggleMenu}>
-                  <button className="w-full py-2 border border-white rounded-lg">Log in</button>
+                  <button className="w-full py-2 border border-white rounded-lg">
+                    Log in
+                  </button>
                 </Link>
               </>
             ) : (
@@ -117,7 +168,8 @@ const Navbar = () => {
                   onClick={() => {
                     toggleMenu();
                     if (user.role === "seller") navigate("/seller/dashboard");
-                    else if (user.role === "buyer") navigate("/buyer/dashboard");
+                    else if (user.role === "buyer")
+                      navigate("/buyer/dashboard");
                     else navigate("/Home");
                   }}
                   className="w-full py-2 bg-white text-cyan-700 font-bold rounded-lg"

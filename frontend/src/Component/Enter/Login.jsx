@@ -39,10 +39,8 @@ const Login = () => {
 
       localStorage.setItem("user", JSON.stringify(res.data.user));
       localStorage.setItem("token", res.data.token);
-
-      localStorage.setItem("username", res.data.user.name);  // ✅ Save name
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("username", res.data.user.name);
+      localStorage.setItem("email", res.data.user.email); // ✅ Save email for upload
 
 
       if (res.data.user.role === "seller") {
