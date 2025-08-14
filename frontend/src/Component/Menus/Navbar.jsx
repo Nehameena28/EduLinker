@@ -44,7 +44,7 @@ const Navbar = () => {
       <nav className="flex justify-end items-center h-5 text-white font-semibold bg-gray-900"></nav>
       <div className="max-w-7xl mx-auto flex justify-between items-center h-20 px-4 md:px-8">
         {/* Logo */}
-        <button>
+        <button onClick={() => navigate("/Home")}>
           <img className="h-32 object-cover mb-10" src="/icon.png" alt="Logo" />
         </button>
 
@@ -96,7 +96,7 @@ const Navbar = () => {
               </Link>
             </>
           ) : (
-            <div className="flex items-center justify-end w-full space-x-4">
+            <div className="flex items-center justify-end w-full space-x-12">
               {/* Profile Icon (clickable) */}
               <button
                 onClick={() => {
