@@ -6,42 +6,67 @@ import { Link } from "react-router-dom";
 
 const BuyerProfile = () => {
   const username = localStorage.getItem("username") || "User";
+  const userEmail = localStorage.getItem("email");
 
-    const [savedCount, setSavedCount] = useState(0);
-
-
-
+  const [savedCount, setSavedCount] = useState(0);
+  const [purchasedCount, setPurchasedCount] = useState(0);
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [totalSpent, setTotalSpent] = useState(0);
+  const [showAllActivity, setShowAllActivity] = useState(false);
 
   const stats = [
-    { title: "Purchased Docs", value: "5", change: "+25%" },
-    // { title: "Saved Docs", value:  String(savedCount), change: "+10%" },
-    { title: "Saved Docs", value:  String(savedCount), change: "+10%" },
-
-  ];
-
-  const recentActivity = [
-    { id: 1, title: "Maths Notes - Algebra", status: "Downloaded", date: "Jul 11" },
-    { id: 2, title: "Physics Guide - Motion", status: "Saved", date: "Jul 10" },
+    { title: "Purchased Docs", value: String(purchasedCount)},
+    { title: "Saved Docs", value: String(savedCount) },
+    { title: "Total Spent", value: `₹${totalSpent}` },
   ];
 
 
   useEffect(() => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user?.id;
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user?.id;
 
-  if (!userId) return;
+    if (!userId || !userEmail) return;
 
-  const fetchSavedCount = async () => {
-    try {
-      const res = await axios.get(`http://localhost:7000/api/saved-notes/${userId}`);
-      setSavedCount(res.data.length);
-    } catch (error) {
-      console.error("Failed to fetch saved docs count:", error);
-    }
-  };
+    const fetchData = async () => {
+      try {
+        // Fetch saved notes count
+        const savedRes = await axios.get(`http://localhost:7000/api/saved-notes/${userId}`);
+        setSavedCount(savedRes.data.length);
 
-  fetchSavedCount();
-}, []);
+        // Fetch purchased items and payments
+        const paymentsRes = await axios.get(`http://localhost:7000/api/buyer/payments?email=${userEmail}`, {
+          withCredentials: true,
+        });
+        setPurchasedCount(paymentsRes.data.payments.length);
+        setTotalSpent(paymentsRes.data.totalSpent);
+
+        // Create recent activity from payments and saved notes
+        const recentPayments = paymentsRes.data.payments.slice(0, 3).map(payment => ({
+          id: payment.paymentId,
+          title: payment.itemTitle,
+          status: "Purchased",
+          date: new Date(payment.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+        }));
+
+        const recentSaved = savedRes.data.slice(0, 2).map(note => ({
+          id: note._id,
+          title: note.title,
+          status: "Saved",
+          date: new Date(note.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+        }));
+
+        // Combine and sort by most recent
+        const combinedActivity = [...recentPayments, ...recentSaved]
+          .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        setRecentActivity(combinedActivity);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    };
+
+    fetchData();
+  }, [userEmail]);
 
   return (
     <div className="min-h-screen bg-white text-custom-blue px-4 py-6 md:px-6 md:py-10">
@@ -70,15 +95,7 @@ const BuyerProfile = () => {
                 <p className="text-xl md:text-2xl font-bold text-[rgb(31,91,120)] mt-1">
                   {stat.value}
                 </p>
-                <p
-                  className={`text-xs mt-1 ${
-                    stat.change.startsWith("+")
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
-                >
-                  {stat.change} this month
-                </p>
+               
               </div>
             </div>
           </div>
@@ -91,29 +108,38 @@ const BuyerProfile = () => {
           <h3 className="font-semibold text-[rgb(31,91,120)] text-sm md:text-base">
             Recent Activity
           </h3>
-          <button className="text-xs md:text-sm text-[rgb(148,93,94)] hover:underline">
-            View All
+          <button 
+            onClick={() => setShowAllActivity(!showAllActivity)}
+            className="text-xs md:text-sm text-[rgb(148,93,94)] hover:underline"
+          >
+            {showAllActivity ? 'Show Less' : 'View All'}
           </button>
         </div>
         <div className="space-y-3 md:space-y-4">
-          {recentActivity.map((item) => (
-            <div
-              key={item.id}
-              className="flex justify-between items-center p-2 md:p-3 hover:bg-[rgb(221,167,123)]/5 rounded-lg transition-colors"
-            >
-              <div className="w-3/4">
-                <h4 className="font-medium text-[rgb(31,91,120)] text-sm md:text-base truncate">
-                  {item.title}
-                </h4>
-                <p className="text-xs text-gray-500">
-                  {item.status} • {item.date}
-                </p>
+          {recentActivity.length > 0 ? (
+            recentActivity.slice(0, showAllActivity ? 4 : 2).map((item) => (
+              <div
+                key={item.id}
+                className="flex justify-between items-center p-2 md:p-3 hover:bg-[rgb(221,167,123)]/5 rounded-lg transition-colors"
+              >
+                <div className="w-3/4">
+                  <h4 className="font-medium text-[rgb(31,91,120)] text-sm md:text-base truncate">
+                    {item.title}
+                  </h4>
+                  <p className="text-xs text-gray-500">
+                    {item.status} • {item.date}
+                  </p>
+                </div>
+                <span className={`font-semibold text-xs md:text-sm ${
+                  item.status === 'Purchased' ? 'text-green-600' : 'text-[rgb(148,93,94)]'
+                }`}>
+                  {item.status}
+                </span>
               </div>
-              <span className="text-[rgb(148,93,94)] font-semibold text-xs md:text-sm">
-                {item.status}
-              </span>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-gray-500 text-center py-4">No recent activity</p>
+          )}
         </div>
       </div>
     </div>

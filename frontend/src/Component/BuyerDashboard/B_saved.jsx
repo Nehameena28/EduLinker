@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import NoteCard from "./NoteCard";
 import axios from "axios";
+import { FaBookmark } from "react-icons/fa";
 
 const B_Saved = () => {
   const [savedNotes, setSavedNotes] = useState([]);
@@ -60,25 +61,34 @@ const B_Saved = () => {
   return (
     <div className="p-4">
       {/* <h1 className="text-2xl font-bold mb-4">Saved Notes</h1> */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {savedNotes.map((note) => {
-          console.log('Note preview URL:', note.previewUrl); // Debug log
-          return (
-            <NoteCard 
-              key={note._id} 
-              title={note.title}
-              description={note.description}
-              price={note.price}
-              category={note.category}
-              fileName={note.fileName}
-              previewUrl={note.previewUrl}
-              hideSave={true} 
-              onUnsave={() => handleUnsave(note._id)}
-              onClick={() => handleViewPdf(note.previewUrl)}
-            />
-          );
-        })}
-      </div>
+      {savedNotes.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {savedNotes.map((note) => {
+            console.log('Note preview URL:', note.previewUrl); // Debug log
+            return (
+              <NoteCard 
+                key={note._id} 
+                title={note.title}
+                description={note.description}
+                price={note.price}
+                category={note.category}
+                fileName={note.fileName}
+                previewUrl={note.previewUrl}
+                hideSave={true} 
+                onUnsave={() => handleUnsave(note._id)}
+                onClick={() => handleViewPdf(note.previewUrl)}
+              />
+            );
+          })}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center min-h-[60vh]">
+          <div className="text-gray-400 mb-4">
+            <FaBookmark className="w-16 h-16" />
+          </div>
+          <p className="text-gray-600 text-lg">You have not saved any material yet.</p>
+        </div>
+      )}
     </div>
   );
 };
