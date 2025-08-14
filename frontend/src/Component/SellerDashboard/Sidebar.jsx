@@ -42,17 +42,17 @@ const NavItem = ({ icon, title, to }) => (
   <NavLink
     to={to}
     className={({ isActive }) =>
-      `group flex items-center px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${
+      `group flex items-center px-3 md:px-4 py-3 md:py-3 rounded-lg transition-all duration-200 cursor-pointer touch-manipulation ${
         isActive
           ? 'bg-[rgb(221,167,123)] text-[rgb(31,91,120)] font-semibold'
-          : 'text-[rgb(31,91,120)] hover:bg-[rgb(221,167,123)]/30'
+          : 'text-[rgb(31,91,120)] hover:bg-[rgb(221,167,123)]/30 active:bg-[rgb(221,167,123)]/50'
       }`
     }
   >
-    <div className="mr-3 transform group-hover:scale-105 group-active:scale-95 transition-transform duration-150">
+    <div className="mr-2 md:mr-3 transform group-hover:scale-105 group-active:scale-95 transition-transform duration-150">
       {icon}
     </div>
-    <span className="transform group-hover:scale-105 group-active:scale-95 transition-transform duration-150">
+    <span className="text-sm md:text-base transform group-hover:scale-105 group-active:scale-95 transition-transform duration-150">
       {title}
     </span>
   </NavLink>
@@ -61,9 +61,9 @@ const NavItem = ({ icon, title, to }) => (
 // Sidebar component
 const Sidebar = () => {
   return (
-    <div className="w-64 bg-[rgb(221,167,123)]/10 h-screen sticky top-0 overflow-hidden">
-      <div className="bg-white h-full rounded-xl shadow-sm p-6 flex flex-col justify-start overflow-y-auto scrollbar-hide">
-        <nav className="flex flex-col gap-4">
+    <div className="w-full md:w-64 bg-[rgb(221,167,123)]/10 h-full sticky top-0 overflow-hidden">
+      <div className="bg-white h-full md:rounded-xl shadow-sm p-4 md:p-6 flex flex-col justify-start overflow-y-auto scrollbar-hide">
+        <nav className="flex flex-col gap-2 md:gap-4">
           <NavItem icon={<DashboardIcon />} title="Dashboard" to="/seller/dashboard" />
           <NavItem icon={<UploadIcon />} title="Upload Material" to="/seller/S_upload" />
           <NavItem icon={<MaterialsIcon />} title="All Materials" to="/seller/S_Sell" />
@@ -71,9 +71,7 @@ const Sidebar = () => {
           <NavItem icon={<PaymentIcon />} title="Payment Info" to="/seller/S_payment" />
         </nav>
       </div>
-      
     </div>
-    
   );
 };
 
