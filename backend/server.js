@@ -363,6 +363,46 @@ app.get('/api/buyer/payments', async (req, res) => {
   }
 });
 
+// Buyer purchased items endpoint
+app.get('/api/buyer/purchased', async (req, res) => {
+  try {
+    const { email } = req.query;
+    
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+    
+    // Get all payments by this buyer
+    const payments = await Payment.find({ 
+      buyerEmail: email, 
+      status: 'completed' 
+    });
+    
+    // Get the item titles from payments
+    const itemTitles = payments.map(payment => payment.itemTitle);
+    
+    // Find study materials that match these titles
+    const purchasedItems = await StudyMaterial.find({ 
+      title: { $in: itemTitles } 
+    });
+    
+    // Add purchase info to each item
+    const itemsWithPurchaseInfo = purchasedItems.map(item => {
+      const payment = payments.find(p => p.itemTitle === item.title);
+      return {
+        ...item.toObject(),
+        purchaseDate: payment?.date,
+        purchasePrice: payment?.amount
+      };
+    });
+    
+    res.json(itemsWithPurchaseInfo);
+  } catch (error) {
+    console.error('Purchased items fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch purchased items' });
+  }
+});
+
 //payment endpoint 
 app.get('/api/seller/payments', async (req, res) => {
   try {
