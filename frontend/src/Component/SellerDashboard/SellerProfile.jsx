@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
 
@@ -9,13 +9,16 @@ const SellerProfile = () => {
   ]);
   const [recentSales, setRecentSales] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const hasFetched = useRef(false);
 
   const userEmail = localStorage.getItem("email");
 
 
   useEffect(() => {
     const fetchSellerData = async () => {
+      if (hasFetched.current) return;
+      hasFetched.current = true;
+      
       try {
         setIsLoading(true);
        
@@ -56,10 +59,10 @@ const SellerProfile = () => {
     };
 
 
-    if (userEmail) {
+    if (userEmail && !hasFetched.current) {
       fetchSellerData();
     }
-  }, [userEmail]);
+  }, []);
 
 
   return (
