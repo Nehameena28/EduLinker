@@ -330,6 +330,39 @@ app.get('/api/all-materials', async (req, res) => {
   }
 });
 
+// Buyer payment endpoint
+app.get('/api/buyer/payments', async (req, res) => {
+  try {
+    const { email } = req.query;
+    
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+    
+    const payments = await Payment.find({ buyerEmail: email })
+      .sort({ createdAt: -1, date: -1 });
+    
+    const totalSpent = payments.reduce((sum, payment) => sum + (payment.amount || 0), 0);
+    
+    const formattedPayments = payments.map(payment => ({
+      itemTitle: payment.itemTitle,
+      sellerEmail: payment.sellerEmail,
+      amount: payment.amount,
+      paymentId: payment.paymentId,
+      status: payment.status,
+      date: payment.date
+    }));
+    
+    res.json({
+      payments: formattedPayments,
+      totalSpent
+    });
+  } catch (error) {
+    console.error('Buyer payment fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch payment data' });
+  }
+});
+
 //payment endpoint 
 app.get('/api/seller/payments', async (req, res) => {
   try {
