@@ -10,7 +10,7 @@ const SellerLayout = () => {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
       {/* Top Navigation Bar */}
-      <div className="bg-[rgb(31,91,120)] text-white p-4 md:hidden">
+      <div className="bg-custom-i-berry text-white p-4 md:hidden">
         <div className="flex justify-between items-center">
           <h1 className="text-xl font-bold">Seller Menu</h1>
           <button onClick={() => setSidebarOpen(!sidebarOpen)}>
