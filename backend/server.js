@@ -1,7 +1,6 @@
 
 require('dotenv').config();
 
-
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -17,8 +16,8 @@ const path = require("path");
 //  Models 
 const User = require("./models/User");
 const StudyMaterial = require("./models/StudyMaterial.js");
-
-const SavedNote = require("./models/SaveNotes.js"); 
+const SavedNote = require("./models/SaveNotes.js");
+const Payment = require("./models/Payment.js"); 
 
 // Routes
 const uploadRoutes = require("./routes/upload");
@@ -288,7 +287,7 @@ app.get("/api/materials/count", async (req, res) => {
 app.use("/api/payment", paymentRoutes);
 
 
-// Add this route to your backend (server.js or app.js)
+// get all study material for buyer
 app.get('/api/all-materials', async (req, res) => {
   try {
     // Replace 'StudyMaterial' with your actual model name
@@ -299,6 +298,79 @@ app.get('/api/all-materials', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch materials' });
   }
 });
+
+//payment endpoint 
+app.get('/api/seller/payments', async (req, res) => {
+  try {
+    const { email } = req.query;
+    
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+    
+    console.log('\n=== FETCHING PAYMENTS FOR SELLER ===');
+    console.log('Seller email:', email);
+    
+    // Directly find payments by sellerEmail field
+    const payments = await Payment.find({ sellerEmail: email })
+      .sort({ createdAt: -1, date: -1 });
+    
+    console.log('Found payments with sellerEmail:', payments.length);
+    
+    // Format payments for display
+    const formattedPayments = payments.map(payment => {
+      const plainPayment = payment.toObject ? payment.toObject() : payment;
+      
+      console.log('Processing payment:', {
+        id: plainPayment._id,
+        itemTitle: plainPayment.itemTitle,
+        amount: plainPayment.amount,
+        buyerName: plainPayment.buyerName
+      });
+      
+      return {
+        itemTitle: plainPayment.itemTitle || 'Unknown Item',
+        buyerName: plainPayment.buyerName || plainPayment.user?.name || 'Unknown Buyer',
+        buyerEmail: plainPayment.buyerEmail || plainPayment.user?.email || 'Unknown Email',
+        date: plainPayment.date || plainPayment.createdAt || new Date(),
+        paymentId: plainPayment.paymentId || plainPayment.razorpay_payment_id || plainPayment._id,
+        amount: plainPayment.amount || plainPayment.amountPaid || 0,
+        status: plainPayment.status || 'completed'
+      };
+    });
+    
+    console.log('\n=== FINAL RESULTS ===');
+    console.log('Seller:', email);
+    console.log('Total payments found:', formattedPayments.length);
+    
+    // Calculate earnings
+    const total = formattedPayments.reduce((sum, p) => sum + (p.amount || 0), 0);
+    const thisMonth = formattedPayments
+      .filter(p => {
+        const paymentDate = new Date(p.date);
+        const currentDate = new Date();
+        return paymentDate.getMonth() === currentDate.getMonth() && 
+               paymentDate.getFullYear() === currentDate.getFullYear();
+      })
+      .reduce((sum, p) => sum + (p.amount || 0), 0);
+    const pending = formattedPayments
+      .filter(p => p.status === 'pending')
+      .reduce((sum, p) => sum + (p.amount || 0), 0);
+    
+    console.log('Total earnings: ₹' + total);
+    console.log('This month: ₹' + thisMonth);
+    console.log('Pending: ₹' + pending);
+    
+    res.json({
+      payments: formattedPayments,
+      earnings: { total, thisMonth, pending }
+    });
+  } catch (error) {
+    console.error('Payment fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch payment data' });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);

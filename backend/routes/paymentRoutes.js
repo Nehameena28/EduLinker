@@ -5,6 +5,7 @@ const crypto = require("crypto");
 const router = express.Router();
 
 const Payment = require("../models/Payment");
+const StudyMaterial = require("../models/StudyMaterial");
 
 const razorpay = new Razorpay({
   key_id: "rzp_test_KbKCf8dIP10uNs", // Replace with your key
@@ -38,19 +39,32 @@ router.post("/verify", async (req, res) => {
     .digest("hex");
 
   if (expectedSignature === razorpay_signature) {
-    const payment = new Payment({
-      user,
-      items,
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
-      amountPaid: items.reduce((total, item) => total + item.price, 0),
-      createdAt: new Date(),
-    });
+    try {
+      // Save payment for each item (for seller dashboard)
+      for (const item of items) {
+        // Find the study material to get seller email
+        const material = await StudyMaterial.findOne({ title: item.title });
+        
+        const payment = new Payment({
+          sellerEmail: material?.uploadedBy || 'unknown@seller.com',
+          buyerName: user.name,
+          buyerEmail: user.email,
+          itemTitle: item.title,
+          amount: item.price,
+          paymentId: razorpay_payment_id,
+          razorpayOrderId: razorpay_order_id,
+          status: 'completed',
+          date: new Date()
+        });
 
-    await payment.save();
+        await payment.save();
+      }
 
-    res.json({ success: true });
+      res.json({ success: true });
+    } catch (saveError) {
+      console.error('Payment save error:', saveError);
+      res.json({ success: true }); // Still return success as payment was verified
+    }
   } else {
     res.status(400).json({ success: false, message: "Invalid signature" });
   }
