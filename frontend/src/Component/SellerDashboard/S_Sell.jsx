@@ -59,6 +59,22 @@ const S_Sell = () => {
     window.open(fullUrl, '_blank');
   };
 
+  const handleDeleteNote = async (noteId) => {
+    if (!window.confirm("Are you sure you want to delete this note?")) {
+      return;
+    }
+
+    try {
+      await axios.delete(`http://localhost:7000/seller/notes/${noteId}`, {
+        withCredentials: true,
+      });
+      setNotes(notes.filter(note => note._id !== noteId));
+    } catch (err) {
+      console.error("Failed to delete note:", err);
+      alert("Failed to delete note");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white text-custom-blue">
       {/* Search Bar - No vertical spacing */}
@@ -108,6 +124,7 @@ const S_Sell = () => {
                   fileName={note.pdf?.url?.split("/").pop() || "Preview PDF"}
                   previewUrl={note.pdf?.url}
                   onViewPdf={() => handleViewPdf(note.pdf?.url)}
+                  onDelete={() => handleDeleteNote(note._id)}
                 />
               ))
             ) : (
