@@ -9,6 +9,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
+const fs = require('fs');
 
 
 
@@ -219,6 +220,36 @@ app.get("/seller/notes", async (req, res) => {
   } catch (err) {
     console.error("Failed to fetch notes:", err);
     res.status(500).json({ message: "Failed to fetch notes" });
+  }
+});
+
+// DELETE /seller/notes/:id - Delete a specific note
+app.delete("/seller/notes/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Find the note first to get the file path
+    const note = await StudyMaterial.findById(id);
+    if (!note) {
+      return res.status(404).json({ message: "Note not found" });
+    }
+    
+    // Delete the file from uploads folder
+    const fs = require('fs');
+    if (note.pdf && note.pdf.url) {
+      const filePath = path.join(__dirname, note.pdf.url);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+    
+    // Delete from database
+    await StudyMaterial.findByIdAndDelete(id);
+    
+    res.json({ message: "Note deleted successfully" });
+  } catch (err) {
+    console.error("Failed to delete note:", err);
+    res.status(500).json({ message: "Failed to delete note" });
   }
 });
 
