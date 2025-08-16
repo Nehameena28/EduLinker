@@ -45,7 +45,10 @@ const Hero = () => {
   }, []);
 
   const handleFeatureClick = () => {
-    navigate('/Login');
+    const user = localStorage.getItem('user');
+    if (!user) {
+      navigate('/Login');
+    }
   };
 
   return (

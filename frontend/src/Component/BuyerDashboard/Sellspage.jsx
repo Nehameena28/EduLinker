@@ -181,7 +181,7 @@
    );
 
    return (
-     <div className="min-h-screen bg-white text-custom-blue">
+     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
        <div className="relative h-[440px] flex items-center justify-center px-4 sm:px-6 overflow-hidden">
          {/* Video Background */}
          <video 
@@ -251,26 +251,38 @@
          </div>
        </div>
 
-       <div className="px-4 sm:px-6 py-14">
-         {isLoading ? (
-           <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+       <div className="px-4 sm:px-6 py-16">
+         <div className="max-w-6xl mx-auto">
+           <div className="text-center mb-12">
+             <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">
+               Discover Study Materials
+             </h2>
+             <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-6"></div>
+             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+               Browse through our collection of high-quality study materials
+             </p>
+           </div>
+           
+           {isLoading ? (
+             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
              {[...Array(6)].map((_, index) => (
                <div
                  key={index}
-                 className="animate-pulse bg-white shadow-md rounded-xl p-4 space-y-4"
+                 className="animate-pulse bg-white shadow-lg rounded-2xl p-6 space-y-4 border border-gray-100"
                >
-                 <div className="h-40 bg-gray-300 rounded-md"></div>
+                 <div className="h-48 bg-gradient-to-br from-gray-200 to-gray-300 rounded-xl"></div>
                  <div className="h-4 bg-gray-300 rounded w-3/4"></div>
                  <div className="h-4 bg-gray-200 rounded w-2/4"></div>
                  <div className="h-8 bg-gray-300 rounded w-full mt-4"></div>
                </div>
              ))}
-           </div>
-         ) : (
-           <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
+             </div>
+           ) : (
+             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
              {filteredNotes.length > 0 ? (
                filteredNotes.map((note, index) => (
-                 <NoteCard
+                 <div key={index} className="transform hover:scale-105 transition-all duration-300">
+                   <NoteCard
                    key={index}
                    title={note.title}
                    description={note.description}
@@ -282,58 +294,68 @@
                      : note.previewUrl || note.pdfUrl}
                    onBuy={() => handleBuyNow(note)}
                    onSave={() => handleSave(note)}
-                   onPayment={() => handlePayment(note)}
-                 />
+                     onPayment={() => handlePayment(note)}
+                   />
+                 </div>
                ))
              ) : (
-               <p className="text-center text-gray-600 col-span-full">
-                 No notes found matching your search.
-               </p>
+               <div className="col-span-full text-center py-16">
+                 <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                   <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                   </svg>
+                 </div>
+                 <h3 className="text-xl font-semibold text-gray-700 mb-2">No materials found</h3>
+                 <p className="text-gray-500">Try adjusting your search terms</p>
+               </div>
              )}
-           </div>
-         )}
+             </div>
+           )}
+         </div>
        </div>
 
-       {/* Phone Number Modal */}
+       {/* Enhanced Phone Number Modal */}
        {showPhoneModal && (
-         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
-           <div className="bg-white rounded-xl p-6 w-full max-w-md">
-             <div className="text-center mb-6">
-               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                 <span className="text-2xl">📱</span>
+         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+           <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl border border-gray-100">
+             <div className="text-center mb-8">
+               <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                 <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                 </svg>
                </div>
-               <h3 className="text-xl font-bold text-gray-800 mb-2">Enter Phone Number</h3>
-               <p className="text-gray-600">We need your phone number to complete the purchase</p>
+               <h3 className="text-2xl font-bold text-gray-800 mb-3">Complete Your Purchase</h3>
+               <p className="text-gray-600 leading-relaxed">Please provide your phone number to proceed with secure payment</p>
              </div>
              
-             <div className="mb-6">
-               <label className="block text-sm font-medium text-gray-700 mb-2">
+             <div className="mb-8">
+               <label className="block text-sm font-semibold text-gray-700 mb-3">
                  Phone Number
                </label>
                <input
                  type="tel"
                  value={phoneNumber}
                  onChange={(e) => setPhoneNumber(e.target.value)}
-                 placeholder="Enter 10-digit phone number"
-                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                 placeholder="Enter your 10-digit phone number"
+                 className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 text-lg"
                  maxLength="10"
                />
              </div>
              
-             <div className="flex gap-3">
+             <div className="flex gap-4">
                <button
                  onClick={() => {
                    setShowPhoneModal(false);
                    setPhoneNumber("");
                    setSelectedNote(null);
                  }}
-                 className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+                 className="flex-1 px-6 py-4 border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 font-semibold"
                >
                  Cancel
                </button>
                <button
                  onClick={handlePhoneSubmit}
-                 className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                 className="flex-1 px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold"
                >
                  Continue
                </button>
