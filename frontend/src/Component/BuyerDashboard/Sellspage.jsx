@@ -36,6 +36,20 @@
      }
    };
 
+   const handlePayment = async (note) => {
+     try {
+       const res = await axios.post(`http://localhost:7000/api/payment`, {
+         noteId: note._id,
+         userId,
+         amount: note.price
+       });
+       alert("Payment successful!");
+     } catch (error) {
+       console.error("Payment failed:", error);
+       alert("Payment failed. Please try again.");
+     }
+   };
+
    const handleBuyNow = (note) => {
      const user = JSON.parse(localStorage.getItem("user"));
 
@@ -152,14 +166,66 @@
      fetchNotes();
    }, []);
 
+   const handleSearch = () => {
+     // Force re-render by updating a state or just scroll to results
+     const resultsSection = document.querySelector('.max-w-6xl');
+     if (resultsSection) {
+       resultsSection.scrollIntoView({ behavior: 'smooth' });
+     }
+   };
+
    const filteredNotes = notes.filter((note) =>
-     note.title.toLowerCase().includes(searchTerm.toLowerCase())
+     note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     note.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     note.category.toLowerCase().includes(searchTerm.toLowerCase())
    );
 
    return (
      <div className="min-h-screen bg-white text-custom-blue">
-       <div className="relative bg-cover bg-center h-[440px] flex items-center justify-center px-4 sm:px-6">
-         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+       <div className="relative h-[440px] flex items-center justify-center px-4 sm:px-6 overflow-hidden">
+         {/* Video Background */}
+         <video 
+           className="absolute inset-0 w-full h-full object-cover"
+           autoPlay 
+           muted 
+           loop 
+           playsInline
+         >
+           <source src="https://cdn.pixabay.com/vimeo/279533085/education-18947.mp4?width=1280&hash=b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8" type="video/mp4" />
+           {/* Fallback gradient background */}
+           <div className="absolute inset-0 bg-gradient-to-r from-[rgb(31,91,120)] to-[rgb(148,93,94)]"></div>
+         </video>
+         
+         {/* Video Overlay */}
+         <div className="absolute inset-0 bg-gradient-to-r from-[rgba(31,91,120,0.8)] to-[rgba(148,93,94,0.8)]"></div>
+         
+         {/* Animated Particles Overlay */}
+         <div className="absolute inset-0 opacity-30">
+           <div className="absolute top-20 left-10 w-2 h-2 bg-[rgb(221,167,123)] rounded-full animate-bounce-slow"></div>
+           <div className="absolute top-32 right-20 w-3 h-3 bg-white rounded-full animate-bounce-medium"></div>
+           <div className="absolute bottom-40 left-1/4 w-1 h-1 bg-[rgb(221,167,123)] rounded-full animate-bounce-fast"></div>
+           <div className="absolute bottom-20 right-1/3 w-2 h-2 bg-white rounded-full animate-bounce-slow"></div>
+           <div className="absolute top-1/2 left-20 w-1 h-1 bg-[rgb(221,167,123)] rounded-full animate-bounce-medium"></div>
+           <div className="absolute top-1/3 right-10 w-2 h-2 bg-white rounded-full animate-bounce-fast"></div>
+         </div>
+         
+         <style jsx>{`
+           @keyframes bounce-slow {
+             0%, 100% { transform: translateY(0px) scale(1); opacity: 0.7; }
+             50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+           }
+           @keyframes bounce-medium {
+             0%, 100% { transform: translateY(0px) scale(1); opacity: 0.6; }
+             50% { transform: translateY(-15px) scale(1.1); opacity: 1; }
+           }
+           @keyframes bounce-fast {
+             0%, 100% { transform: translateY(0px) scale(1); opacity: 0.5; }
+             50% { transform: translateY(-10px) scale(1.3); opacity: 1; }
+           }
+           .animate-bounce-slow { animation: bounce-slow 4s ease-in-out infinite; }
+           .animate-bounce-medium { animation: bounce-medium 3s ease-in-out infinite; }
+           .animate-bounce-fast { animation: bounce-fast 2s ease-in-out infinite; }
+         `}</style>
          <div className="relative z-10 text-center w-full max-w-3xl mx-auto">
            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg mb-4">
              Turn Your Knowledge Into Income
@@ -175,7 +241,10 @@
                onChange={(e) => setSearchTerm(e.target.value)}
                className="flex-grow px-5 py-3 text-gray-700 focus:outline-none w-full sm:w-auto"
              />
-             <button className="bg-custom-blue text-white w-full sm:w-auto px-6 py-3 font-medium hover:bg-opacity-90 transition">
+             <button 
+               onClick={handleSearch}
+               className="bg-custom-blue text-white w-full sm:w-auto px-6 py-3 font-medium hover:bg-opacity-90 transition"
+             >
                Search
              </button>
            </div>
@@ -213,6 +282,7 @@
                      : note.previewUrl || note.pdfUrl}
                    onBuy={() => handleBuyNow(note)}
                    onSave={() => handleSave(note)}
+                   onPayment={() => handlePayment(note)}
                  />
                ))
              ) : (
