@@ -10,7 +10,6 @@ Users can upload and sell their study materials in PDF format.
 Buyers can browse, view, and purchase notes from a variety of categories.
 Doubt Resolution
 
-Buyers can directly communicate with sellers to clarify doubts related to the purchased materials.
 Download Purchased Notes
 
 After purchase, users can download the notes in PDF format to their personal devices.
@@ -23,10 +22,14 @@ Fully responsive design built with React.js and styled components for a seamless
 Dynamic Dashboard
 
 For Sellers: Manage uploaded materials, view sales, and respond to buyers' questions.
-For Buyers: Track purchases, download notes, and ask questions to sellers.
+For Buyers: Track purchases, download notes.
 Secure Payments
 
 Integrated secure payment gateway to enable safe transactions.
+
+Integrate AI 
+to Enhance User Experience
+
 Search and Filter
 
 Advanced search functionality to quickly find the right study material.
@@ -52,10 +55,10 @@ Payment Gateway Integration (Razorpay)
 
 📧 Contact
 
-Email: neham.bba2023@ssism.org
+Email: khushivrma07@gmail.com
 
-LinkedIn: www.linkedin.com/in/contact-neha-meena
+LinkedIn:https://www.linkedin.com/in/khushiiverma/
 
-GitHub: https://github.com/Nehameena28
+GitHub:  https://github.com/khushi-verma07
 
 
