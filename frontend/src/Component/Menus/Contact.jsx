@@ -1,4 +1,5 @@
 import { useState } from "react";
+import emailjs from '@emailjs/browser';
  
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -15,8 +16,24 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setFormData({ name: "", email: "", message: "" });
+    
+    emailjs.send(
+      'service_cm29xpk',
+      'template_vjz04nd',
+      {
+        from_name: formData.name,
+        from_email: formData.email,
+        message: formData.message,
+        to_email: 'contactedulinker@gmail.com'
+      },
+      'AtuCg9S_ykX1zx2e7'
+    ).then(() => {
+      setIsSubmitted(true);
+      setFormData({ name: "", email: "", message: "" });
+    }).catch((error) => {
+      console.log('EmailJS Error:', error);
+      alert('Failed to send message. Check console for details.');
+    });
   };
 
   return (
@@ -50,7 +67,7 @@ const Contact = () => {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-semibold text-gray-900">Email</h3>
-                    <p className="mt-1 text-gray-600">contact@edulinker.com</p>
+                    <p className="mt-1 text-gray-600">contactedulinker@gmail.com</p>
                   </div>
                 </div>
 

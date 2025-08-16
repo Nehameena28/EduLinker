@@ -10,6 +10,7 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
 const fs = require('fs');
+const nodemailer = require('nodemailer');
 
 
 
@@ -472,6 +473,37 @@ app.get('/api/seller/payments', async (req, res) => {
   } catch (error) {
     console.error('Payment fetch error:', error);
     res.status(500).json({ error: 'Failed to fetch payment data' });
+  }
+});
+
+// Contact email route
+app.post('/api/contact', async (req, res) => {
+  try {
+    const { name, email, message } = req.body;
+    
+    const transporter = nodemailer.createTransporter({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: 'contactedulinker@gmail.com',
+        pass: 'your_gmail_password_here'
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    });
+    
+    await transporter.sendMail({
+      from: email,
+      to: 'contactedulinker@gmail.com',
+      subject: `Contact from ${name}`,
+      html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${email}</p><p><strong>Message:</strong> ${message}</p>`
+    });
+    
+    res.json({ message: 'Email sent successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to send email' });
   }
 });
 

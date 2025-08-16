@@ -84,65 +84,65 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#06687A] px-3">
-      <div className="w-full max-w-sm bg-white rounded-md shadow-md p-5 border-t-4 border-[#0A6E86] flex flex-col justify-center relative">
-        <div className="absolute top-0 left-0 w-full h-1 rounded-t bg-[#643c2c]"></div>
-
-        <div className="flex justify-center mb-3">
-          <img src="/i2.png" alt="EDULinker Logo" className="w-10 h-auto" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4 py-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 border-l-4 border-custom-i-berry">
+        
+        <div className="flex justify-center mb-4">
+          <img src="/i2.png" alt="EDULinker Logo" className="w-12 h-auto" />
         </div>
 
-        <h2 className="text-xl font-semibold text-center text-custom-brown mb-2">
-          Sign Up
+        <h2 className="text-2xl font-bold text-center text-custom-i-berry mb-1">
+          Create Account
         </h2>
+        <p className="text-center text-gray-600 mb-6">Join our community today</p>
 
-        {error && <p className="text-red-500 text-sm text-center mb-2">{error}</p>}
+        {error && <p className="text-red-500 text-sm text-center mb-3 bg-red-50 p-2 rounded-lg">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="space-y-3 text-sm">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name */}
           <div>
-            <label className="block font-medium text-[#12192c]">Name</label>
+            <label className="block font-medium text-gray-700 mb-1">Full Name</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full px-3 py-2 mt-1 rounded bg-gray-100 border border-[#0A6E86] focus:ring-1 focus:outline-none focus:ring-[#0A6E86]"
-              placeholder="Your name"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-custom-i-berry focus:border-transparent transition"
+              placeholder="Enter your full name"
               required
             />
           </div>
 
           {/* Email */}
           <div>
-            <label className="block font-medium text-[#12192c]">Email</label>
+            <label className="block font-medium text-gray-700 mb-1">Email Address</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-3 py-2 mt-1 rounded bg-gray-100 border border-[#0A6E86] focus:ring-1 focus:outline-none focus:ring-[#0A6E86]"
-              placeholder="Your email"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-custom-i-berry focus:border-transparent transition"
+              placeholder="Enter your email"
               required
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="block font-medium text-[#12192c]">Password</label>
+            <label className="block font-medium text-gray-700 mb-1">Password</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-3 py-2 mt-1 rounded bg-gray-100 border border-[#0A6E86] focus:ring-1 focus:outline-none focus:ring-[#0A6E86]"
-                placeholder="Password"
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-custom-i-berry focus:border-transparent transition"
+                placeholder="Create a password"
                 required
               />
               <span
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute top-3 right-3 text-sm cursor-pointer text-[#0A6E86]"
+                className="absolute top-3 right-3 text-lg cursor-pointer text-custom-i-berry hover:text-custom-brown transition"
               >
                 {showPassword ? "👁️" : "🙈"}
               </span>
@@ -151,20 +151,20 @@ const Signup = () => {
 
           {/* Confirm Password */}
           <div>
-            <label className="block font-medium text-[#12192c]">Confirm Password</label>
+            <label className="block font-medium text-gray-700 mb-1">Confirm Password</label>
             <div className="relative">
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full px-3 py-2 mt-1 rounded bg-gray-100 border border-[#0A6E86] focus:ring-1 focus:outline-none focus:ring-[#0A6E86]"
-                placeholder="Confirm password"
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-custom-i-berry focus:border-transparent transition"
+                placeholder="Confirm your password"
                 required
               />
               <span
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute top-3 right-3 text-sm cursor-pointer text-[#0A6E86]"
+                className="absolute top-3 right-3 text-lg cursor-pointer text-custom-i-berry hover:text-custom-brown transition"
               >
                 {showConfirmPassword ? "👁️" : "🙈"}
               </span>
@@ -173,15 +173,15 @@ const Signup = () => {
 
           {/* Role */}
           <div>
-            <label className="block font-medium text-[#12192c]">Role</label>
+            <label className="block font-medium text-gray-700 mb-1">Account Type</label>
             <select
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full px-3 py-2 mt-1 rounded bg-gray-100 border border-[#0A6E86] focus:ring-1 focus:outline-none focus:ring-[#0A6E86]"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-custom-i-berry focus:border-transparent transition"
               required
             >
-              <option value="">Select Role</option>
+              <option value="">Select your role</option>
               <option value="buyer">Buyer</option>
               <option value="seller">Seller</option>
             </select>
@@ -189,15 +189,15 @@ const Signup = () => {
 
           <button
             type="submit"
-            className="w-full bg-[#0A6E86] hover:bg-[#05596B] text-white font-medium py-2 rounded transition duration-200"
+            className="w-full bg-gradient-to-r from-custom-i-berry to-custom-brown hover:from-custom-brown hover:to-custom-i-berry text-white font-bold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
           >
-            Sign Up
+            Create Account
           </button>
         </form>
 
-        <p className="text-sm text-center text-[#12192c] mt-4">
+        <p className="text-center text-gray-600 mt-6">
           Already have an account?{" "}
-          <a href="/Login" className="text-[#0A6E86] font-medium hover:underline">
+          <a href="/Login" className="text-custom-i-berry font-semibold hover:underline transition">
             Log in here
           </a>
         </p>
