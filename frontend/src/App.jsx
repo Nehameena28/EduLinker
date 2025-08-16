@@ -33,6 +33,7 @@
   import B_Payment from "./Component/BuyerDashboard/B_Payment";
  
 import SellsPage from "./Component/BuyerDashboard/Sellspage";
+import Profile from "./Component/Profile/Profile";
 
 
   function App() {
@@ -54,6 +55,7 @@ import SellsPage from "./Component/BuyerDashboard/Sellspage";
           <Route path="/Contact" element={<Contact />} />
           <Route path="/Signup" element={<Signup />} />
           <Route path="/Login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/Sellspage" element={<SellsPage />} />
          
 
