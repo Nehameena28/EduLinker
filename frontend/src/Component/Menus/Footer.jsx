@@ -37,8 +37,8 @@ const Footer = () => {
           <ul className="space-y-2 text-sm">
             <li className="flex items-start gap-2">
               <FontAwesomeIcon icon={faEnvelope} className="text-custom-i-berry mt-1" />
-              <a href="mailto:contact@edulinker.com" className="hover:text-white transition">
-                contact@edulinker.com
+              <a href="mailto:contactedulinker@gmail.com" className="hover:text-white transition">
+                contactedulinker@gmail.com
               </a>
             </li>
             {/* <li className="flex items-start gap-2">

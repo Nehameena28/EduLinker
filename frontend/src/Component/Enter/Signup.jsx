@@ -1,10 +1,15 @@
 
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Signup = () => {
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    document.body.setAttribute('data-auth-page', 'true');
+    return () => document.body.removeAttribute('data-auth-page');
+  }, []);
 
   const [formData, setFormData] = useState({
     name: "",

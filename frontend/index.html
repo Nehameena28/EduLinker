@@ -14,17 +14,57 @@
     <div id="root"></div>
     <script>
 (function(){
-  // Check if current page is login or signup
-  const currentPath = window.location.pathname;
-  const isAuthPage = currentPath === '/Login' || currentPath === '/Signup';
+  let chatbaseLoaded = false;
   
-  // Only load chatbase if not on auth pages
-  if (!isAuthPage) {
-    if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="nOetaidXgjpw06PGSYqTf";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}
+  function shouldShowChatbase() {
+    const currentPath = window.location.pathname;
+    const allowedPages = ['/', '/Home', '/About', '/Contact', '/profile', '/Sellspage'];
+    const isDashboard = currentPath.includes('/seller/') || currentPath.includes('/buyer/');
+    return allowedPages.includes(currentPath) || isDashboard;
   }
+  
+  function loadChatbase() {
+    if (!chatbaseLoaded && shouldShowChatbase()) {
+      if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="nOetaidXgjpw06PGSYqTf";script.domain="www.chatbase.co";document.body.appendChild(script);
+      chatbaseLoaded = true;
+    }
+  }
+  
+  function hideChatbase() {
+    const chatbaseWidget = document.querySelector('#chatbase-bubble-button, [id*="chatbase"]');
+    if (chatbaseWidget) {
+      chatbaseWidget.style.display = shouldShowChatbase() ? 'block' : 'none';
+    }
+  }
+  
+  // Initial load
+  if (document.readyState === "complete") {
+    loadChatbase();
+  } else {
+    window.addEventListener("load", loadChatbase);
+  }
+  
+  // Monitor route changes
+  let lastPath = window.location.pathname;
+  setInterval(() => {
+    if (window.location.pathname !== lastPath) {
+      lastPath = window.location.pathname;
+      setTimeout(() => {
+        loadChatbase();
+        hideChatbase();
+      }, 100);
+    }
+  }, 500);
 })();
 </script>
     <script type="module" src="/src/main.jsx"></script>
+    <style>
+      /* Hide chatbase on auth pages */
+      body[data-auth-page="true"] #chatbase-bubble-button,
+      body[data-auth-page="true"] [id*="chatbase"] {
+        display: none !important;
+      }
+    </style>
     <!-- <script src="https://checkout.razorpay.com/v1/checkout.js"></script> -->
 
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
