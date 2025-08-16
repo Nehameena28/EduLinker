@@ -374,6 +374,52 @@ app.get("/api/materials/count", async (req, res) => {
 });
 
 
+// Category management routes
+app.get("/api/seller/categories", async (req, res) => {
+  try {
+    const { email } = req.query;
+    
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+    
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    res.json({ categories: user.categories });
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    res.status(500).json({ message: "Failed to fetch categories" });
+  }
+});
+
+app.post("/api/seller/categories", async (req, res) => {
+  try {
+    const { email, categories } = req.body;
+    
+    if (!email || !categories || !Array.isArray(categories)) {
+      return res.status(400).json({ message: "Email and categories array are required" });
+    }
+    
+    const user = await User.findOneAndUpdate(
+      { email },
+      { categories },
+      { new: true }
+    );
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    res.json({ message: "Categories updated successfully", categories: user.categories });
+  } catch (error) {
+    console.error("Error updating categories:", error);
+    res.status(500).json({ message: "Failed to update categories" });
+  }
+});
+
 // Payment routes
 app.use("/api/payment", paymentRoutes);
 
