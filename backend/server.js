@@ -195,6 +195,66 @@ app.get("/api/logout", (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 });
 
+// Update user profile
+app.put("/api/user/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email, role } = req.body;
+
+    // Validate input
+    if (!name || !email || !role) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Check if email is already taken by another user
+    const existingUser = await User.findOne({ email, _id: { $ne: id } });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+
+    // Update user
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { name, email, role },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      message: "Profile updated successfully",
+      user: {
+        id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role
+      }
+    });
+  } catch (error) {
+    console.error("Profile update failed:", error);
+    res.status(500).json({ message: "Profile update failed" });
+  }
+});
+
+// Delete user account
+app.delete("/api/user/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const deletedUser = await User.findByIdAndDelete(id);
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ message: "Account deleted successfully" });
+  } catch (error) {
+    console.error("Account deletion failed:", error);
+    res.status(500).json({ message: "Account deletion failed" });
+  }
+});
+
 
 
 
