@@ -30,8 +30,18 @@ const S_Sell = () => {
     }
   }, [userEmail]);
 
+  const handleSearch = () => {
+    // Force re-render by updating a state or just scroll to results
+    const resultsSection = document.querySelector('.max-w-6xl');
+    if (resultsSection) {
+      resultsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const filteredNotes = notes.filter((note) =>
-    note.title.toLowerCase().includes(searchTerm.toLowerCase())
+    note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    note.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    note.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleViewPdf = (pdfUrl) => {
@@ -77,8 +87,8 @@ const S_Sell = () => {
 
   return (
     <div className="min-h-screen bg-white text-custom-blue">
-      {/* Search Bar - No vertical spacing */}
-      <div className="flex justify-center items-center px-4 py-4">
+      {/* Search Bar */}
+      <div className="flex justify-center items-center px-4 pt-8 pb-4">
         <div className="w-full max-w-3xl">
           <div className="flex flex-col sm:flex-row items-center bg-white rounded-full shadow-md overflow-hidden">
             <input
@@ -88,7 +98,10 @@ const S_Sell = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-grow px-5 py-3 text-gray-700 focus:outline-none w-full sm:w-auto"
             />
-            <button className="bg-custom-blue text-white w-full sm:w-auto px-6 py-3 font-medium hover:bg-opacity-90 transition">
+            <button 
+              onClick={handleSearch}
+              className="bg-custom-blue text-white w-full sm:w-auto px-6 py-3 font-medium hover:bg-opacity-90 transition"
+            >
               Search
             </button>
           </div>
@@ -96,7 +109,7 @@ const S_Sell = () => {
       </div>
 
       {/* Notes Display Section */}
-      <div className="px-4 sm:px-6 pb-14">
+      <div className="px-4 sm:px-6 pt-8 pb-14">
         {isLoading ? (
           <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
             {[...Array(6)].map((_, index) => (

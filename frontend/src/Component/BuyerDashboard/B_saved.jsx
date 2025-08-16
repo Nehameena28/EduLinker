@@ -6,6 +6,9 @@ import { FaBookmark } from "react-icons/fa";
 
 const B_Saved = () => {
   const [savedNotes, setSavedNotes] = useState([]);
+  const [showPhoneModal, setShowPhoneModal] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [selectedNote, setSelectedNote] = useState(null);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id;
@@ -30,6 +33,95 @@ const B_Saved = () => {
     } catch (error) {
       console.error("Unsave failed:", error);
       alert("Error unsaving note");
+    }
+  };
+
+  const handleBuyNow = (note) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user || !user.name || !user.email) {
+      alert("You must be logged in to make a purchase.");
+      return;
+    }
+
+    setSelectedNote(note);
+    setShowPhoneModal(true);
+  };
+
+  const handlePhoneSubmit = async () => {
+    if (!phoneNumber || phoneNumber.length < 10) {
+      alert("Please enter a valid 10-digit phone number.");
+      return;
+    }
+
+    setShowPhoneModal(false);
+    await processPayment(selectedNote, phoneNumber);
+  };
+
+  const processPayment = async (note, phone) => {
+    try {
+      const res = await axios.post("http://localhost:7000/api/payment/checkout", {
+        amount: note.price * 100,
+      });
+
+      const user = JSON.parse(localStorage.getItem("user"));
+      const { order } = res.data;
+
+      const options = {
+        key: "rzp_test_KbKCf8dIP10uNs",
+        amount: order.amount,
+        currency: "INR",
+        name: "EduLinker",
+        description: note.title,
+        order_id: order.id,
+        handler: async function (response) {
+          try {
+            const verifyRes = await axios.post("http://localhost:7000/api/payment/verify", {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              user: {
+                name: user.name,
+                email: user.email,
+                phone,
+              },
+              items: [
+                {
+                  title: note.title,
+                  description: note.description,
+                  price: note.price,
+                  category: note.category,
+                  pdf: note.previewUrl,
+                  cover: note.cover,
+                },
+              ],
+            });
+
+            if (verifyRes.data.success) {
+              alert("✅ Payment successful and saved!");
+            } else {
+              alert("⚠️ Signature verification failed.");
+            }
+          } catch (err) {
+            console.error("Payment save failed:", err);
+            alert("❌ Payment verified but not saved.");
+          }
+        },
+        prefill: {
+          name: user.name,
+          email: user.email,
+          contact: phone,
+        },
+        theme: {
+          color: "#1d4ed8",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error("Payment initiation failed", error);
+      alert("❌ Payment failed. Try again.");
     }
   };
 
@@ -76,6 +168,7 @@ const B_Saved = () => {
                 previewUrl={note.previewUrl}
                 hideSave={true} 
                 onUnsave={() => handleUnsave(note._id)}
+                onBuy={() => handleBuyNow(note)}
                 onClick={() => handleViewPdf(note.previewUrl)}
               />
             );
@@ -87,6 +180,54 @@ const B_Saved = () => {
             <FaBookmark className="w-16 h-16" />
           </div>
           <p className="text-gray-600 text-lg">You have not saved any material yet.</p>
+        </div>
+      )}
+
+      {/* Phone Number Modal */}
+      {showPhoneModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">📱</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">Enter Phone Number</h3>
+              <p className="text-gray-600">We need your phone number to complete the purchase</p>
+            </div>
+            
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="Enter 10-digit phone number"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                maxLength="10"
+              />
+            </div>
+            
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  setShowPhoneModal(false);
+                  setPhoneNumber("");
+                  setSelectedNote(null);
+                }}
+                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handlePhoneSubmit}
+                className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

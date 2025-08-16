@@ -10,6 +10,10 @@ const userSchema = new mongoose.Schema({
     enum: ["buyer", "seller"],
     required: true,
   },
+  categories: {
+    type: [String],
+    default: ["HTML", "CSS", "JavaScript", "React", "Node.js", "Python", "Java", "C++", "Data Science"]
+  },
 });
 
 const User = mongoose.model("User", userSchema);
