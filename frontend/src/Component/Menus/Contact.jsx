@@ -1,5 +1,7 @@
 import { useState } from "react";
 import emailjs from '@emailjs/browser';
+import { useToast } from "../Toast/useToast";
+import ToastContainer from "../Toast/ToastContainer";
  
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +10,7 @@ const Contact = () => {
     message: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { toasts, showToast, removeToast } = useToast();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,9 +33,10 @@ const Contact = () => {
     ).then(() => {
       setIsSubmitted(true);
       setFormData({ name: "", email: "", message: "" });
+      showToast("Message sent successfully!", "success");
     }).catch((error) => {
       console.log('EmailJS Error:', error);
-      alert('Failed to send message. Check console for details.');
+      showToast('Failed to send message. Please try again.', "error");
     });
   };
 
@@ -209,8 +213,8 @@ const Contact = () => {
           </div>
         </div>
       </section>
-
       
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </>
   );
 };

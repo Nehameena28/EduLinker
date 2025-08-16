@@ -3,12 +3,15 @@ import { useEffect, useState } from "react";
 import NoteCard from "./NoteCard";
 import axios from "axios";
 import { FaBookmark } from "react-icons/fa";
+import { useToast } from "../Toast/useToast";
+import ToastContainer from "../Toast/ToastContainer";
 
 const B_Saved = () => {
   const [savedNotes, setSavedNotes] = useState([]);
   const [showPhoneModal, setShowPhoneModal] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [selectedNote, setSelectedNote] = useState(null);
+  const { toasts, showToast, removeToast } = useToast();
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id;
@@ -29,10 +32,10 @@ const B_Saved = () => {
     try {
       await axios.delete(`http://localhost:7000/api/saved-notes/${noteId}`);
       setSavedNotes(prev => prev.filter(note => note._id !== noteId));
-      alert("Note unsaved successfully");
+      showToast("Note unsaved successfully", "success");
     } catch (error) {
       console.error("Unsave failed:", error);
-      alert("Error unsaving note");
+      showToast("Error unsaving note", "error");
     }
   };
 
@@ -40,7 +43,7 @@ const B_Saved = () => {
     const user = JSON.parse(localStorage.getItem("user"));
 
     if (!user || !user.name || !user.email) {
-      alert("You must be logged in to make a purchase.");
+      showToast("You must be logged in to make a purchase.", "warning");
       return;
     }
 
@@ -50,7 +53,7 @@ const B_Saved = () => {
 
   const handlePhoneSubmit = async () => {
     if (!phoneNumber || phoneNumber.length < 10) {
-      alert("Please enter a valid 10-digit phone number.");
+      showToast("Please enter a valid 10-digit phone number.", "warning");
       return;
     }
 
@@ -98,13 +101,13 @@ const B_Saved = () => {
             });
 
             if (verifyRes.data.success) {
-              alert("✅ Payment successful and saved!");
+              showToast("Payment successful and saved!", "success");
             } else {
-              alert("⚠️ Signature verification failed.");
+              showToast("Signature verification failed.", "error");
             }
           } catch (err) {
             console.error("Payment save failed:", err);
-            alert("❌ Payment verified but not saved.");
+            showToast("Payment verified but not saved.", "error");
           }
         },
         prefill: {
@@ -121,13 +124,13 @@ const B_Saved = () => {
       rzp.open();
     } catch (error) {
       console.error("Payment initiation failed", error);
-      alert("❌ Payment failed. Try again.");
+      showToast("Payment failed. Try again.", "error");
     }
   };
 
   const handleViewPdf = (pdfUrl) => {
     if (!pdfUrl) {
-      alert("PDF not available");
+      showToast("PDF not available", "warning");
       return;
     }
     
@@ -230,6 +233,7 @@ const B_Saved = () => {
           </div>
         </div>
       )}
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 };

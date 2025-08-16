@@ -1,10 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
+import { useToast } from "../Toast/useToast";
+import ToastContainer from "../Toast/ToastContainer";
 
 const ResetPassword = ({ token }) => {
   const [formData, setFormData] = useState({ password: "", confirmPassword: "" });
   const [error, setError] = useState("");
   const [msg, setMsg] = useState("");
+  const { toasts, showToast, removeToast } = useToast();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,8 +27,10 @@ const ResetPassword = ({ token }) => {
         password,
       });
       setMsg("Password has been reset successfully.");
+      showToast("Password has been reset successfully.", "success");
     } catch (err) {
       setError("Reset failed. Invalid or expired token.");
+      showToast("Reset failed. Invalid or expired token.", "error");
     }
   };
 
@@ -74,6 +79,7 @@ const ResetPassword = ({ token }) => {
           </button>
         </form>
       </div>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 };

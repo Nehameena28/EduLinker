@@ -15,6 +15,8 @@
   import Signup from "./Component/Enter/Signup";
   import Login from "./Component/Enter/Login";
   import Footer from "./Component/Menus/Footer";
+  import { useToast } from "./Component/Toast/useToast";
+  import ToastContainer from "./Component/Toast/ToastContainer";
  
 
   import SellerLayout from "./Component/SellerDashboard/SellerLayout";
@@ -37,6 +39,7 @@ import Profile from "./Component/Profile/Profile";
 
 
   function App() {
+    const { toasts, showToast, removeToast } = useToast();
   
     useEffect(() => {
       AOS.init({ duration: 1000 });
@@ -84,7 +87,7 @@ import Profile from "./Component/Profile/Profile";
         </Routes>
 
   {location.pathname !== "/Login" && location.pathname !== "/Signup" && <Footer />}
-
+  <ToastContainer toasts={toasts} removeToast={removeToast} />
 
         
       </>

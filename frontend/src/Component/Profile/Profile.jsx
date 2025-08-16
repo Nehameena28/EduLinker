@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useToast } from "../Toast/useToast";
+import ToastContainer from "../Toast/ToastContainer";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -10,6 +12,7 @@ const Profile = () => {
     email: "",
     role: ""
   });
+  const { toasts, showToast, removeToast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,10 +47,10 @@ const Profile = () => {
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
       setIsEditing(false);
-      alert("Profile updated successfully!");
+      showToast("Profile updated successfully!", "success");
     } catch (error) {
       console.error("Update failed:", error);
-      alert("Failed to update profile");
+      showToast("Failed to update profile", "error");
     }
   };
 
@@ -207,6 +210,7 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 };

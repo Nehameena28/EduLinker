@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useToast } from "../Toast/useToast";
+import ToastContainer from "../Toast/ToastContainer";
 
 const S_Upload = () => {
   const [title, setTitle] = useState("");
@@ -12,6 +14,7 @@ const S_Upload = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [pdfUrl, setPdfUrl] = useState("");
   const [userCategories, setUserCategories] = useState([]);
+  const { toasts, showToast, removeToast } = useToast();
 
   const defaultCategories = [
     "HTML", "CSS", "JavaScript", "React", "Node.js", 
@@ -41,19 +44,19 @@ const S_Upload = () => {
     const uploadedBy = localStorage.getItem("email");
 
     if (!pdfFile || !title || !description || !category || !price || !uploadedBy) {
-      alert("Please fill all the fields and upload PDF file.");
+      showToast("Please fill all the fields and upload PDF file.", "warning");
       setIsUploading(false);
       return;
     }
 
     if (pdfFile && pdfFile.type !== 'application/pdf') {
-      alert("Please upload a valid PDF file.");
+      showToast("Please upload a valid PDF file.", "error");
       setIsUploading(false);
       return;
     }
 
     if (pdfFile && pdfFile.size > 50 * 1024 * 1024) {
-      alert("PDF file size should be less than 50MB.");
+      showToast("PDF file size should be less than 50MB.", "error");
       setIsUploading(false);
       return;
     }
@@ -85,9 +88,9 @@ const S_Upload = () => {
       
       if (uploadedPdfUrl) {
         setPdfUrl(uploadedPdfUrl);
-        alert(`Upload successful! PDF URL: ${uploadedPdfUrl}`);
+        showToast("Upload successful!", "success");
       } else {
-        alert("Upload successful!");
+        showToast("Upload successful!", "success");
       }
 
       setTitle("");
@@ -103,13 +106,13 @@ const S_Upload = () => {
 
     } catch (error) {
       if (error.code === 'ECONNABORTED') {
-        alert("Upload timeout. Please check your connection and try again.");
+        showToast("Upload timeout. Please check your connection and try again.", "error");
       } else if (error.response) {
-        alert(`Upload failed: ${error.response.data.message || 'Server error'}`);
+        showToast(`Upload failed: ${error.response.data.message || 'Server error'}`, "error");
       } else if (error.request) {
-        alert("Network error. Please check if the server is running on port 7000.");
+        showToast("Network error. Please check if the server is running on port 7000.", "error");
       } else {
-        alert("Upload failed. Check console for details.");
+        showToast("Upload failed. Check console for details.", "error");
       }
     } finally {
       setIsUploading(false);
@@ -238,6 +241,7 @@ const S_Upload = () => {
             </form>
           </div>
         </div>
+        <ToastContainer toasts={toasts} removeToast={removeToast} />
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
  import React, { useEffect, useState } from "react";
  import axios from "axios";
  import NoteCard from "./NoteCard";
+ import { useToast } from "../Toast/useToast";
+ import ToastContainer from "../Toast/ToastContainer";
 
  const Sellspage = () => {
    const [notes, setNotes] = useState([]);
@@ -9,6 +11,7 @@
    const [showPhoneModal, setShowPhoneModal] = useState(false);
    const [phoneNumber, setPhoneNumber] = useState("");
    const [selectedNote, setSelectedNote] = useState(null);
+   const { toasts, showToast, removeToast } = useToast();
 
    const user = JSON.parse(localStorage.getItem("user"));
    const userId = user?.id;
@@ -25,13 +28,13 @@
          previewUrl: note.pdf?.url,
        });
 
-       alert("Note saved successfully!");
+       showToast("Note saved successfully!", "success");
      } catch (err) {
        if (err.response?.status === 409) {
-         alert("Note already saved.");
+         showToast("Note already saved.", "warning");
        } else {
          console.error("Failed to save note", err);
-         alert("Error saving note.");
+         showToast("Error saving note.", "error");
        }
      }
    };
@@ -43,10 +46,10 @@
          userId,
          amount: note.price
        });
-       alert("Payment successful!");
+       showToast("Payment successful!", "success");
      } catch (error) {
        console.error("Payment failed:", error);
-       alert("Payment failed. Please try again.");
+       showToast("Payment failed. Please try again.", "error");
      }
    };
 
@@ -54,7 +57,7 @@
      const user = JSON.parse(localStorage.getItem("user"));
 
      if (!user || !user.name || !user.email) {
-       alert("You must be logged in to make a purchase.");
+       showToast("You must be logged in to make a purchase.", "warning");
        return;
      }
 
@@ -64,7 +67,7 @@
 
    const handlePhoneSubmit = async () => {
      if (!phoneNumber || phoneNumber.length < 10) {
-       alert("Please enter a valid 10-digit phone number.");
+       showToast("Please enter a valid 10-digit phone number.", "warning");
        return;
      }
 
@@ -114,13 +117,13 @@
              });
 
              if (verifyRes.data.success) {
-               alert("✅ Payment successful and saved!");
+               showToast("Payment successful and saved!", "success");
              } else {
-               alert("⚠️ Signature verification failed.");
+               showToast("Signature verification failed.", "error");
              }
            } catch (err) {
              console.error("Payment save failed:", err);
-             alert("❌ Payment verified but not saved.");
+             showToast("Payment verified but not saved.", "error");
            }
          },
          prefill: {
@@ -137,7 +140,7 @@
        rzp.open();
      } catch (error) {
        console.error("Payment initiation failed", error);
-       alert("❌ Payment failed. Try again.");
+       showToast("Payment failed. Try again.", "error");
      }
    };
 
@@ -363,6 +366,8 @@
            </div>
          </div>
        )}
+       
+       <ToastContainer toasts={toasts} removeToast={removeToast} />
      </div>
    );
  };

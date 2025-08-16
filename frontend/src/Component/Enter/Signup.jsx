@@ -2,6 +2,8 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useToast } from "../Toast/useToast";
+import ToastContainer from "../Toast/ToastContainer";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ const Signup = () => {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { toasts, showToast, removeToast } = useToast();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -84,7 +87,8 @@ const Signup = () => {
       }
     } catch (error) {
       console.error(error.response ? error.response.data : error.message);
-      setError("Signup failed. Please try again.");
+      showToast("Signup failed. Please try again.", "error");
+      setError("");
     }
   };
 
@@ -206,6 +210,8 @@ const Signup = () => {
             Log in here
           </a>
         </p>
+        
+        <ToastContainer toasts={toasts} removeToast={removeToast} />
       </div>
     </div>
   );

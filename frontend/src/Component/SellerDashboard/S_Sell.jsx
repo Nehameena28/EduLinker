@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import NoteCard from "./S_NoteCard";
+import { useToast } from "../Toast/useToast";
+import ToastContainer from "../Toast/ToastContainer";
 
 const S_Sell = () => {
   const [notes, setNotes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const { toasts, showToast, removeToast } = useToast();
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userEmail = localStorage.getItem("email");
@@ -46,7 +49,7 @@ const S_Sell = () => {
 
   const handleViewPdf = (pdfUrl) => {
     if (!pdfUrl) {
-      alert("PDF not available");
+      showToast("PDF not available", "warning");
       return;
     }
     
@@ -79,9 +82,10 @@ const S_Sell = () => {
         withCredentials: true,
       });
       setNotes(notes.filter(note => note._id !== noteId));
+      showToast("Note deleted successfully", "success");
     } catch (err) {
       console.error("Failed to delete note:", err);
-      alert("Failed to delete note");
+      showToast("Failed to delete note", "error");
     }
   };
 
@@ -148,6 +152,7 @@ const S_Sell = () => {
           </div>
         )}
       </div>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 };

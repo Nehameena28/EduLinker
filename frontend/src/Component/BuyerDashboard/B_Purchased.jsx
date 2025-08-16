@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaBook, FaFilePdf, FaDownload } from "react-icons/fa";
+import { useToast } from "../Toast/useToast";
+import ToastContainer from "../Toast/ToastContainer";
 
 const B_Purchased = () => {
   const [purchasedItems, setPurchasedItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const { toasts, showToast, removeToast } = useToast();
 
   const userEmail = localStorage.getItem("email");
 
@@ -35,7 +38,7 @@ const B_Purchased = () => {
 
   const handleDownloadPdf = (pdfUrl, title) => {
     if (!pdfUrl) {
-      alert("PDF not available");
+      showToast("PDF not available", "warning");
       return;
     }
     
@@ -56,6 +59,7 @@ const B_Purchased = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    showToast("Download started!", "success");
   };
 
   return (
@@ -175,6 +179,7 @@ const B_Purchased = () => {
           </div>
         )}
       </div>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 };

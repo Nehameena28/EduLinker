@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useToast } from "../Toast/useToast";
+import ToastContainer from "../Toast/ToastContainer";
 
 const CategoryManager = () => {
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { toasts, showToast, removeToast } = useToast();
 
   const userEmail = localStorage.getItem("email");
 
@@ -32,7 +35,7 @@ const CategoryManager = () => {
 
   const addCategory = async () => {
     if (!newCategory.trim() || categories.includes(newCategory.trim())) {
-      alert("Category already exists or is empty");
+      showToast("Category already exists or is empty", "warning");
       return;
     }
 
@@ -46,10 +49,10 @@ const CategoryManager = () => {
       
       setCategories(updatedCategories);
       setNewCategory("");
-      alert("Category added successfully!");
+      showToast("Category added successfully!", "success");
     } catch (error) {
       console.error("Failed to add category:", error);
-      alert("Failed to add category");
+      showToast("Failed to add category", "error");
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +60,7 @@ const CategoryManager = () => {
 
   const removeCategory = async (categoryToRemove) => {
     if (categories.length <= 1) {
-      alert("You must have at least one category");
+      showToast("You must have at least one category", "warning");
       return;
     }
 
@@ -70,10 +73,10 @@ const CategoryManager = () => {
       }, { withCredentials: true });
       
       setCategories(updatedCategories);
-      alert("Category removed successfully!");
+      showToast("Category removed successfully!", "success");
     } catch (error) {
       console.error("Failed to remove category:", error);
-      alert("Failed to remove category");
+      showToast("Failed to remove category", "error");
     } finally {
       setIsLoading(false);
     }
@@ -132,6 +135,7 @@ const CategoryManager = () => {
           Updating categories...
         </div>
       )}
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 };
