@@ -1,5 +1,6 @@
  import React, { useEffect, useState } from "react";
  import axios from "axios";
+ import { useNavigate } from "react-router-dom";
  import NoteCard from "./NoteCard";
  import { useToast } from "../Toast/useToast";
  import ToastContainer from "../Toast/ToastContainer";
@@ -11,12 +12,19 @@
    const [showPhoneModal, setShowPhoneModal] = useState(false);
    const [phoneNumber, setPhoneNumber] = useState("");
    const [selectedNote, setSelectedNote] = useState(null);
+   const [showLoginModal, setShowLoginModal] = useState(false);
    const { toasts, showToast, removeToast } = useToast();
+   const navigate = useNavigate();
 
    const user = JSON.parse(localStorage.getItem("user"));
    const userId = user?.id;
 
    const handleSave = async (note) => {
+     if (!user || !userId) {
+       setShowLoginModal(true);
+       return;
+     }
+
      try {
        await axios.post("http://localhost:7000/api/save-note", {
          userId,
@@ -54,10 +62,8 @@
    };
 
    const handleBuyNow = (note) => {
-     const user = JSON.parse(localStorage.getItem("user"));
-
      if (!user || !user.name || !user.email) {
-       showToast("You must be logged in to make a purchase.", "warning");
+       setShowLoginModal(true);
        return;
      }
 
@@ -320,19 +326,19 @@
        {/* Enhanced Phone Number Modal */}
        {showPhoneModal && (
          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-           <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl border border-gray-100">
+           <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl border-l-4 border-custom-i-berry">
              <div className="text-center mb-8">
-               <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                 <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               <div className="w-20 h-20 bg-gradient-to-br from-custom-i-berry/20 to-custom-brown/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                 <svg className="w-10 h-10 text-custom-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                  </svg>
                </div>
-               <h3 className="text-2xl font-bold text-gray-800 mb-3">Complete Your Purchase</h3>
+               <h3 className="text-2xl font-bold text-custom-blue mb-3">Complete Your Purchase</h3>
                <p className="text-gray-600 leading-relaxed">Please provide your phone number to proceed with secure payment</p>
              </div>
              
              <div className="mb-8">
-               <label className="block text-sm font-semibold text-gray-700 mb-3">
+               <label className="block text-sm font-semibold text-custom-brown mb-3">
                  Phone Number
                </label>
                <input
@@ -340,7 +346,7 @@
                  value={phoneNumber}
                  onChange={(e) => setPhoneNumber(e.target.value)}
                  placeholder="Enter your 10-digit phone number"
-                 className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-300 text-lg"
+                 className="w-full px-5 py-4 border-2 border-custom-i-berry/30 rounded-xl focus:ring-2 focus:ring-custom-i-berry focus:border-custom-i-berry outline-none transition-all duration-300 text-lg"
                  maxLength="10"
                />
              </div>
@@ -352,16 +358,47 @@
                    setPhoneNumber("");
                    setSelectedNote(null);
                  }}
-                 className="flex-1 px-6 py-4 border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-300 font-semibold"
+                 className="flex-1 px-6 py-4 border-2 border-custom-brown text-custom-brown rounded-xl hover:bg-custom-brown/10 hover:border-custom-brown transition-all duration-300 font-semibold"
                >
                  Cancel
                </button>
                <button
                  onClick={handlePhoneSubmit}
-                 className="flex-1 px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold"
+                 className="flex-1 px-6 py-4 bg-gradient-to-r from-custom-i-berry to-custom-brown hover:from-custom-brown hover:to-custom-i-berry text-white rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold"
                >
                  Continue
                </button>
+             </div>
+           </div>
+         </div>
+       )}
+
+       {/* Login Required Modal */}
+       {showLoginModal && (
+         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+           <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl border-l-4 border-custom-i-berry">
+             <div className="text-center">
+               <div className="w-16 h-16 bg-custom-i-berry/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                 <svg className="w-8 h-8 text-custom-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                 </svg>
+               </div>
+               <h3 className="text-xl font-bold text-custom-blue mb-2">Login Required</h3>
+               <p className="text-gray-600 mb-6">Please log in to access this feature</p>
+               <div className="flex gap-3">
+                 <button
+                   onClick={() => setShowLoginModal(false)}
+                   className="flex-1 px-4 py-2 border border-custom-brown text-custom-brown rounded-lg hover:bg-custom-brown/10"
+                 >
+                   Cancel
+                 </button>
+                 <button
+                   onClick={() => navigate("/Login")}
+                   className="flex-1 px-4 py-2 bg-custom-i-berry text-white rounded-lg hover:bg-custom-brown"
+                 >
+                   Login
+                 </button>
+               </div>
              </div>
            </div>
          </div>

@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import NoteCard from "./NoteCard";
 import axios from "axios";
 import { FaBookmark } from "react-icons/fa";
@@ -11,7 +12,9 @@ const B_Saved = () => {
   const [showPhoneModal, setShowPhoneModal] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [selectedNote, setSelectedNote] = useState(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const { toasts, showToast, removeToast } = useToast();
+  const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user?.id;
@@ -40,10 +43,8 @@ const B_Saved = () => {
   };
 
   const handleBuyNow = (note) => {
-    const user = JSON.parse(localStorage.getItem("user"));
-
     if (!user || !user.name || !user.email) {
-      showToast("You must be logged in to make a purchase.", "warning");
+      setShowLoginModal(true);
       return;
     }
 
@@ -189,17 +190,17 @@ const B_Saved = () => {
       {/* Phone Number Modal */}
       {showPhoneModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
+          <div className="bg-white rounded-xl p-6 w-full max-w-md border-l-4 border-custom-i-berry">
             <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-custom-i-berry/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">📱</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-2">Enter Phone Number</h3>
+              <h3 className="text-xl font-bold text-custom-blue mb-2">Enter Phone Number</h3>
               <p className="text-gray-600">We need your phone number to complete the purchase</p>
             </div>
             
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-custom-brown mb-2">
                 Phone Number
               </label>
               <input
@@ -207,7 +208,7 @@ const B_Saved = () => {
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 placeholder="Enter 10-digit phone number"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                className="w-full px-4 py-3 border border-custom-i-berry/30 rounded-lg focus:ring-2 focus:ring-custom-i-berry focus:border-custom-i-berry outline-none"
                 maxLength="10"
               />
             </div>
@@ -219,16 +220,47 @@ const B_Saved = () => {
                   setPhoneNumber("");
                   setSelectedNote(null);
                 }}
-                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+                className="flex-1 px-4 py-3 border border-custom-brown text-custom-brown rounded-lg hover:bg-custom-brown/10 transition"
               >
                 Cancel
               </button>
               <button
                 onClick={handlePhoneSubmit}
-                className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                className="flex-1 px-4 py-3 bg-custom-i-berry text-white rounded-lg hover:bg-custom-brown transition"
               >
                 Continue
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Login Required Modal */}
+      {showLoginModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl border-l-4 border-custom-i-berry">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-custom-i-berry/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-custom-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-custom-blue mb-2">Login Required</h3>
+              <p className="text-gray-600 mb-6">Please log in to access this feature</p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowLoginModal(false)}
+                  className="flex-1 px-4 py-2 border border-custom-brown text-custom-brown rounded-lg hover:bg-custom-brown/10"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => navigate("/Login")}
+                  className="flex-1 px-4 py-2 bg-custom-i-berry text-white rounded-lg hover:bg-custom-brown"
+                >
+                  Login
+                </button>
+              </div>
             </div>
           </div>
         </div>

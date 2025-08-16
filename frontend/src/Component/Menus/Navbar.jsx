@@ -140,24 +140,24 @@ const Navbar = () => {
                 </button>
                 
                 {showProfileDropdown && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-50">
+                  <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-custom-i-berry/20 z-50">
                     <button
                       onClick={() => {
                         setShowProfileDropdown(false);
                         navigate("/profile");
                       }}
-                      className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-t-lg"
+                      className="w-full px-4 py-2 text-left text-custom-blue hover:bg-custom-i-berry/10 rounded-t-lg font-medium"
                     >
-                      See your profile
+                      Profile
                     </button>
                     <button
                       onClick={() => {
                         setShowProfileDropdown(false);
                         setShowDeleteModal(true);
                       }}
-                      className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 rounded-b-lg"
+                      className="w-full px-4 py-2 text-left text-custom-brown hover:bg-red-50 rounded-b-lg font-medium"
                     >
-                      Delete your account
+                      Delete AC
                     </button>
                   </div>
                 )}
