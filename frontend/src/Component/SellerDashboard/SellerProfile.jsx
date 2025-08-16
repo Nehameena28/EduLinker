@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import CategoryManager from "./CategoryManager";
 
 
 const SellerProfile = () => {
   const [stats, setStats] = useState([
     { title: "Total Sales", value: "₹0" },
     { title: "Total Files", value: "0" },
+    { title: "Categories", value: "0" },
   ]);
   const [recentActivity, setRecentActivity] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,15 +39,22 @@ const SellerProfile = () => {
         const materialsListRes = await axios.get(`http://localhost:7000/seller/notes?email=${userEmail}`, {
           withCredentials: true,
         });
+
+        // Fetch categories count
+        const categoriesRes = await axios.get(`http://localhost:7000/api/seller/categories?email=${userEmail}`, {
+          withCredentials: true,
+        });
        
         const totalSales = paymentsRes.data.earnings?.total || 0;
         const totalFiles = materialsRes.data.count || 0;
+        const totalCategories = categoriesRes.data.categories?.length || 0;
         const payments = paymentsRes.data.payments || [];
        
         // Update stats
         setStats([
           { title: "Total Sales", value: `₹${totalSales}` },
           { title: "Total Files", value: totalFiles.toString() },
+          { title: "Categories", value: totalCategories.toString() },
         ]);
        
         // Combine sales and materials into recent activity
@@ -98,7 +107,7 @@ const SellerProfile = () => {
 
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6 md:mb-8">
           {stats.map((stat, index) => (
             <div
               key={index}
@@ -122,6 +131,11 @@ const SellerProfile = () => {
           ))}
         </div>
 
+
+        {/* Category Manager */}
+        <div className="mb-6 md:mb-8">
+          <CategoryManager />
+        </div>
 
         {/* Recent Activity */}
         <div className="bg-white p-3 md:p-4 rounded-xl shadow-sm border border-[rgb(221,167,123)]/20">

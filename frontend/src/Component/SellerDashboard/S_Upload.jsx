@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const S_Upload = () => {
@@ -12,11 +11,28 @@ const S_Upload = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [pdfUrl, setPdfUrl] = useState("");
+  const [userCategories, setUserCategories] = useState([]);
 
-  const predefinedCategories = [
+  const defaultCategories = [
     "HTML", "CSS", "JavaScript", "React", "Node.js", 
     "Python", "Java", "C++", "Data Science"
   ];
+
+  useEffect(() => {
+    const fetchUserCategories = async () => {
+      try {
+        const userEmail = localStorage.getItem("email");
+        const response = await axios.get(`http://localhost:7000/api/seller/categories?email=${userEmail}`, {
+          withCredentials: true,
+        });
+        setUserCategories(response.data.categories || defaultCategories);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+        setUserCategories(defaultCategories);
+      }
+    };
+    fetchUserCategories();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -145,7 +161,7 @@ const S_Upload = () => {
                     className="w-full px-4 py-2 border-b border-gray-300 focus:border-custom-i-berry focus:outline-none"
                   >
                     <option value="">Category</option>
-                    {predefinedCategories.map((cat, index) => (
+                    {userCategories.map((cat, index) => (
                       <option key={index} value={cat}>{cat}</option>
                     ))}
                   </select>
