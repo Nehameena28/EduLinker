@@ -11,6 +11,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require('fs');
 const nodemailer = require('nodemailer');
+const { PDFDocument } = require('pdf-lib');
 
 
 
@@ -263,6 +264,14 @@ app.delete("/api/user/:id", async (req, res) => {
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Add CORS headers for file access
+app.use('/uploads', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
 // Use upload routes
 app.use("/api/upload", uploadRoutes);
 
@@ -316,7 +325,27 @@ app.delete("/seller/notes/:id", async (req, res) => {
 
 
 
-app.post("/api/save-note", async (req, res) => {
+// Middleware to check if user is buyer
+const checkBuyerRole = async (req, res, next) => {
+  try {
+    const { userId } = req.body;
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    if (user.role !== 'buyer') {
+      return res.status(403).json({ message: "Only buyers can access this feature" });
+    }
+    
+    next();
+  } catch (error) {
+    res.status(500).json({ message: "Authorization failed", error: error.message });
+  }
+};
+
+app.post("/api/save-note", checkBuyerRole, async (req, res) => {
   try {
     const { userId, title, description, category, price, fileName, previewUrl } = req.body;
 
@@ -340,6 +369,16 @@ app.post("/api/save-note", async (req, res) => {
 
 app.get("/api/saved-notes/:userId", async (req, res) => {
   try {
+    const user = await User.findById(req.params.userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    if (user.role !== 'buyer') {
+      return res.status(403).json({ message: "Only buyers can access saved notes" });
+    }
+    
     const notes = await SavedNote.find({ userId: req.params.userId });
     res.status(200).json(notes);
   } catch (err) {
@@ -351,6 +390,16 @@ app.get("/api/saved-notes/:userId", async (req, res) => {
 
 app.delete("/api/saved-notes/:id", async (req, res) => {
   try {
+    const note = await SavedNote.findById(req.params.id);
+    if (!note) {
+      return res.status(404).json({ message: "Note not found" });
+    }
+    
+    const user = await User.findById(note.userId);
+    if (user.role !== 'buyer') {
+      return res.status(403).json({ message: "Only buyers can unsave notes" });
+    }
+    
     await SavedNote.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: "Note unsaved successfully" });
   } catch (err) {
@@ -437,6 +486,154 @@ app.get('/api/all-materials', async (req, res) => {
   }
 });
 
+// PDF Preview endpoint - serves only first 3 pages
+app.get('/api/preview-pdf/:materialId', async (req, res) => {
+  try {
+    const { materialId } = req.params;
+    const { userEmail } = req.query;
+    
+    // Find the material
+    const material = await StudyMaterial.findById(materialId);
+    if (!material) {
+      return res.status(404).json({ error: 'Material not found' });
+    }
+    
+    // Check if user has purchased this material
+    let hasPurchased = false;
+    if (userEmail) {
+      const purchase = await Payment.findOne({ 
+        buyerEmail: userEmail, 
+        itemTitle: material.title,
+        status: 'completed' 
+      });
+      hasPurchased = !!purchase;
+    }
+    
+    const pdfPath = path.join(__dirname, material.pdf.url);
+    
+    // If purchased, serve full PDF
+    if (hasPurchased) {
+      if (fs.existsSync(pdfPath)) {
+        return res.sendFile(pdfPath);
+      }
+    }
+    
+    // For preview, create a 3-page version
+    if (fs.existsSync(pdfPath)) {
+      try {
+        const { PDFDocument } = require('pdf-lib');
+        const existingPdfBytes = fs.readFileSync(pdfPath);
+        const pdfDoc = await PDFDocument.load(existingPdfBytes);
+        
+        // Create new PDF with only first 4 pages
+        const newPdf = await PDFDocument.create();
+        const totalPages = pdfDoc.getPageCount();
+        const previewPages = Math.min(4, totalPages);
+        
+        // Add first 4 pages only
+        for (let i = 0; i < previewPages; i++) {
+          const [copiedPage] = await newPdf.copyPages(pdfDoc, [i]);
+          newPdf.addPage(copiedPage);
+        }
+        
+        // Add one purchase message page if there are more pages
+        if (totalPages > 4) {
+          const page = newPdf.addPage();
+          const { width, height } = page.getSize();
+          
+          // White background
+          page.drawRectangle({
+            x: 0,
+            y: 0,
+            width: width,
+            height: height,
+            color: { r: 1, g: 1, b: 1 }
+          });
+          
+          // Purchase message
+          page.drawText('🔒 PURCHASE REQUIRED', {
+            x: width / 2 - 120,
+            y: height / 2 + 50,
+            size: 24,
+            color: { r: 0.8, g: 0.2, b: 0.2 }
+          });
+          
+          page.drawText('You have viewed 4 pages out of ' + totalPages, {
+            x: width / 2 - 100,
+            y: height / 2,
+            size: 16,
+            color: { r: 0.3, g: 0.3, b: 0.3 }
+          });
+          
+          page.drawText('Buy this note to access all content', {
+            x: width / 2 - 110,
+            y: height / 2 - 40,
+            size: 14,
+            color: { r: 0.5, g: 0.5, b: 0.5 }
+          });
+        }
+        
+        // Add headers for frontend modal trigger
+        res.setHeader('X-Total-Pages', pdfDoc.getPageCount().toString());
+        res.setHeader('X-Preview-Pages', '4');
+        res.setHeader('X-Material-Title', material.title);
+        res.setHeader('X-Material-Price', material.price.toString());
+        res.setHeader('X-Material-Category', material.category);
+        
+        const pdfBytes = await newPdf.save();
+        
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `inline; filename="preview_${material.title}.pdf"`);
+        res.send(Buffer.from(pdfBytes));
+        
+      } catch (pdfError) {
+        console.error('PDF processing error:', pdfError);
+        // Fallback to original PDF with headers
+        res.setHeader('X-Preview-Mode', 'true');
+        res.sendFile(pdfPath);
+      }
+    } else {
+      res.status(404).json({ error: 'PDF file not found' });
+    }
+    
+  } catch (error) {
+    console.error('PDF preview error:', error);
+    res.status(500).json({ error: 'Failed to serve PDF preview' });
+  }
+});
+
+// Check if user has purchased this material endpoint
+app.get('/api/check-purchase/:materialId', async (req, res) => {
+  try {
+    const { materialId } = req.params;
+    const { userEmail } = req.query;
+    
+    if (!userEmail) {
+      return res.json({ hasPurchased: false });
+    }
+    
+    const material = await StudyMaterial.findById(materialId);
+    if (!material) {
+      return res.status(404).json({ error: 'Material not found' });
+    }
+    
+    const purchase = await Payment.findOne({ 
+      buyerEmail: userEmail, 
+      itemTitle: material.title,
+      status: 'completed' 
+    });
+    
+    res.json({ 
+      hasPurchased: !!purchase,
+      totalPages: material.totalPages || 0,
+      previewPages: 4
+    });
+  } catch (error) {
+    console.error('Purchase check error:', error);
+    res.status(500).json({ error: 'Failed to check purchase status' });
+  }
+});
+
 // Buyer payment endpoint
 app.get('/api/buyer/payments', async (req, res) => {
   try {
@@ -444,6 +641,11 @@ app.get('/api/buyer/payments', async (req, res) => {
     
     if (!email) {
       return res.status(400).json({ error: 'Email is required' });
+    }
+    
+    const user = await User.findOne({ email });
+    if (!user || user.role !== 'buyer') {
+      return res.status(403).json({ error: 'Only buyers can access payment history' });
     }
     
     const payments = await Payment.find({ buyerEmail: email })
@@ -477,6 +679,11 @@ app.get('/api/buyer/purchased', async (req, res) => {
     
     if (!email) {
       return res.status(400).json({ error: 'Email is required' });
+    }
+    
+    const user = await User.findOne({ email });
+    if (!user || user.role !== 'buyer') {
+      return res.status(403).json({ error: 'Only buyers can access purchased items' });
     }
     
     // Get all payments by this buyer

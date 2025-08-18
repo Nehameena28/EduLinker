@@ -10,6 +10,7 @@ const S_NoteCard = ({
   previewUrl,
   onViewPdf,
   onDelete,
+  showActions = true,
 }) => {
   return (
     <div className=" overflow-hidden transition-all duration-300">
@@ -57,15 +58,17 @@ const S_NoteCard = ({
             Price: ₹{price}
           </div>
 
-          {/* Delete Button */}
-          <button
-            onClick={onDelete}
-            className="flex items-center bg-red-50 hover:bg-red-100 text-red-500 font-medium py-2 px-3 rounded-lg text-sm transition"
-            title="Delete this note"
-          >
-            <FaTrash className="mr-1" />
-            Delete
-          </button>
+          {/* Delete Button - Only show if user is authenticated */}
+          {showActions && onDelete && (
+            <button
+              onClick={onDelete}
+              className="flex items-center bg-red-50 hover:bg-red-100 text-red-500 font-medium py-2 px-3 rounded-lg text-sm transition"
+              title="Delete this note"
+            >
+              <FaTrash className="mr-1" />
+              Delete
+            </button>
+          )}
         </div>
       </div>
     </div>

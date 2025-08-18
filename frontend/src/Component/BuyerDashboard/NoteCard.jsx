@@ -11,9 +11,12 @@
    previewUrl,
    onSave,
    onBuy,
-    onUnsave,
-     hideSave,
-     onClick,
+   onUnsave,
+   hideSave,
+   hideBuy,
+   userRole,
+   onClick,
+   onPurchaseRequired,
  }) => {
    return (
      <div className="w-full max-w-md bg-white shadow-lg hover:shadow-xl rounded-2xl overflow-hidden transition-all duration-300">
@@ -50,8 +53,25 @@
                className="block border-2 border-dashed border-[rgb(221,167,123)] rounded-lg h-24 bg-[rgba(221,167,123,0.05)] hover:bg-[rgba(221,167,123,0.15)] hover:border-[rgb(148,93,94)] transition-all duration-200 cursor-pointer no-underline group"
                onClick={() => {
                  console.log('PDF URL clicked:', previewUrl);
-                 if (onClick) onClick();
-                 else window.open(previewUrl, '_blank');
+                 console.log('File name:', fileName);
+                 
+                 if (onClick) {
+                   onClick();
+                 } else {
+                   // Open PDF in new window and monitor for purchase requirement
+                   const newWindow = window.open(previewUrl, '_blank');
+                   
+                   // Check if this is a preview URL and set up purchase modal trigger
+                   if (previewUrl.includes('/api/preview-pdf/') && onPurchaseRequired) {
+                     // Set a timeout to show purchase modal after user views PDF
+                     setTimeout(() => {
+                       if (newWindow && !newWindow.closed) {
+                         // Trigger purchase modal
+                         onPurchaseRequired();
+                       }
+                     }, 10000); // Show modal after 10 seconds of viewing
+                   }
+                 }
                }}
              >
                <div className="flex items-center justify-center h-full">
@@ -81,40 +101,25 @@
 
            {/* Actions */}
            <div className="flex gap-2">
-             {/* Save Button with Save Icon */}
- {/* 
- {!hideSave && (
-             <button
-               className="flex items-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-3 rounded-lg text-sm transition"
-               title="Save this note"
-               onClick={onSave}
-             >
-               <FaSave className="mr-1" />
-               Save
-             </button>
-
-             )} */}
-
-
+             {/* Save Button - Only for buyers and not logged in users */}
              {onUnsave ? (
-   <button
-     className="bg-red-100 hover:bg-red-200 text-red-600 font-medium py-2 px-3 rounded-lg text-sm transition"
-     onClick={onUnsave}
-   >
-      Unsave
-   </button>
- ) : !hideSave && (
-   <button
-     className="flex items-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-3 rounded-lg text-sm transition"
-     title="Save this note"
-     onClick={onSave}
-   >
-     💾 Save
-   </button>
- )}
+               <button
+                 className="bg-red-100 hover:bg-red-200 text-red-600 font-medium py-2 px-3 rounded-lg text-sm transition"
+                 onClick={onUnsave}
+               >
+                 Unsave
+               </button>
+             ) : (!userRole || userRole === 'buyer') && !hideSave && (
+               <button
+                 className="flex items-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-3 rounded-lg text-sm transition"
+                 title="Save this note"
+                 onClick={onSave}
+               >
+                 💾 Save
+               </button>
+             )}
 
-
-             {/* Buy Button */}
+             {/* Buy Button - Show for everyone (not logged in, buyers, and sellers) */}
              <button
                onClick={onBuy}
                className="bg-[rgb(221,167,123)] hover:bg-[rgb(148,93,94)] text-white font-medium py-2 px-4 rounded-lg text-sm transition"

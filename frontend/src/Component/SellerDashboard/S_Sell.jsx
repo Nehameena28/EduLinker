@@ -3,15 +3,19 @@ import axios from "axios";
 import NoteCard from "./S_NoteCard";
 import { useToast } from "../Toast/useToast";
 import ToastContainer from "../Toast/ToastContainer";
+import RestrictedPdfViewer from "../PdfViewer/RestrictedPdfViewer";
 
 const S_Sell = () => {
   const [notes, setNotes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showPdfViewer, setShowPdfViewer] = useState(false);
+  const [currentPdfUrl, setCurrentPdfUrl] = useState("");
   const { toasts, showToast, removeToast } = useToast();
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userEmail = localStorage.getItem("email");
+  const isAuthenticated = !!(user && userEmail);
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -53,12 +57,8 @@ const S_Sell = () => {
       return;
     }
     
-    console.log("Original PDF URL:", pdfUrl);
-    
-    // Construct full URL
     let fullUrl = pdfUrl;
     if (!pdfUrl.startsWith('http')) {
-      // If URL already starts with /uploads/, don't add it again
       if (pdfUrl.startsWith('/uploads/')) {
         fullUrl = `http://localhost:7000${pdfUrl}`;
       } else {
@@ -66,10 +66,8 @@ const S_Sell = () => {
       }
     }
     
-    console.log("Final PDF URL:", fullUrl);
-    
-    // Open PDF in new tab
-    window.open(fullUrl, '_blank');
+    setCurrentPdfUrl(fullUrl);
+    setShowPdfViewer(true);
   };
 
   const handleDeleteNote = async (noteId) => {
@@ -141,7 +139,8 @@ const S_Sell = () => {
                   fileName={note.pdf?.url?.split("/").pop() || "Preview PDF"}
                   previewUrl={note.pdf?.url}
                   onViewPdf={() => handleViewPdf(note.pdf?.url)}
-                  onDelete={() => handleDeleteNote(note._id)}
+                  onDelete={isAuthenticated ? () => handleDeleteNote(note._id) : null}
+                  showActions={isAuthenticated}
                 />
               ))
             ) : (
@@ -153,6 +152,13 @@ const S_Sell = () => {
         )}
       </div>
       <ToastContainer toasts={toasts} removeToast={removeToast} />
+      {showPdfViewer && (
+        <RestrictedPdfViewer
+          pdfUrl={currentPdfUrl}
+          onClose={() => setShowPdfViewer(false)}
+          isPurchased={false}
+        />
+      )}
     </div>
   );
 };

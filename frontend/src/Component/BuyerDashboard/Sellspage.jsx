@@ -13,15 +13,24 @@
    const [phoneNumber, setPhoneNumber] = useState("");
    const [selectedNote, setSelectedNote] = useState(null);
    const [showLoginModal, setShowLoginModal] = useState(false);
+   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+   const [selectedNoteForPurchase, setSelectedNoteForPurchase] = useState(null);
    const { toasts, showToast, removeToast } = useToast();
    const navigate = useNavigate();
 
    const user = JSON.parse(localStorage.getItem("user"));
    const userId = user?.id;
+   const userRole = user?.role; // Get user role
 
    const handleSave = async (note) => {
      if (!user || !userId) {
        setShowLoginModal(true);
+       return;
+     }
+
+     // Check if user is seller
+     if (userRole === 'seller') {
+       showToast("Sellers cannot save notes. Only buyers can save notes.", "warning");
        return;
      }
 
@@ -40,6 +49,8 @@
      } catch (err) {
        if (err.response?.status === 409) {
          showToast("Note already saved.", "warning");
+       } else if (err.response?.status === 403) {
+         showToast("Only buyers can save notes.", "warning");
        } else {
          console.error("Failed to save note", err);
          showToast("Error saving note.", "error");
@@ -67,6 +78,7 @@
        return;
      }
 
+     // Allow both buyers and sellers to buy notes
      setSelectedNote(note);
      setShowPhoneModal(true);
    };
@@ -298,12 +310,23 @@
                    price={note.price}
                    category={note.category}
                    fileName={note.pdf?.url?.split("/").pop() || note.fileName || "Preview PDF"}
-                   previewUrl={note.pdf?.url ? 
-                     (note.pdf.url.startsWith('http') ? note.pdf.url : `http://localhost:7000${note.pdf.url}`) 
-                     : note.previewUrl || note.pdfUrl}
+                   previewUrl={note._id ? 
+                     `http://localhost:7000/api/preview-pdf/${note._id}?userEmail=${user?.email || ''}` 
+                     : (note.pdf?.url ? 
+                       (note.pdf.url.startsWith('http') ? note.pdf.url : 
+                        note.pdf.url.startsWith('/uploads/') ? `http://localhost:7000${note.pdf.url}` : 
+                        `http://localhost:7000/uploads/${note.pdf.url}`) 
+                       : note.previewUrl || note.pdfUrl)}
+                   onPurchaseRequired={() => {
+                     setSelectedNoteForPurchase(note);
+                     setShowPurchaseModal(true);
+                   }}
                    onBuy={() => handleBuyNow(note)}
                    onSave={() => handleSave(note)}
-                     onPayment={() => handlePayment(note)}
+                   onPayment={() => handlePayment(note)}
+                   hideSave={false} // Don't hide save button here, let NoteCard handle it
+                   hideBuy={false} // Don't hide buy button here, let NoteCard handle it
+                   userRole={userRole} // Pass user role to NoteCard
                    />
                  </div>
                ))
@@ -397,6 +420,49 @@
                    className="flex-1 px-4 py-2 bg-custom-i-berry text-white rounded-lg hover:bg-custom-brown"
                  >
                    Login
+                 </button>
+               </div>
+             </div>
+           </div>
+         </div>
+       )}
+
+       {/* Purchase Required Modal */}
+       {showPurchaseModal && selectedNoteForPurchase && (
+         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+           <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl border-l-4 border-orange-500">
+             <div className="text-center">
+               <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                 <svg className="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                 </svg>
+               </div>
+               <h3 className="text-2xl font-bold text-orange-600 mb-3">🔒 Purchase Required</h3>
+               <p className="text-gray-600 mb-4">You've reached the preview limit (4 pages)</p>
+               <div className="bg-orange-50 rounded-lg p-4 mb-6">
+                 <h4 className="font-semibold text-orange-800 mb-2">{selectedNoteForPurchase.title}</h4>
+                 <p className="text-sm text-orange-700 mb-2">Category: {selectedNoteForPurchase.category}</p>
+                 <p className="text-lg font-bold text-orange-600">Price: ₹{selectedNoteForPurchase.price}</p>
+               </div>
+               <p className="text-gray-500 text-sm mb-6">Buy this note to access the complete content</p>
+               <div className="flex gap-3">
+                 <button
+                   onClick={() => {
+                     setShowPurchaseModal(false);
+                     setSelectedNoteForPurchase(null);
+                   }}
+                   className="flex-1 px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50"
+                 >
+                   Cancel
+                 </button>
+                 <button
+                   onClick={() => {
+                     setShowPurchaseModal(false);
+                     handleBuyNow(selectedNoteForPurchase);
+                   }}
+                   className="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
+                 >
+                   Buy Now
                  </button>
                </div>
              </div>
