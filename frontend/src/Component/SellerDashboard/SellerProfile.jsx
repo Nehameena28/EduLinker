@@ -134,7 +134,15 @@ const SellerProfile = () => {
 
         {/* Category Manager */}
         <div className="mb-6 md:mb-8">
-          <CategoryManager />
+          <CategoryManager onCategoryChange={(newCount) => {
+            setStats(prevStats => 
+              prevStats.map(stat => 
+                stat.title === "Categories" 
+                  ? { ...stat, value: newCount.toString() }
+                  : stat
+              )
+            );
+          }} />
         </div>
 
         {/* Recent Activity */}

@@ -34,7 +34,6 @@ const B_Payment = () => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[rgb(31,91,120)] mb-2">Payment History</h1>
-        <p className="text-gray-600">Track your purchases and transactions</p>
       </div>
 
       {/* Stats Card */}

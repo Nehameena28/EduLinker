@@ -3,7 +3,7 @@ import axios from "axios";
 import { useToast } from "../Toast/useToast";
 import ToastContainer from "../Toast/ToastContainer";
 
-const CategoryManager = () => {
+const CategoryManager = ({ onCategoryChange }) => {
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -49,6 +49,7 @@ const CategoryManager = () => {
       
       setCategories(updatedCategories);
       setNewCategory("");
+      onCategoryChange?.(updatedCategories.length);
       showToast("Category added successfully!", "success");
     } catch (error) {
       console.error("Failed to add category:", error);
@@ -73,6 +74,7 @@ const CategoryManager = () => {
       }, { withCredentials: true });
       
       setCategories(updatedCategories);
+      onCategoryChange?.(updatedCategories.length);
       showToast("Category removed successfully!", "success");
     } catch (error) {
       console.error("Failed to remove category:", error);
