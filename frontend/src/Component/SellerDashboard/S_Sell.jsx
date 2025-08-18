@@ -11,6 +11,8 @@ const S_Sell = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showPdfViewer, setShowPdfViewer] = useState(false);
   const [currentPdfUrl, setCurrentPdfUrl] = useState("");
+  const [currentNoteId, setCurrentNoteId] = useState("");
+  const [purchasedNotes, setPurchasedNotes] = useState([]);
   const { toasts, showToast, removeToast } = useToast();
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -18,22 +20,24 @@ const S_Sell = () => {
   const isAuthenticated = !!(user && userEmail);
 
   useEffect(() => {
-    const fetchNotes = async () => {
+    const fetchData = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(`http://localhost:7000/seller/notes?email=${userEmail}`, {
-          withCredentials: true,
-        });
-        setNotes(res.data);
+        const [notesRes, purchasedRes] = await Promise.all([
+          axios.get(`http://localhost:7000/seller/notes?email=${userEmail}`, { withCredentials: true }),
+          axios.get(`http://localhost:7000/api/buyer/purchased?email=${userEmail}`, { withCredentials: true })
+        ]);
+        setNotes(notesRes.data);
+        setPurchasedNotes(purchasedRes.data.map(item => item._id));
       } catch (err) {
-        console.error("Failed to fetch notes:", err);
+        console.error("Failed to fetch data:", err);
       } finally {
         setIsLoading(false);
       }
     };
 
     if (userEmail) {
-      fetchNotes();
+      fetchData();
     }
   }, [userEmail]);
 
@@ -51,7 +55,7 @@ const S_Sell = () => {
     note.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleViewPdf = (pdfUrl) => {
+  const handleViewPdf = (pdfUrl, noteId) => {
     if (!pdfUrl) {
       showToast("PDF not available", "warning");
       return;
@@ -67,6 +71,7 @@ const S_Sell = () => {
     }
     
     setCurrentPdfUrl(fullUrl);
+    setCurrentNoteId(noteId);
     setShowPdfViewer(true);
   };
 
@@ -138,7 +143,7 @@ const S_Sell = () => {
                   category={note.category}
                   fileName={note.pdf?.url?.split("/").pop() || "Preview PDF"}
                   previewUrl={note.pdf?.url}
-                  onViewPdf={() => handleViewPdf(note.pdf?.url)}
+                  onViewPdf={() => handleViewPdf(note.pdf?.url, note._id)}
                   onDelete={isAuthenticated ? () => handleDeleteNote(note._id) : null}
                   showActions={isAuthenticated}
                 />
@@ -156,7 +161,7 @@ const S_Sell = () => {
         <RestrictedPdfViewer
           pdfUrl={currentPdfUrl}
           onClose={() => setShowPdfViewer(false)}
-          isPurchased={false}
+          isPurchased={purchasedNotes.includes(currentNoteId)}
         />
       )}
     </div>

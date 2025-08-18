@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
@@ -8,6 +8,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 const RestrictedPdfViewer = ({ pdfUrl, onClose, isPurchased = false }) => {
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
+
 
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
@@ -31,24 +32,22 @@ const RestrictedPdfViewer = ({ pdfUrl, onClose, isPurchased = false }) => {
         <div className="flex-1 overflow-auto p-4">
           <div className="flex flex-col items-center">
             <Document file={pdfUrl} onLoadSuccess={onDocumentLoadSuccess}>
-              <div className={`relative ${!isPurchased && pageNumber > 4 ? 'filter blur-md' : ''}`}>
-                <Page pageNumber={pageNumber} width={Math.min(600, window.innerWidth - 100)} />
-                {!isPurchased && pageNumber > 4 && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg text-center">
-                      <h4 className="text-xl font-bold mb-2">Purchase Required</h4>
-                      <p className="text-gray-600 mb-4">Buy this note to view all pages</p>
-                      <button className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">Purchase Now</button>
-                    </div>
-                  </div>
-                )}
-              </div>
+              <Page pageNumber={pageNumber} width={Math.min(600, window.innerWidth - 100)} />
             </Document>
             {numPages && (
               <div className="flex items-center gap-4 mt-4">
                 <button onClick={goToPrevPage} disabled={pageNumber <= 1} className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50">Previous</button>
-                <span className="text-sm">Page {pageNumber} of {numPages} {!isPurchased && pageNumber <= 4 && <span className="text-green-600 ml-2">(Preview)</span>} {!isPurchased && pageNumber > 4 && <span className="text-red-600 ml-2">(Restricted)</span>}</span>
-                <button onClick={goToNextPage} disabled={pageNumber >= numPages} className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50">Next</button>
+                <span className="text-sm">
+                  Page {pageNumber} of {numPages > 4 && !isPurchased ? '4+' : numPages}
+                  {!isPurchased && <span className="text-orange-600 ml-2">(Preview - First 4 pages only)</span>}
+                </span>
+                <button 
+                  onClick={goToNextPage} 
+                  disabled={pageNumber >= numPages || (!isPurchased && pageNumber >= 4)} 
+                  className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+                >
+                  Next
+                </button>
               </div>
             )}
           </div>
