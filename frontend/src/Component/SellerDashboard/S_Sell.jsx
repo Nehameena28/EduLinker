@@ -3,41 +3,33 @@ import axios from "axios";
 import NoteCard from "./S_NoteCard";
 import { useToast } from "../Toast/useToast";
 import ToastContainer from "../Toast/ToastContainer";
-import RestrictedPdfViewer from "../PdfViewer/RestrictedPdfViewer";
 
 const S_Sell = () => {
   const [notes, setNotes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showPdfViewer, setShowPdfViewer] = useState(false);
-  const [currentPdfUrl, setCurrentPdfUrl] = useState("");
-  const [currentNoteId, setCurrentNoteId] = useState("");
-  const [purchasedNotes, setPurchasedNotes] = useState([]);
   const { toasts, showToast, removeToast } = useToast();
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userEmail = localStorage.getItem("email");
-  const isAuthenticated = !!(user && userEmail);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchNotes = async () => {
       try {
         setIsLoading(true);
-        const [notesRes, purchasedRes] = await Promise.all([
-          axios.get(`http://localhost:7000/seller/notes?email=${userEmail}`, { withCredentials: true }),
-          axios.get(`http://localhost:7000/api/buyer/purchased?email=${userEmail}`, { withCredentials: true })
-        ]);
-        setNotes(notesRes.data);
-        setPurchasedNotes(purchasedRes.data.map(item => item._id));
+        const res = await axios.get(`http://localhost:7000/seller/notes?email=${userEmail}`, {
+          withCredentials: true,
+        });
+        setNotes(res.data);
       } catch (err) {
-        console.error("Failed to fetch data:", err);
+        console.error("Failed to fetch notes:", err);
       } finally {
         setIsLoading(false);
       }
     };
 
     if (userEmail) {
-      fetchData();
+      fetchNotes();
     }
   }, [userEmail]);
 
@@ -55,14 +47,18 @@ const S_Sell = () => {
     note.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleViewPdf = (pdfUrl, noteId) => {
+  const handleViewPdf = (pdfUrl) => {
     if (!pdfUrl) {
       showToast("PDF not available", "warning");
       return;
     }
     
+    console.log("Original PDF URL:", pdfUrl);
+    
+    // Construct full URL
     let fullUrl = pdfUrl;
     if (!pdfUrl.startsWith('http')) {
+      // If URL already starts with /uploads/, don't add it again
       if (pdfUrl.startsWith('/uploads/')) {
         fullUrl = `http://localhost:7000${pdfUrl}`;
       } else {
@@ -70,9 +66,10 @@ const S_Sell = () => {
       }
     }
     
-    setCurrentPdfUrl(fullUrl);
-    setCurrentNoteId(noteId);
-    setShowPdfViewer(true);
+    console.log("Final PDF URL:", fullUrl);
+    
+    // Open PDF in new tab
+    window.open(fullUrl, '_blank');
   };
 
   const handleDeleteNote = async (noteId) => {
@@ -143,9 +140,8 @@ const S_Sell = () => {
                   category={note.category}
                   fileName={note.pdf?.url?.split("/").pop() || "Preview PDF"}
                   previewUrl={note.pdf?.url}
-                  onViewPdf={() => handleViewPdf(note.pdf?.url, note._id)}
-                  onDelete={isAuthenticated ? () => handleDeleteNote(note._id) : null}
-                  showActions={isAuthenticated}
+                  onViewPdf={() => handleViewPdf(note.pdf?.url)}
+                  onDelete={() => handleDeleteNote(note._id)}
                 />
               ))
             ) : (
@@ -157,19 +153,11 @@ const S_Sell = () => {
         )}
       </div>
       <ToastContainer toasts={toasts} removeToast={removeToast} />
-      {showPdfViewer && (
-        <RestrictedPdfViewer
-          pdfUrl={currentPdfUrl}
-          onClose={() => setShowPdfViewer(false)}
-          isPurchased={purchasedNotes.includes(currentNoteId)}
-        />
-      )}
     </div>
   );
 };
 
 export default S_Sell;
-
 
 
 
