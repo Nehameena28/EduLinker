@@ -115,19 +115,12 @@ const Profile = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email Address
               </label>
-              {isEditing ? (
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                />
-              ) : (
-                <div className="p-3 bg-gray-50 rounded-lg border">
-                  {user.email}
-                </div>
-              )}
+              <div 
+                className="p-3 bg-gray-50 rounded-lg border text-gray-500 cursor-not-allowed"
+                title="Email cannot be changed"
+              >
+                {user.email}
+              </div>
             </div>
 
             <div>

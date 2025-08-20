@@ -150,6 +150,17 @@ const Navbar = () => {
                     >
                       Profile
                     </button>
+
+                      <button
+                      onClick={() => {
+                        setShowProfileDropdown(false);
+                        navigate("seller/dashboard");
+                      }}
+                      className="w-full px-4 py-2 text-left text-custom-blue hover:bg-custom-i-berry/10 rounded-t-lg font-medium"
+                    >
+                      Dashboard
+                    </button>
+
                     <button
                       onClick={() => {
                         setShowProfileDropdown(false);
@@ -157,8 +168,10 @@ const Navbar = () => {
                       }}
                       className="w-full px-4 py-2 text-left text-custom-brown hover:bg-red-50 rounded-b-lg font-medium"
                     >
-                      Delete AC
+                      Delete Account
                     </button>
+
+                     
                   </div>
                 )}
               </div>
