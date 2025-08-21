@@ -20,6 +20,7 @@ const S_Sell = () => {
         const res = await axios.get(`http://localhost:7000/seller/notes?email=${userEmail}`, {
           withCredentials: true,
         });
+
         setNotes(res.data);
       } catch (err) {
         console.error("Failed to fetch notes:", err);
@@ -48,12 +49,10 @@ const S_Sell = () => {
   );
 
   const handleViewPdf = (pdfUrl) => {
-    if (!pdfUrl) {
+    if (!pdfUrl || pdfUrl === '' || pdfUrl === 'undefined') {
       showToast("PDF not available", "warning");
       return;
     }
-    
-    console.log("Original PDF URL:", pdfUrl);
     
     // Construct full URL
     let fullUrl = pdfUrl;
@@ -65,8 +64,6 @@ const S_Sell = () => {
         fullUrl = `http://localhost:7000/uploads/${pdfUrl}`;
       }
     }
-    
-    console.log("Final PDF URL:", fullUrl);
     
     // Open PDF in new tab
     window.open(fullUrl, '_blank');
@@ -138,10 +135,11 @@ const S_Sell = () => {
                   description={note.description}
                   price={note.price}
                   category={note.category}
-                  fileName={note.pdf?.url?.split("/").pop() || "Preview PDF"}
-                  previewUrl={note.pdf?.url}
-                  onViewPdf={() => handleViewPdf(note.pdf?.url)}
+                  fileName={note.pdf?.fullUrl?.split("/").pop() || "Preview PDF"}
+                  previewUrl={note.pdf?.fullUrl}
+                  onViewPdf={() => handleViewPdf(note.pdf?.fullUrl)}
                   onDelete={() => handleDeleteNote(note._id)}
+                  isPurchased={true}
                 />
               ))
             ) : (
@@ -158,7 +156,6 @@ const S_Sell = () => {
 };
 
 export default S_Sell;
-
 
 
 

@@ -36,30 +36,30 @@ const B_Purchased = () => {
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleDownloadPdf = (pdfUrl, title) => {
-    if (!pdfUrl) {
-      showToast("PDF not available", "warning");
-      return;
-    }
-    
-    let fullUrl = pdfUrl;
-    if (!pdfUrl.startsWith('http')) {
-      if (pdfUrl.startsWith('/uploads/')) {
-        fullUrl = `http://localhost:7000${pdfUrl}`;
-      } else {
-        fullUrl = `http://localhost:7000/uploads/${pdfUrl}`;
+  const handleDownloadPdf = async (item) => {
+    try {
+      if (!item._id) {
+        showToast("Material ID not found", "error");
+        return;
       }
+      
+      // Use the secure download endpoint
+      const downloadUrl = `http://localhost:7000/api/download-pdf/${item._id}?userEmail=${userEmail}`;
+      
+      // Create download link
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `${item.title}.pdf`;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      showToast("Download started!", "success");
+    } catch (error) {
+      console.error('Download failed:', error);
+      showToast("Download failed. Please try again.", "error");
     }
-    
-    // Create download link
-    const link = document.createElement('a');
-    link.href = fullUrl;
-    link.download = `${title}.pdf`;
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    showToast("Download started!", "success");
   };
 
   return (
@@ -140,7 +140,7 @@ const B_Purchased = () => {
                         <div className="text-center">
                           <FaFilePdf className="text-2xl text-[rgb(148,93,94)] mb-1 mx-auto" />
                           <p className="text-xs font-medium text-gray-700">
-                            {item.pdf?.url?.split("/").pop() || "PDF File"}
+                            {(item.pdf?.fullUrl || item.pdf?.url)?.split("/").pop() || "PDF File"}
                           </p>
                           <p className="text-xs text-green-600 font-medium">✓ Owned</p>
                         </div>
@@ -157,7 +157,7 @@ const B_Purchased = () => {
 
                       {/* Download Button */}
                       <button
-                        onClick={() => handleDownloadPdf(item.pdf?.url, item.title)}
+                        onClick={() => handleDownloadPdf(item)}
                         className="flex items-center bg-[rgb(221,167,123)] hover:bg-[rgb(148,93,94)] text-white font-medium py-2 px-4 rounded-lg text-sm transition"
                       >
                         <FaDownload className="mr-2" />

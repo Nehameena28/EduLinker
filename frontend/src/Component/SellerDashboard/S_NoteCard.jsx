@@ -11,6 +11,7 @@ const S_NoteCard = ({
   onViewPdf,
   onDelete,
   showActions = true,
+  isPurchased = false,
 }) => {
   return (
     <div className=" overflow-hidden transition-all duration-300">
@@ -46,7 +47,9 @@ const S_NoteCard = ({
             <div className="text-center">
               <FaFilePdf className="text-2xl text-[rgb(148,93,94)] mb-1 mx-auto" />
               <p className="text-xs font-medium text-gray-700">{fileName}</p>
-              <p className="text-xs text-gray-500">Click to preview</p>
+              <p className="text-xs text-gray-500">
+                {isPurchased ? "Click to view full PDF" : "Click to preview"}
+              </p>
             </div>
           </div>
         </div>
@@ -58,16 +61,22 @@ const S_NoteCard = ({
             Price: ₹{price}
           </div>
 
-          {/* Delete Button - Only show if user is authenticated */}
-          {showActions && onDelete && (
-            <button
-              onClick={onDelete}
-              className="flex items-center bg-red-50 hover:bg-red-100 text-red-500 font-medium py-2 px-3 rounded-lg text-sm transition"
-              title="Delete this note"
-            >
-              <FaTrash className="mr-1" />
-              Delete
-            </button>
+          {/* Purchase Status or Delete Button */}
+          {isPurchased ? (
+            <span className="bg-green-50 text-green-600 font-medium py-2 px-3 rounded-lg text-sm">
+              Purchased
+            </span>
+          ) : (
+            showActions && onDelete && (
+              <button
+                onClick={onDelete}
+                className="flex items-center bg-red-50 hover:bg-red-100 text-red-500 font-medium py-2 px-3 rounded-lg text-sm transition"
+                title="Delete this note"
+              >
+                <FaTrash className="mr-1" />
+                Delete
+              </button>
+            )
           )}
         </div>
       </div>

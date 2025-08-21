@@ -154,7 +154,9 @@ const Navbar = () => {
                       <button
                       onClick={() => {
                         setShowProfileDropdown(false);
-                        navigate("seller/dashboard");
+                        if (user.role === "seller") navigate("/seller/dashboard");
+                        else if (user.role === "buyer") navigate("/buyer/dashboard");
+                        else navigate("/Home");
                       }}
                       className="w-full px-4 py-2 text-left text-custom-blue hover:bg-custom-i-berry/10 rounded-t-lg font-medium"
                     >

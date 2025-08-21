@@ -3,13 +3,18 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const StudyMaterial = require("../models/StudyMaterial.js");
+const { createPreviewPdf } = require("../utils/pdfProcessor");
 
 const router = express.Router();
 
-// Create uploads directory if it doesn't exist
+// Create uploads directories if they don't exist
 const uploadsDir = path.join(__dirname, '../uploads');
+const previewsDir = path.join(__dirname, '../uploads/previews');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
+}
+if (!fs.existsSync(previewsDir)) {
+  fs.mkdirSync(previewsDir, { recursive: true });
 }
 
 const storage = multer.diskStorage({
@@ -50,6 +55,21 @@ router.post("/", upload.single("pdf"), async (req, res) => {
     console.log("File saved locally:");
     console.log("PDF:", req.file.filename);
 
+    // Create preview PDF
+    const originalPdfPath = path.join(uploadsDir, req.file.filename);
+    const previewFilename = `preview_${req.file.filename}`;
+    const previewPdfPath = path.join(previewsDir, previewFilename);
+    
+    console.log("Creating preview PDF...");
+    const previewResult = await createPreviewPdf(originalPdfPath, previewPdfPath, 3);
+    
+    if (!previewResult.success) {
+      console.error("Failed to create preview:", previewResult.error);
+      return res.status(500).json({ error: "Failed to create PDF preview" });
+    }
+    
+    console.log(`Preview created: ${previewResult.previewPages} pages from ${previewResult.totalPages} total`);
+
     const materialData = {
       title,
       description,
@@ -57,7 +77,8 @@ router.post("/", upload.single("pdf"), async (req, res) => {
       price: parseFloat(price),
       uploadedBy,
       pdf: {
-        url: `/uploads/${req.file.filename}`,
+        fullUrl: `/uploads/${req.file.filename}`,
+        previewUrl: `/uploads/previews/${previewFilename}`,
         public_id: req.file.filename
       }
     };

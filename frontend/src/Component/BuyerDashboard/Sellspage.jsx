@@ -4,6 +4,7 @@
  import NoteCard from "./NoteCard";
  import { useToast } from "../Toast/useToast";
  import ToastContainer from "../Toast/ToastContainer";
+ import RestrictedPdfViewer from "../PdfViewer/RestrictedPdfViewer";
 
  const Sellspage = () => {
    const [notes, setNotes] = useState([]);
@@ -15,6 +16,10 @@
    const [showLoginModal, setShowLoginModal] = useState(false);
    const [showPurchaseModal, setShowPurchaseModal] = useState(false);
    const [selectedNoteForPurchase, setSelectedNoteForPurchase] = useState(null);
+   const [showPdfViewer, setShowPdfViewer] = useState(false);
+   const [currentPdfUrl, setCurrentPdfUrl] = useState("");
+   const [currentNoteId, setCurrentNoteId] = useState("");
+   const [purchasedNotes, setPurchasedNotes] = useState([]);
    const { toasts, showToast, removeToast } = useToast();
    const navigate = useNavigate();
 
@@ -41,8 +46,8 @@
          description: note.description,
          category: note.category,
          price: note.price,
-         fileName: note.pdf?.url?.split("/").pop() || "Note",
-         previewUrl: note.pdf?.url,
+         fileName: (note.pdf?.fullUrl || note.pdf?.url)?.split("/").pop() || "Note",
+         previewUrl: note.pdf?.fullUrl || note.pdf?.url,
        });
 
        showToast("Note saved successfully!", "success");
@@ -163,19 +168,19 @@
    };
 
    useEffect(() => {
-     const fetchNotes = async () => {
+     const fetchData = async () => {
        try {
          setIsLoading(true);
          console.log("Fetching all study materials...");
          
-         // Try the buyer-specific endpoint first
-         const res = await axios.get("http://localhost:7000/api/all-materials", {
-           withCredentials: true,
-         });
+         const [notesRes, purchasedRes] = await Promise.all([
+           axios.get("http://localhost:7000/api/all-materials", { withCredentials: true }),
+           user?.email ? axios.get(`http://localhost:7000/api/buyer/purchased?email=${user.email}`, { withCredentials: true }).catch(() => ({ data: [] })) : Promise.resolve({ data: [] })
+         ]);
          
-         console.log("Fetched data:", res.data);
-         console.log("Sample note structure:", res.data[0]);
-         setNotes(res.data);
+         console.log("Fetched data:", notesRes.data);
+         setNotes(notesRes.data);
+         setPurchasedNotes(purchasedRes.data?.map(item => item._id) || []);
        } catch (err) {
          console.error("Failed to fetch notes:", err);
          console.error("Error details:", err.response?.data);
@@ -184,8 +189,8 @@
        }
      };
 
-     fetchNotes();
-   }, []);
+     fetchData();
+   }, [user?.email]);
 
    const handleSearch = () => {
      // Force re-render by updating a state or just scroll to results
@@ -193,6 +198,35 @@
      if (resultsSection) {
        resultsSection.scrollIntoView({ behavior: 'smooth' });
      }
+   };
+
+   const handleViewPdf = (note, noteId) => {
+     const isPurchased = purchasedNotes.includes(noteId);
+     // Handle both old and new PDF structures
+     let pdfUrl;
+     if (isPurchased) {
+       pdfUrl = note.pdf?.fullUrl || note.pdf?.url; // fallback to old structure
+     } else {
+       pdfUrl = note.pdf?.previewUrl || note.pdf?.url; // fallback to old structure
+     }
+     
+     if (!pdfUrl) {
+       showToast("PDF not available", "warning");
+       return;
+     }
+     
+     let fullUrl = pdfUrl;
+     if (!pdfUrl.startsWith('http')) {
+       fullUrl = `http://localhost:7000${pdfUrl}`;
+     }
+     
+     if (!isPurchased && note.pdf?.previewUrl) {
+       showToast("Showing preview (3 pages only). Purchase to view full content.", "info");
+     }
+     
+     setCurrentPdfUrl(fullUrl);
+     setCurrentNoteId(noteId);
+     setShowPdfViewer(true);
    };
 
    const filteredNotes = notes.filter((note) =>
@@ -309,14 +343,10 @@
                    description={note.description}
                    price={note.price}
                    category={note.category}
-                   fileName={note.pdf?.url?.split("/").pop() || note.fileName || "Preview PDF"}
-                   previewUrl={note._id ? 
-                     `http://localhost:7000/api/preview-pdf/${note._id}?userEmail=${user?.email || ''}` 
-                     : (note.pdf?.url ? 
-                       (note.pdf.url.startsWith('http') ? note.pdf.url : 
-                        note.pdf.url.startsWith('/uploads/') ? `http://localhost:7000${note.pdf.url}` : 
-                        `http://localhost:7000/uploads/${note.pdf.url}`) 
-                       : note.previewUrl || note.pdfUrl)}
+                   fileName={(note.pdf?.fullUrl || note.pdf?.url)?.split("/").pop() || note.fileName || "Preview PDF"}
+                   previewUrl={purchasedNotes.includes(note._id) ? (note.pdf?.fullUrl || note.pdf?.url) : (note.pdf?.previewUrl || note.pdf?.url)}
+                   onViewPdf={() => handleViewPdf(note, note._id)}
+                   isPurchased={purchasedNotes.includes(note._id)}
                    onPurchaseRequired={() => {
                      setSelectedNoteForPurchase(note);
                      setShowPurchaseModal(true);
@@ -324,9 +354,9 @@
                    onBuy={() => handleBuyNow(note)}
                    onSave={() => handleSave(note)}
                    onPayment={() => handlePayment(note)}
-                   hideSave={false} // Don't hide save button here, let NoteCard handle it
-                   hideBuy={false} // Don't hide buy button here, let NoteCard handle it
-                   userRole={userRole} // Pass user role to NoteCard
+                   hideSave={false}
+                   hideBuy={false}
+                   userRole={userRole}
                    />
                  </div>
                ))
@@ -471,6 +501,13 @@
        )}
        
        <ToastContainer toasts={toasts} removeToast={removeToast} />
+       {showPdfViewer && (
+         <RestrictedPdfViewer
+           pdfUrl={currentPdfUrl}
+           onClose={() => setShowPdfViewer(false)}
+           isPurchased={purchasedNotes.includes(currentNoteId)}
+         />
+       )}
      </div>
    );
  };
