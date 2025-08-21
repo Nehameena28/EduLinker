@@ -84,7 +84,7 @@ const Login = () => {
             <div className="lg:hidden mb-6">
               <img src="/i2.png" alt="EDULinker" className="w-16 h-auto mx-auto cursor-pointer" onClick={() => navigate('/')} />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Sign In</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Log In</h2>
             <p className="text-gray-600">Access your account</p>
           </div>
 
@@ -147,7 +147,7 @@ const Login = () => {
               type="submit"
               className="w-full bg-custom-blue hover:opacity-90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
             >
-              Sign In
+               Log in
             </button>
           </form>
 
