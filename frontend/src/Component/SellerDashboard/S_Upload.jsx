@@ -134,7 +134,7 @@ const S_Upload = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="h-screen bg-gray-50 flex items-center justify-center p-4 overflow-hidden">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
           <div className="p-8">

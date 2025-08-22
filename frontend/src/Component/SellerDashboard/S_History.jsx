@@ -6,6 +6,8 @@ const S_History = () => {
   const [salesHistory, setSalesHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('uploads');
+  const [showAllUploads, setShowAllUploads] = useState(false);
+  const [showAllSales, setShowAllSales] = useState(false);
 
   const userEmail = localStorage.getItem("email");
 
@@ -88,10 +90,20 @@ const S_History = () => {
             {/* Upload History Tab */}
             {activeTab === 'uploads' && (
               <div className="p-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Your Uploaded Materials</h2>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold text-gray-800">Your Uploaded Materials</h2>
+                  {uploadHistory.length > 3 && (
+                    <button 
+                      onClick={() => setShowAllUploads(!showAllUploads)}
+                      className="text-sm text-blue-600 hover:underline"
+                    >
+                      {showAllUploads ? 'Show Less' : 'View All'}
+                    </button>
+                  )}
+                </div>
                 {uploadHistory.length > 0 ? (
                   <div className="space-y-4">
-                    {uploadHistory.map((material, index) => (
+                    {uploadHistory.slice(0, showAllUploads ? uploadHistory.length : 3).map((material, index) => (
                       <div key={index} className="flex justify-between items-center p-4 border rounded-lg hover:bg-gray-50">
                         <div>
                           <h4 className="font-medium text-gray-800">{material.title}</h4>
@@ -118,10 +130,20 @@ const S_History = () => {
             {/* Sales History Tab */}
             {activeTab === 'sales' && (
               <div className="p-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Your Sales History</h2>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold text-gray-800">Your Sales History</h2>
+                  {salesHistory.length > 3 && (
+                    <button 
+                      onClick={() => setShowAllSales(!showAllSales)}
+                      className="text-sm text-blue-600 hover:underline"
+                    >
+                      {showAllSales ? 'Show Less' : 'View All'}
+                    </button>
+                  )}
+                </div>
                 {salesHistory.length > 0 ? (
                   <div className="space-y-4">
-                    {salesHistory.map((sale, index) => (
+                    {salesHistory.slice(0, showAllSales ? salesHistory.length : 3).map((sale, index) => (
                       <div key={index} className="flex justify-between items-center p-4 border rounded-lg hover:bg-gray-50">
                         <div>
                           <h4 className="font-medium text-gray-800">{sale.itemTitle}</h4>

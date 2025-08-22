@@ -177,7 +177,7 @@ const SellerProfile = () => {
             </p>
           ) : (
             <div className="space-y-3 md:space-y-4">
-              {recentActivity.slice(0, showAllActivity ? 8 : 4).map((activity) => (
+              {recentActivity.slice(0, showAllActivity ? 8 : 3).map((activity) => (
                 <div
                   key={activity.id}
                   className="flex justify-between items-center p-2 md:p-3 hover:bg-[rgb(221,167,123)]/5 rounded-lg transition-colors"
