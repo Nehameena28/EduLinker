@@ -86,7 +86,7 @@ import Profile from "./Component/Profile/Profile";
 
         </Routes>
 
-  {location.pathname !== "/Login" && location.pathname !== "/Signup" && <Footer />}
+  {(location.pathname === "/" || location.pathname === "/Home" || location.pathname === "/About" || location.pathname === "/Contact") && <Footer />}
   <ToastContainer toasts={toasts} removeToast={removeToast} />
 
         
