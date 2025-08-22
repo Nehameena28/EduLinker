@@ -19,8 +19,8 @@ const Home = () => {
         }}
       ></div>
       
-      <div className="relative flex flex-col items-start justify-start pl-6 md:pl-20 text-black pt-20 pb-20 min-h-screen">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-8 opacity-100 leading-loose text-left max-w-4xl pb-4 mt-18">
+      <div className="relative flex flex-col items-start justify-center pl-6 md:pl-20 text-black min-h-screen">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-8 opacity-100 leading-loose text-left max-w-4xl pb-4">
           Unlock the Knowledge<br />
           you need with<br />
           our wide selection of<br />
