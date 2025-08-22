@@ -244,12 +244,12 @@ const Signup = () => {
       {/* Right Side - Image/Pattern */}
       <div className="hidden lg:flex lg:w-1/2 bg-custom-blue relative">
         <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative z-10 flex flex-col justify-center items-center text-white p-12">
+        <div className="relative z-10 flex flex-col items-center text-white p-12 pt-20 pb-20">
           <div className="mb-8">
             <img src="/i2.png" alt="EDULinker" className="w-24 h-auto cursor-pointer" onClick={() => navigate('/')} />
           </div>
-          <h1 className="text-4xl font-bold mb-4 text-center">Join EDULinker</h1>
-          <p className="text-xl text-center text-white/80 mb-6">Connect, Learn, and Share Knowledge</p>
+          <h1 className="text-4xl font-bold mb-4 text-center text-amber-300 drop-shadow-lg w-full">Join EDULinker</h1>
+          <p className="text-xl text-center text-amber-100 mb-6 font-medium w-full">Connect, Learn, and Share Knowledge</p>
           <div className="text-center text-white/70">
             <p className="mb-2">✓ Access thousands of study materials</p>
             <p className="mb-2">✓ Share your knowledge with others</p>

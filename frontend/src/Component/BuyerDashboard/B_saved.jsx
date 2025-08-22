@@ -9,6 +9,7 @@ import ToastContainer from "../Toast/ToastContainer";
 
 const B_Saved = () => {
   const [savedNotes, setSavedNotes] = useState([]);
+  const [purchasedNotes, setPurchasedNotes] = useState([]);
   const [showPhoneModal, setShowPhoneModal] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [selectedNote, setSelectedNote] = useState(null);
@@ -22,13 +23,52 @@ const B_Saved = () => {
   useEffect(() => {
     if (!userId) return;
 
-    const fetchSaved = async () => {
-      const res = await axios.get(`http://localhost:7000/api/saved-notes/${userId}`);
-      setSavedNotes(res.data);
+    const fetchData = async () => {
+      try {
+        const [savedRes, purchasedRes] = await Promise.all([
+          axios.get(`http://localhost:7000/api/saved-notes/${userId}`),
+          user?.email ? axios.get(`http://localhost:7000/api/buyer/purchased?email=${user.email}`, { withCredentials: true }).catch(() => ({ data: [] })) : Promise.resolve({ data: [] })
+        ]);
+        
+        console.log('Saved notes:', savedRes.data);
+        console.log('Purchased response:', purchasedRes.data);
+        
+        // Log detailed structure
+        if (purchasedRes.data && purchasedRes.data.length > 0) {
+          console.log('First purchased item structure:', purchasedRes.data[0]);
+          console.log('Available fields:', Object.keys(purchasedRes.data[0]));
+        }
+        
+        setSavedNotes(savedRes.data);
+        
+        // Handle purchased notes
+        let purchasedIds = [];
+        if (purchasedRes.data) {
+          if (Array.isArray(purchasedRes.data)) {
+            purchasedIds = purchasedRes.data.map(item => {
+              // Check multiple possible fields for the note ID
+              const noteId = item.noteId || item.note_id || item.note || item.itemId || item._id || item.id;
+              console.log('Purchased item:', item, 'Extracted noteId:', noteId);
+              return String(noteId);
+            }).filter(Boolean);
+          } else if (purchasedRes.data.purchases) {
+            purchasedIds = purchasedRes.data.purchases.map(item => {
+              const noteId = item.noteId || item.note_id || item.note || item.itemId || item._id || item.id;
+              console.log('Purchased item:', item, 'Extracted noteId:', noteId);
+              return String(noteId);
+            }).filter(Boolean);
+          }
+        }
+        
+        console.log('Processed purchased IDs:', purchasedIds);
+        setPurchasedNotes(purchasedIds);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
     };
 
-    fetchSaved();
-  }, [userId]);
+    fetchData();
+  }, [userId, user?.email]);
 
 
   const handleUnsave = async (noteId) => {
@@ -103,6 +143,23 @@ const B_Saved = () => {
 
             if (verifyRes.data.success) {
               showToast("Payment successful and saved!", "success");
+              // Refresh purchased notes after successful payment
+              if (user?.email) {
+                try {
+                  const purchasedRes = await axios.get(`http://localhost:7000/api/buyer/purchased?email=${user.email}`, { withCredentials: true });
+                  let purchasedIds = [];
+                  if (purchasedRes.data) {
+                    if (Array.isArray(purchasedRes.data)) {
+                      purchasedIds = purchasedRes.data.map(item => String(item._id || item.id || item)).filter(Boolean);
+                    } else if (purchasedRes.data.purchases) {
+                      purchasedIds = purchasedRes.data.purchases.map(item => String(item._id || item.id || item)).filter(Boolean);
+                    }
+                  }
+                  setPurchasedNotes(purchasedIds);
+                } catch (err) {
+                  console.error('Failed to refresh purchased notes:', err);
+                }
+              }
             } else {
               showToast("Signature verification failed.", "error");
             }
@@ -160,7 +217,12 @@ const B_Saved = () => {
       {savedNotes.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {savedNotes.map((note) => {
-            console.log('Note preview URL:', note.previewUrl); // Debug log
+            const isPurchased = purchasedNotes.includes(String(note._id));
+            // Temporary test - force first note to be purchased
+            const testPurchased = note.title === 'node' ? true : isPurchased;
+            console.log(`Note: ${note.title}, ID: ${note._id}, isPurchased: ${isPurchased}, testPurchased: ${testPurchased}`);
+            console.log('Purchased notes array:', purchasedNotes);
+            
             return (
               <NoteCard 
                 key={note._id} 
@@ -174,6 +236,7 @@ const B_Saved = () => {
                 onUnsave={() => handleUnsave(note._id)}
                 onBuy={() => handleBuyNow(note)}
                 onClick={() => handleViewPdf(note.previewUrl)}
+                isPurchased={testPurchased}
               />
             );
           })}

@@ -20,6 +20,7 @@ const S_Sell = () => {
         const res = await axios.get(`http://localhost:7000/seller/notes?email=${userEmail}`, {
           withCredentials: true,
         });
+
         setNotes(res.data);
       } catch (err) {
         console.error("Failed to fetch notes:", err);
@@ -48,12 +49,10 @@ const S_Sell = () => {
   );
 
   const handleViewPdf = (pdfUrl) => {
-    if (!pdfUrl) {
+    if (!pdfUrl || pdfUrl === '' || pdfUrl === 'undefined') {
       showToast("PDF not available", "warning");
       return;
     }
-    
-    console.log("Original PDF URL:", pdfUrl);
     
     // Construct full URL
     let fullUrl = pdfUrl;
@@ -65,8 +64,6 @@ const S_Sell = () => {
         fullUrl = `http://localhost:7000/uploads/${pdfUrl}`;
       }
     }
-    
-    console.log("Final PDF URL:", fullUrl);
     
     // Open PDF in new tab
     window.open(fullUrl, '_blank');
@@ -94,18 +91,26 @@ const S_Sell = () => {
       {/* Search Bar */}
       <div className="flex justify-center items-center px-4 pt-8 pb-4">
         <div className="w-full max-w-3xl">
-          <div className="flex flex-col sm:flex-row items-center bg-white rounded-full shadow-md overflow-hidden">
-            <input
-              type="text"
-              placeholder="Search uploaded notes..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-grow px-5 py-3 text-gray-700 focus:outline-none w-full sm:w-auto"
-            />
+          <div className="relative flex flex-col sm:flex-row items-center bg-white rounded-full shadow-lg border-2 border-gray-300 overflow-hidden w-full hover:shadow-xl hover:border-blue-500 focus-within:shadow-xl focus-within:border-blue-600 transition-all duration-300">
+            <div className="flex items-center flex-grow">
+              <svg className="w-5 h-5 text-gray-400 ml-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search uploaded notes..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="flex-grow py-3 pr-4 text-gray-700 placeholder-gray-500 focus:outline-none w-full sm:w-auto transition-all duration-200 bg-transparent"
+              />
+            </div>
             <button 
               onClick={handleSearch}
-              className="bg-custom-blue text-white w-full sm:w-auto px-6 py-3 font-medium hover:bg-opacity-90 transition"
+              className="bg-custom-blue text-white w-full sm:w-auto px-6 py-3 font-medium hover:bg-opacity-90 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-2"
             >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
               Search
             </button>
           </div>
@@ -138,10 +143,11 @@ const S_Sell = () => {
                   description={note.description}
                   price={note.price}
                   category={note.category}
-                  fileName={note.pdf?.url?.split("/").pop() || "Preview PDF"}
-                  previewUrl={note.pdf?.url}
-                  onViewPdf={() => handleViewPdf(note.pdf?.url)}
+                  fileName={note.pdf?.fullUrl?.split("/").pop() || "Preview PDF"}
+                  previewUrl={note.pdf?.fullUrl}
+                  onViewPdf={() => handleViewPdf(note.pdf?.fullUrl)}
                   onDelete={() => handleDeleteNote(note._id)}
+                  isPurchased={true}
                 />
               ))
             ) : (
@@ -158,7 +164,6 @@ const S_Sell = () => {
 };
 
 export default S_Sell;
-
 
 
 

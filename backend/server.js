@@ -304,12 +304,22 @@ app.delete("/seller/notes/:id", async (req, res) => {
       return res.status(404).json({ message: "Note not found" });
     }
     
-    // Delete the file from uploads folder
+    // Delete both preview and full PDF files
     const fs = require('fs');
-    if (note.pdf && note.pdf.url) {
-      const filePath = path.join(__dirname, note.pdf.url);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
+    if (note.pdf) {
+      // Delete full PDF
+      if (note.pdf.fullUrl) {
+        const fullFilePath = path.join(__dirname, note.pdf.fullUrl);
+        if (fs.existsSync(fullFilePath)) {
+          fs.unlinkSync(fullFilePath);
+        }
+      }
+      // Delete preview PDF
+      if (note.pdf.previewUrl) {
+        const previewFilePath = path.join(__dirname, note.pdf.previewUrl);
+        if (fs.existsSync(previewFilePath)) {
+          fs.unlinkSync(previewFilePath);
+        }
       }
     }
     
@@ -669,6 +679,60 @@ app.get('/api/buyer/payments', async (req, res) => {
   } catch (error) {
     console.error('Buyer payment fetch error:', error);
     res.status(500).json({ error: 'Failed to fetch payment data' });
+  }
+});
+
+// Download purchased PDF endpoint
+app.get('/api/download-pdf/:materialId', async (req, res) => {
+  try {
+    const { materialId } = req.params;
+    const { userEmail } = req.query;
+    
+    if (!userEmail) {
+      return res.status(401).json({ error: 'User email required' });
+    }
+    
+    // Find the material
+    const material = await StudyMaterial.findById(materialId);
+    if (!material) {
+      return res.status(404).json({ error: 'Material not found' });
+    }
+    
+    // Check if user has purchased this material
+    const purchase = await Payment.findOne({ 
+      buyerEmail: userEmail, 
+      itemTitle: material.title,
+      status: 'completed' 
+    });
+    
+    if (!purchase) {
+      return res.status(403).json({ error: 'Purchase required to download' });
+    }
+    
+    // Get the full PDF path
+    const pdfUrl = material.pdf?.fullUrl || material.pdf?.url;
+    if (!pdfUrl) {
+      return res.status(404).json({ error: 'PDF file not found in database' });
+    }
+    
+    const pdfPath = path.join(__dirname, pdfUrl);
+    
+    // Check if file exists
+    if (!fs.existsSync(pdfPath)) {
+      console.error('PDF file not found at path:', pdfPath);
+      return res.status(404).json({ error: 'PDF file not found on server' });
+    }
+    
+    // Set headers for download
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${material.title}.pdf"`);
+    
+    // Send file
+    res.sendFile(pdfPath);
+    
+  } catch (error) {
+    console.error('Download error:', error);
+    res.status(500).json({ error: 'Failed to download PDF' });
   }
 });
 

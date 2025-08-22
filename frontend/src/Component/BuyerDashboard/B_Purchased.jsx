@@ -36,30 +36,30 @@ const B_Purchased = () => {
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleDownloadPdf = (pdfUrl, title) => {
-    if (!pdfUrl) {
-      showToast("PDF not available", "warning");
-      return;
-    }
-    
-    let fullUrl = pdfUrl;
-    if (!pdfUrl.startsWith('http')) {
-      if (pdfUrl.startsWith('/uploads/')) {
-        fullUrl = `http://localhost:7000${pdfUrl}`;
-      } else {
-        fullUrl = `http://localhost:7000/uploads/${pdfUrl}`;
+  const handleDownloadPdf = async (item) => {
+    try {
+      if (!item._id) {
+        showToast("Material ID not found", "error");
+        return;
       }
+      
+      // Use the secure download endpoint
+      const downloadUrl = `http://localhost:7000/api/download-pdf/${item._id}?userEmail=${userEmail}`;
+      
+      // Create download link
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `${item.title}.pdf`;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      showToast("Download started!", "success");
+    } catch (error) {
+      console.error('Download failed:', error);
+      showToast("Download failed. Please try again.", "error");
     }
-    
-    // Create download link
-    const link = document.createElement('a');
-    link.href = fullUrl;
-    link.download = `${title}.pdf`;
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    showToast("Download started!", "success");
   };
 
   return (
@@ -72,15 +72,23 @@ const B_Purchased = () => {
       {/* Search Bar */}
       <div className="flex justify-center items-center px-4 pb-6">
         <div className="w-full max-w-3xl">
-          <div className="flex flex-col sm:flex-row items-center bg-white rounded-full shadow-md overflow-hidden">
-            <input
-              type="text"
-              placeholder="Search purchased items..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-grow px-5 py-3 text-gray-700 focus:outline-none w-full sm:w-auto"
-            />
-            <button className="bg-[rgb(31,91,120)] text-white w-full sm:w-auto px-6 py-3 font-medium hover:bg-opacity-90 transition">
+          <div className="relative flex flex-col sm:flex-row items-center bg-white rounded-full shadow-lg border-2 border-gray-300 overflow-hidden w-full hover:shadow-xl hover:border-blue-500 focus-within:shadow-xl focus-within:border-blue-600 transition-all duration-300">
+            <div className="flex items-center flex-grow">
+              <svg className="w-5 h-5 text-gray-400 ml-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search purchased items..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="flex-grow py-3 pr-4 text-gray-700 placeholder-gray-500 focus:outline-none w-full sm:w-auto transition-all duration-200 bg-transparent"
+              />
+            </div>
+            <button className="bg-[rgb(31,91,120)] text-white w-full sm:w-auto px-6 py-3 font-medium hover:bg-opacity-90 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
               Search
             </button>
           </div>
@@ -140,7 +148,7 @@ const B_Purchased = () => {
                         <div className="text-center">
                           <FaFilePdf className="text-2xl text-[rgb(148,93,94)] mb-1 mx-auto" />
                           <p className="text-xs font-medium text-gray-700">
-                            {item.pdf?.url?.split("/").pop() || "PDF File"}
+                            {(item.pdf?.fullUrl || item.pdf?.url)?.split("/").pop() || "PDF File"}
                           </p>
                           <p className="text-xs text-green-600 font-medium">✓ Owned</p>
                         </div>
@@ -157,7 +165,7 @@ const B_Purchased = () => {
 
                       {/* Download Button */}
                       <button
-                        onClick={() => handleDownloadPdf(item.pdf?.url, item.title)}
+                        onClick={() => handleDownloadPdf(item)}
                         className="flex items-center bg-[rgb(221,167,123)] hover:bg-[rgb(148,93,94)] text-white font-medium py-2 px-4 rounded-lg text-sm transition"
                       >
                         <FaDownload className="mr-2" />

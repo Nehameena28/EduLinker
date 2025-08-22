@@ -63,15 +63,15 @@ const Contact = () => {
               </h2>
               
               <div className="space-y-6">
-                <div className="flex">
+                <div className="flex items-center hover:bg-custom-i-berry/10 p-4 rounded-xl hover:border-custom-i-berry/20 border border-transparent transition-all duration-200">
                   <div className="flex-shrink-0 bg-custom-i-berry/10 p-3 rounded-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-custom-i-berry" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <div className="ml-4">
+                  <div className="ml-4 flex-1 min-w-0">
                     <h3 className="text-lg font-semibold text-gray-900">Email</h3>
-                    <p className="mt-1 text-gray-600">contactedulinker@gmail.com</p>
+                    <p className="mt-1 text-gray-600 text-sm sm:text-base break-all">contactedulinker@gmail.com</p>
                   </div>
                 </div>
 
@@ -87,7 +87,7 @@ const Contact = () => {
                   </div>
                 </div> */}
 
-                <div className="flex">
+                <div className="flex items-start hover:bg-custom-i-berry/10 p-4 rounded-xl hover:border-custom-i-berry/20 border border-transparent transition-all duration-200">
                   <div className="flex-shrink-0 bg-custom-i-berry/10 p-3 rounded-lg">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-custom-i-berry" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -165,7 +165,7 @@ const Contact = () => {
                         onChange={handleChange}
                         required
                         placeholder="Your name"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-i-berry focus:border-transparent transition"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-i-berry focus:border-transparent focus:outline-none transition"
                       />
                     </div>
                     <div>
@@ -180,7 +180,7 @@ const Contact = () => {
                         onChange={handleChange}
                         required
                         placeholder="you@example.com"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-i-berry focus:border-transparent transition"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-i-berry focus:border-transparent focus:outline-none transition"
                       />
                     </div>
                   </div>
@@ -197,13 +197,13 @@ const Contact = () => {
                       rows="5"
                       required
                       placeholder="How can we help you?"
-                      className="w-full px-4 resize-none py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-i-berry focus:border-transparent transition"
+                      className="w-full px-4 resize-none py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-i-berry focus:border-transparent focus:outline-none transition"
                     ></textarea>
                   </div>
                   
                   <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-custom-i-berry to-custom-i-berry/90 hover:from-custom-i-berry hover:to-custom-i-berry text-white font-bold py-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="w-full bg-gradient-to-r from-custom-blue to-custom-brown hover:from-custom-brown hover:to-custom-blue text-white font-bold py-4 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-95 transition-all duration-300"
                   >
                     Send Message
                   </button>
