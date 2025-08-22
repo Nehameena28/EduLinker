@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useToast } from "../Toast/useToast";
 import ToastContainer from "../Toast/ToastContainer";
+import { FaChevronDown } from "react-icons/fa";
 
 const S_Upload = () => {
   const [title, setTitle] = useState("");
@@ -9,6 +10,8 @@ const S_Upload = () => {
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [pdfFile, setPdfFile] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -35,6 +38,16 @@ const S_Upload = () => {
       }
     };
     fetchUserCategories();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleSubmit = async (e) => {
@@ -137,7 +150,7 @@ const S_Upload = () => {
                   value={title} 
                   onChange={(e) => setTitle(e.target.value)} 
                   required
-                  className="w-full px-4 py-2 border-b border-gray-300 focus:border-custom-i-berry focus:outline-none"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-custom-blue focus:outline-none"
                   placeholder="Title"
                 />
               </div>
@@ -149,25 +162,39 @@ const S_Upload = () => {
                   onChange={(e) => setDescription(e.target.value)} 
                   required
                   rows="2"
-                  className="w-full px-4 py-2 resize-none border-b border-gray-300 focus:border-custom-i-berry focus:outline-none"
+                  className="w-full px-4 py-2 resize-none border border-gray-300 rounded-lg focus:border-custom-blue focus:outline-none"
                   placeholder="Description"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 {/* Category */}
-                <div>
-                  <select 
-                    value={category} 
-                    onChange={(e) => setCategory(e.target.value)} 
-                    required
-                    className="w-full px-4 py-2 border-b border-gray-300 focus:border-custom-i-berry focus:outline-none"
+                <div className="relative" ref={dropdownRef}>
+                  <div 
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-custom-blue cursor-pointer hover:border-custom-blue transition-colors duration-200 flex items-center justify-between"
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   >
-                    <option value="">Category</option>
-                    {userCategories.map((cat, index) => (
-                      <option key={index} value={cat}>{cat}</option>
-                    ))}
-                  </select>
+                    <span className={category ? "text-gray-700" : "text-gray-500"}>
+                      {category || "Category"}
+                    </span>
+                    <FaChevronDown className={`text-gray-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                  </div>
+                  {isDropdownOpen && (
+                    <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-10 mt-1 max-h-48 overflow-y-auto">
+                      {userCategories.map((cat, index) => (
+                        <div
+                          key={index}
+                          className="px-4 py-2 hover:bg-custom-blue hover:text-white cursor-pointer transition-colors duration-150 text-gray-700"
+                          onClick={() => {
+                            setCategory(cat);
+                            setIsDropdownOpen(false);
+                          }}
+                        >
+                          {cat}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Price */}
@@ -178,7 +205,7 @@ const S_Upload = () => {
                     value={price} 
                     onChange={(e) => setPrice(e.target.value)} 
                     required
-                    className="w-full px-4 py-2 border-b border-gray-300 focus:border-custom-i-berry focus:outline-none"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-custom-blue focus:outline-none"
                     placeholder="Price (₹)"
                   />
                 </div>
@@ -189,7 +216,7 @@ const S_Upload = () => {
                 <label className="block text-sm text-gray-500 mb-1">PDF File</label>
                 <div className="border border-dashed border-gray-300 rounded-md p-4 text-center">
                   {pdfFile ? (
-                    <p className="text-sm text-custom-i-berry">{pdfFile.name}</p>
+                    <p className="text-sm text-custom-blue">{pdfFile.name}</p>
                   ) : (
                     <p className="text-sm text-gray-500">Drag & drop or click to browse</p>
                   )}
@@ -203,7 +230,7 @@ const S_Upload = () => {
                   />
                   <label 
                     htmlFor="pdf-upload" 
-                    className="inline-block mt-2 px-4 py-1 text-sm text-custom-i-berry border border-custom-i-berry rounded-md cursor-pointer hover:bg-custom-i-berry hover:text-white transition"
+                    className="inline-block mt-2 px-4 py-1 text-sm text-custom-blue border border-custom-blue rounded-md cursor-pointer hover:bg-custom-blue hover:text-white transition"
                   >
                     Select File
                   </label>
@@ -219,7 +246,7 @@ const S_Upload = () => {
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-1.5">
                     <div 
-                      className="bg-custom-i-berry h-1.5 rounded-full" 
+                      className="bg-custom-blue h-1.5 rounded-full" 
                       style={{ width: `${uploadProgress}%` }}
                     ></div>
                   </div>
@@ -231,8 +258,10 @@ const S_Upload = () => {
                 <button 
                   type="submit"
                   disabled={isUploading}
-                  className={`w-full py-2 px-4 rounded-md font-medium text-white transition ${
-                    isUploading ? 'bg-gray-400' : 'bg-custom-i-berry hover:bg-custom-blue'
+                  className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 border-2 ${
+                    isUploading 
+                      ? 'bg-gray-400 cursor-not-allowed text-white border-gray-400' 
+                      : 'bg-custom-blue text-white border-custom-blue hover:bg-transparent hover:text-custom-blue hover:border-custom-blue'
                   }`}
                 >
                   {isUploading ? 'Uploading...' : 'Upload Material'}

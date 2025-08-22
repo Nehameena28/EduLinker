@@ -20,7 +20,7 @@ const NoteCard = ({
   isPurchased = false,
 }) => {
   return (
-    <div className="overflow-hidden transition-all duration-300">
+    <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden transition-all duration-300 border border-gray-100 cursor-pointer">
       {/* Header Section */}
       <div className="bg-gradient-to-r from-[rgba(31,91,120,0.9)] to-[rgba(31,91,120,1)] h-32 flex items-center px-6">
         <div className="flex items-center">
@@ -28,7 +28,7 @@ const NoteCard = ({
             <FaBook className="text-white text-xl" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">{title}</h1>
+            <h2 className="text-xl font-bold text-white">{title}</h2>
             <div className="flex items-center mt-1">
               <span className="bg-white/20 text-xs text-white px-2 py-1 rounded">
                 {category}
@@ -41,8 +41,6 @@ const NoteCard = ({
       {/* Body */}
       <div className="p-5">
         <p className="text-sm text-gray-600 mb-4">{description}</p>
-
-        <div className="h-0.5 bg-gradient-to-r from-transparent via-[rgb(221,167,123)] to-transparent my-4" />
 
         {/* PDF Preview */}
         <div className="mb-4">
@@ -106,7 +104,7 @@ const NoteCard = ({
             ) : !hideBuy && onBuy && (
               <button
                 onClick={onBuy}
-                className="bg-[rgb(221,167,123)] hover:bg-[rgb(148,93,94)] text-white font-medium py-2 px-4 rounded-lg text-sm transition"
+                className="bg-custom-blue text-white font-medium py-2 px-4 rounded-lg text-sm hover:bg-transparent hover:border hover:border-custom-blue hover:text-custom-blue transition-all duration-300"
               >
                 Buy
               </button>

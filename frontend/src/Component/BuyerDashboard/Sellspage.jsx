@@ -220,9 +220,7 @@
        fullUrl = `http://localhost:7000${pdfUrl}`;
      }
      
-     if (!isPurchased && note.pdf?.previewUrl) {
-       showToast("Showing preview (3 pages only). Purchase to view full content.", "info");
-     }
+
      
      setCurrentPdfUrl(fullUrl);
      setCurrentNoteId(noteId);
@@ -379,9 +377,9 @@
        {/* Enhanced Phone Number Modal */}
        {showPhoneModal && (
          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-           <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl border-l-4 border-custom-i-berry">
+           <div className="bg-white/95 backdrop-blur-md rounded-3xl p-8 w-full max-w-md shadow-2xl border border-custom-blue/20">
              <div className="text-center mb-8">
-               <div className="w-20 h-20 bg-gradient-to-br from-custom-i-berry/20 to-custom-brown/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+               <div className="w-20 h-20 bg-gradient-to-br from-custom-blue/10 to-custom-blue/20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg border border-custom-blue/30">
                  <svg className="w-10 h-10 text-custom-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                  </svg>
@@ -391,7 +389,7 @@
              </div>
              
              <div className="mb-8">
-               <label className="block text-sm font-semibold text-custom-brown mb-3">
+               <label className="block text-sm font-semibold text-custom-blue mb-3">
                  Phone Number
                </label>
                <input
@@ -399,7 +397,7 @@
                  value={phoneNumber}
                  onChange={(e) => setPhoneNumber(e.target.value)}
                  placeholder="Enter your 10-digit phone number"
-                 className="w-full px-5 py-4 border-2 border-custom-i-berry/30 rounded-xl focus:ring-2 focus:ring-custom-i-berry focus:border-custom-i-berry outline-none transition-all duration-300 text-lg"
+                 className="w-full px-5 py-4 border-2 border-custom-blue/30 rounded-xl focus:ring-2 focus:ring-custom-blue focus:border-custom-blue outline-none transition-all duration-300 text-lg bg-white/80"
                  maxLength="10"
                />
              </div>
@@ -411,13 +409,13 @@
                    setPhoneNumber("");
                    setSelectedNote(null);
                  }}
-                 className="flex-1 px-6 py-4 border-2 border-custom-brown text-custom-brown rounded-xl hover:bg-custom-brown/10 hover:border-custom-brown transition-all duration-300 font-semibold"
+                 className="flex-1 px-6 py-4 bg-transparent border-2 border-custom-blue text-custom-blue rounded-xl hover:bg-custom-blue hover:text-white transition-all duration-300 font-semibold"
                >
                  Cancel
                </button>
                <button
                  onClick={handlePhoneSubmit}
-                 className="flex-1 px-6 py-4 bg-gradient-to-r from-custom-i-berry to-custom-brown hover:from-custom-brown hover:to-custom-i-berry text-white rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg font-semibold"
+                 className="flex-1 px-6 py-4 bg-custom-blue border-2 border-custom-blue text-white rounded-xl hover:bg-transparent hover:text-custom-blue transition-all duration-300 font-semibold"
                >
                  Continue
                </button>

@@ -66,7 +66,7 @@ const B_Purchased = () => {
     <div className="min-h-screen bg-white text-custom-blue">
       {/* Header */}
       <div className="px-6 py-6">
-        <h1 className="text-3xl font-bold text-[rgb(31,91,120)] mb-2">My Purchased Items</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">My Purchased Items</h1>
       </div>
 
       {/* Search Bar */}
@@ -107,7 +107,7 @@ const B_Purchased = () => {
           <div className="max-w-6xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
             {filteredItems.length > 0 ? (
               filteredItems.map((item, index) => (
-                <div key={index} className="bg-white shadow-lg hover:shadow-xl rounded-2xl overflow-hidden transition-all duration-300">
+                <div key={index} className="bg-white shadow-lg hover:shadow-xl hover:scale-105 rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer">
                   {/* Header Section */}
                   <div className="bg-gradient-to-r from-[rgba(31,91,120,0.9)] to-[rgba(31,91,120,1)] h-32 flex items-center px-6">
                     <div className="flex items-center">
@@ -115,7 +115,8 @@ const B_Purchased = () => {
                         <FaBook className="text-white text-xl" />
                       </div>
                       <div>
-                        <h1 className="text-xl font-bold text-white">{item.title}</h1>
+                        {/* <h1 className="text-xl font-bold text-white">{item.title}</h1> */}
+                        <h2 className="text-xl font-bold text-white">{item.title}</h2>
                         <div className="flex items-center mt-1">
                           <span className="bg-white/20 text-xs text-white px-2 py-1 rounded">
                             {item.category}
@@ -128,8 +129,6 @@ const B_Purchased = () => {
                   {/* Body */}
                   <div className="p-5">
                     <p className="text-sm text-gray-600 mb-4">{item.description}</p>
-
-                    <div className="h-0.5 bg-gradient-to-r from-transparent via-[rgb(221,167,123)] to-transparent my-4" />
 
                     {/* PDF Preview */}
                     <div className="mb-4">
@@ -148,17 +147,17 @@ const B_Purchased = () => {
                     </div>
 
                     {/* Bottom Actions */}
-                    <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-3 mt-4">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mt-4">
                       {/* Purchase Info */}
-                      <div className="text-sm">
-                        <p className="font-semibold text-[rgb(148,93,94)]">Purchased: ₹{item.price}</p>
-                        <p className="text-xs text-gray-500">Seller: {item.uploadedBy}</p>
+                      <div className="text-sm flex-1 min-w-0">
+                        <p className="font-semibold text-[rgb(148,93,94)] whitespace-nowrap">Purchased: ₹{item.price}</p>
+                        <p className="text-xs text-gray-500 whitespace-nowrap overflow-hidden text-ellipsis">Seller: {item.uploadedBy}</p>
                       </div>
 
                       {/* Download Button */}
                       <button
                         onClick={() => handleDownloadPdf(item)}
-                        className="flex items-center bg-[rgb(221,167,123)] hover:bg-[rgb(148,93,94)] text-white font-medium py-2 px-4 rounded-lg text-sm transition"
+                        className="flex items-center bg-custom-blue text-white font-medium py-2 px-4 rounded-lg text-sm hover:bg-transparent hover:border hover:border-custom-blue hover:text-custom-blue transition-all duration-300 flex-shrink-0 whitespace-nowrap"
                       >
                         <FaDownload className="mr-2" />
                         Download

@@ -14,7 +14,7 @@ const S_NoteCard = ({
   isPurchased = false,
 }) => {
   return (
-    <div className=" overflow-hidden transition-all duration-300">
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 border border-gray-100 hover:scale-105 hover:shadow-xl transform cursor-pointer">
       {/* Header Section */}
       <div className="bg-gradient-to-r from-[rgba(31,91,120,0.9)] to-[rgba(31,91,120,1)] h-32 flex items-center px-6">
         <div className="flex items-center">
@@ -22,7 +22,8 @@ const S_NoteCard = ({
             <FaBook className="text-white text-xl" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white">{title}</h1>
+            {/* <h1 className="text-xl font-bold text-white">{title}</h1> */}
+            <h2 className="text-xl font-bold text-white">{title}</h2>
             <div className="flex items-center mt-1">
               <span className="bg-white/20 text-xs text-white px-2 py-1 rounded">
                 {category}
@@ -35,8 +36,6 @@ const S_NoteCard = ({
       {/* Body */}
       <div className="p-5">
         <p className="text-sm text-gray-600 mb-4">{description}</p>
-
-        <div className="h-0.5 bg-gradient-to-r from-transparent via-[rgb(221,167,123)] to-transparent my-4" />
 
         {/* PDF Preview */}
         <div className="mb-4" onClick={onViewPdf}>
@@ -61,22 +60,16 @@ const S_NoteCard = ({
             Price: ₹{price}
           </div>
 
-          {/* Purchase Status or Delete Button */}
-          {isPurchased ? (
-            <span className="bg-green-50 text-green-600 font-medium py-2 px-3 rounded-lg text-sm">
-              Purchased
-            </span>
-          ) : (
-            showActions && onDelete && (
-              <button
-                onClick={onDelete}
-                className="flex items-center bg-red-50 hover:bg-red-100 text-red-500 font-medium py-2 px-3 rounded-lg text-sm transition"
-                title="Delete this note"
-              >
-                <FaTrash className="mr-1" />
-                Delete
-              </button>
-            )
+          {/* Delete Button */}
+          {showActions && onDelete && (
+            <button
+              onClick={onDelete}
+              className="flex items-center bg-red-50 hover:bg-red-100 text-red-500 font-medium py-2 px-3 rounded-lg text-sm transition"
+              title="Delete this note"
+            >
+              <FaTrash className="mr-1" />
+              Delete
+            </button>
           )}
         </div>
       </div>

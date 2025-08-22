@@ -9,7 +9,7 @@ const RestrictedPdfViewer = ({ pdfUrl, onClose, isPurchased }) => {
         <div className="flex justify-between items-center p-4 border-b">
           <div className="flex items-center">
             <h3 className="text-lg font-semibold">
-              {isPurchased ? 'Full PDF Viewer' : 'PDF Preview (3 pages only)'}
+              {isPurchased ? 'Full PDF Viewer' : 'PDF Preview'}
             </h3>
             {!isPurchased && (
               <span className="ml-3 px-3 py-1 bg-orange-100 text-orange-600 text-sm rounded-full flex items-center">
@@ -40,7 +40,7 @@ const RestrictedPdfViewer = ({ pdfUrl, onClose, isPurchased }) => {
               <div className="text-center text-white">
                 <FaShoppingCart className="text-3xl mx-auto mb-2" />
                 <h4 className="text-lg font-semibold mb-2">Want to see the full content?</h4>
-                <p className="text-sm mb-4">This is just a preview. Purchase to access all pages.</p>
+                <p className="text-sm mb-4">This is just a preview (3 pages only). Purchase to access all pages.</p>
                 <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition">
                   Purchase Full PDF
                 </button>

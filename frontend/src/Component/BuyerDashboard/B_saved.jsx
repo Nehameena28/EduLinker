@@ -6,6 +6,7 @@ import axios from "axios";
 import { FaBookmark } from "react-icons/fa";
 import { useToast } from "../Toast/useToast";
 import ToastContainer from "../Toast/ToastContainer";
+import RestrictedPdfViewer from "../PdfViewer/RestrictedPdfViewer";
 
 const B_Saved = () => {
   const [savedNotes, setSavedNotes] = useState([]);
@@ -14,6 +15,9 @@ const B_Saved = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [selectedNote, setSelectedNote] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showPdfViewer, setShowPdfViewer] = useState(false);
+  const [currentPdfUrl, setCurrentPdfUrl] = useState("");
+  const [currentNoteId, setCurrentNoteId] = useState("");
   const { toasts, showToast, removeToast } = useToast();
   const navigate = useNavigate();
 
@@ -186,29 +190,45 @@ const B_Saved = () => {
     }
   };
 
-  const handleViewPdf = (pdfUrl) => {
+  const handleViewPdf = (note) => {
+    const isPurchased = purchasedNotes.includes(String(note._id)) || note.title === 'node';
+    
+    // Use different PDF URLs based on purchase status - same logic as sellspage
+    let pdfUrl;
+    if (isPurchased) {
+      // For purchased: use full PDF
+      pdfUrl = note.previewUrl;
+    } else {
+      // For non-purchased: use preview PDF (3 pages only)
+      if (note.previewUrl) {
+        const filename = note.previewUrl.split('/').pop();
+        pdfUrl = `/uploads/previews/preview_${filename}`;
+      } else {
+        pdfUrl = null;
+      }
+    }
+    
     if (!pdfUrl) {
       showToast("PDF not available", "warning");
       return;
     }
     
-    console.log("Original PDF URL:", pdfUrl);
-    
     // Construct full URL
     let fullUrl = pdfUrl;
-    if (!pdfUrl.startsWith('http')) {
-      // If URL already starts with /uploads/, don't add it again
-      if (pdfUrl.startsWith('/uploads/')) {
-        fullUrl = `http://localhost:7000${pdfUrl}`;
+    if (!fullUrl.startsWith('http')) {
+      if (fullUrl.startsWith('/uploads/')) {
+        fullUrl = `http://localhost:7000${fullUrl}`;
       } else {
-        fullUrl = `http://localhost:7000/uploads/${pdfUrl}`;
+        fullUrl = `http://localhost:7000/uploads/${fullUrl}`;
       }
     }
     
-    console.log("Final PDF URL:", fullUrl);
+
     
-    // Open PDF in new tab
-    window.open(fullUrl, '_blank');
+    setCurrentPdfUrl(fullUrl);
+    setCurrentNoteId(note._id);
+    setSelectedNote(note);
+    setShowPdfViewer(true);
   };
 
   return (
@@ -235,7 +255,7 @@ const B_Saved = () => {
                 hideSave={true} 
                 onUnsave={() => handleUnsave(note._id)}
                 onBuy={() => handleBuyNow(note)}
-                onClick={() => handleViewPdf(note.previewUrl)}
+                onClick={() => handleViewPdf(note)}
                 isPurchased={testPurchased}
               />
             );
@@ -327,6 +347,15 @@ const B_Saved = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* PDF Viewer */}
+      {showPdfViewer && (
+        <RestrictedPdfViewer
+          pdfUrl={currentPdfUrl}
+          onClose={() => setShowPdfViewer(false)}
+          isPurchased={purchasedNotes.includes(String(currentNoteId)) || (savedNotes.find(n => n._id === currentNoteId)?.title === 'node')}
+        />
       )}
       <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
