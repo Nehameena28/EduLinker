@@ -236,21 +236,17 @@
    return (
      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
        <div className="relative h-[440px] flex items-center justify-center px-4 sm:px-6 overflow-hidden">
-         {/* Video Background */}
-         <video 
-           className="absolute inset-0 w-full h-full object-cover"
-           autoPlay 
-           muted 
-           loop 
-           playsInline
-         >
-           <source src="https://cdn.pixabay.com/vimeo/279533085/education-18947.mp4?width=1280&hash=b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8b8" type="video/mp4" />
-           {/* Fallback gradient background */}
-           <div className="absolute inset-0 bg-gradient-to-r from-[rgb(31,91,120)] to-[rgb(148,93,94)]"></div>
-         </video>
+         {/* Background Image */}
+         <div 
+           className="absolute inset-0 w-full h-full bg-cover bg-center"
+           style={{
+             backgroundImage: "url('/buyer-bg.jpg')"
+           }}
+         ></div>
+
+
          
-         {/* Video Overlay */}
-         <div className="absolute inset-0 bg-gradient-to-r from-[rgba(31,91,120,0.8)] to-[rgba(148,93,94,0.8)]"></div>
+
          
          {/* Animated Particles Overlay */}
          <div className="absolute inset-0 opacity-30">
@@ -280,9 +276,9 @@
            .animate-bounce-fast { animation: bounce-fast 2s ease-in-out infinite; }
          `}</style>
          <div className="relative z-10 text-center w-full max-w-3xl mx-auto">
-           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg mb-4">
+           {/* <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg mb-4">
              Turn Your Knowledge Into Income
-           </h1>
+           </h1> */}
            <p className="text-white text-base sm:text-lg mb-6 px-2 sm:px-0">
              Upload your notes, reach learners around the world, and start earning today with EduLinker.
            </p>
