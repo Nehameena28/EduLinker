@@ -57,7 +57,7 @@ const About = () => {
         {/* Our Vision - Soft background style */}
         <div
           data-aos="fade-left"
-          className="bg-[#f9f3ee] rounded-2xl p-8 border-l-4 border-custom-i-berry shadow-inner hover:scale-[1.01] transition"
+          className="bg-[#f9f3ee] rounded-2xl p-8 border-l-4 border-custom-i-berry shadow-xl hover:scale-[1.01] hover:shadow-2xl transition"
         >
           <h2 className="text-3xl font-bold text-custom-i-berry mb-4">Our Vision</h2>
           <p className="text-gray-700 text-base leading-relaxed">
@@ -141,7 +141,7 @@ const About = () => {
             },
           ].map((item, index) => (
             <div key={index} className="border border-gray-200 rounded-xl p-6 bg-white shadow-sm" data-aos="fade-up" data-aos-delay={index * 100}>
-              <h3 className="text-lg font-bold text-custom-i-berry mb-2">{item.q}</h3>
+              <h3 className="text-lg font-bold text-custom-blue mb-2">{item.q}</h3>
               <p className="text-gray-700">{item.a}</p>
             </div>
           ))}

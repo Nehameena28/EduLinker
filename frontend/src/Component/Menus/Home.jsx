@@ -8,25 +8,22 @@ const Home = () => {
   return (
     <>
     {/* <Navbar></Navbar> */}
-    <div className="relative w-full h-screen mt-0">
+    <div className="relative w-full min-h-screen mt-0">
  
       {/* Background image */}
       <div
-        className="absolute inset-0 bg-cover sm:bg-cover h-screen md:bg-cover lg:bg-cover bg-center "
+        className="absolute inset-0 bg-cover sm:bg-cover min-h-screen md:bg-cover lg:bg-cover bg-center "
         style={{
           backgroundImage: "url('/Home-Img/myImage.jpg')",
           opacity: 0.7,
         }}
       ></div>
       
-      <div className="relative flex flex-col items-start justify-center h-full pl-6 md:pl-20 text-black">
-        <h1 className="text-3xl sm:text-4xl md:text-3xl lg:text-5xl font-bold mb-6 md:mb-8 opacity-100 leading-tight">
-          Unlock the Knowledge
-          <br />
-          you need with
-          <br />
-          our wide selection of
-          <br />
+      <div className="relative flex flex-col items-start justify-center pl-6 md:pl-20 text-black min-h-screen">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-8 opacity-100 leading-loose text-left max-w-4xl pb-4">
+          Unlock the Knowledge<br />
+          you need with<br />
+          our wide selection of<br />
           study materials.
         </h1>
 

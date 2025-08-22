@@ -104,7 +104,7 @@ const NoteCard = ({
             ) : !hideBuy && onBuy && (
               <button
                 onClick={onBuy}
-                className="bg-custom-blue text-white font-medium py-2 px-4 rounded-lg text-sm hover:bg-transparent hover:border hover:border-custom-blue hover:text-custom-blue transition-all duration-300"
+                className="bg-[rgb(221,167,123)] hover:bg-[rgb(148,93,94)] text-white font-medium py-2 px-4 rounded-lg text-sm transition"
               >
                 Buy
               </button>
