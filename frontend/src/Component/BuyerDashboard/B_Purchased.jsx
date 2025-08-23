@@ -16,7 +16,7 @@ const B_Purchased = () => {
     const fetchPurchasedItems = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(`http://localhost:7000/api/buyer/purchased?email=${userEmail}`, {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/buyer/purchased?email=${userEmail}`, {
           withCredentials: true,
         });
         setPurchasedItems(res.data);
@@ -44,7 +44,7 @@ const B_Purchased = () => {
       }
       
       // Use the secure download endpoint
-      const downloadUrl = `http://localhost:7000/api/download-pdf/${item._id}?userEmail=${userEmail}`;
+      const downloadUrl = `${import.meta.env.VITE_API_URL}/api/download-pdf/${item._id}?userEmail=${userEmail}`;
       
       // Create download link
       const link = document.createElement('a');

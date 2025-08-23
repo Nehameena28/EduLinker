@@ -12,7 +12,7 @@ const B_Payment = () => {
     const fetchPayments = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(`http://localhost:7000/api/buyer/payments?email=${userEmail}`, {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/buyer/payments?email=${userEmail}`, {
           withCredentials: true,
         });
         setPayments(res.data.payments);

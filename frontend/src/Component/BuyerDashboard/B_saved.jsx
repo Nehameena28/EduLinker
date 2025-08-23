@@ -29,8 +29,8 @@ const B_Saved = () => {
     const fetchData = async () => {
       try {
         const [savedRes, purchasedRes] = await Promise.all([
-          axios.get(`http://localhost:7000/api/saved-notes/${userId}`),
-          user?.email ? axios.get(`http://localhost:7000/api/buyer/purchased?email=${user.email}`, { withCredentials: true }).catch(() => ({ data: [] })) : Promise.resolve({ data: [] })
+          axios.get(`${import.meta.env.VITE_API_URL}/api/saved-notes/${userId}`),
+          user?.email ? axios.get(`${import.meta.env.VITE_API_URL}/api/buyer/purchased?email=${user.email}`, { withCredentials: true }).catch(() => ({ data: [] })) : Promise.resolve({ data: [] })
         ]);
         
         console.log('Saved notes:', savedRes.data);
@@ -76,7 +76,7 @@ const B_Saved = () => {
 
   const handleUnsave = async (noteId) => {
     try {
-      await axios.delete(`http://localhost:7000/api/saved-notes/${noteId}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/saved-notes/${noteId}`);
       setSavedNotes(prev => prev.filter(note => note._id !== noteId));
       showToast("Note unsaved successfully", "success");
     } catch (error) {
@@ -107,7 +107,7 @@ const B_Saved = () => {
 
   const processPayment = async (note, phone) => {
     try {
-      const res = await axios.post("http://localhost:7000/api/payment/checkout", {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/payment/checkout`, {
         amount: note.price * 100,
       });
 
@@ -123,7 +123,7 @@ const B_Saved = () => {
         order_id: order.id,
         handler: async function (response) {
           try {
-            const verifyRes = await axios.post("http://localhost:7000/api/payment/verify", {
+            const verifyRes = await axios.post(`${import.meta.env.VITE_API_URL}/api/payment/verify`, {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
@@ -149,7 +149,7 @@ const B_Saved = () => {
               // Refresh purchased notes after successful payment
               if (user?.email) {
                 try {
-                  const purchasedRes = await axios.get(`http://localhost:7000/api/buyer/purchased?email=${user.email}`, { withCredentials: true });
+                  const purchasedRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/buyer/purchased?email=${user.email}`, { withCredentials: true });
                   let purchasedIds = [];
                   if (purchasedRes.data) {
                     if (Array.isArray(purchasedRes.data)) {
