@@ -68,7 +68,7 @@ const Signup = () => {
 
     try {
       const { confirmPassword, ...dataToSend } = formData;
-      const res = await axios.post("http://localhost:7000/api/Signup", dataToSend, {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/Signup`, dataToSend, {
         withCredentials: true,
       });
 
