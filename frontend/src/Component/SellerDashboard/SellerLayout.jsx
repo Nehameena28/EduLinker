@@ -7,6 +7,10 @@ import { HiMenu, HiX } from 'react-icons/hi';
 const SellerLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
+
   return (
     <div className="flex flex-col h-screen overflow-hidden">
       {/* Top Navigation Bar */}
@@ -24,7 +28,7 @@ const SellerLayout = () => {
         <div 
           className={`${sidebarOpen ? 'block' : 'hidden'} md:block w-full md:w-64 bg-[rgb(221,167,123)]/10 flex-shrink-0`}
         >
-          <Sidebar />
+          <Sidebar onNavigate={closeSidebar} />
         </div>
 
         {/* Main Content */}

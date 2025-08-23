@@ -37,9 +37,10 @@ const PaymentIcon = () => (
 );
 
 // NavItem component using NavLink
-const NavItem = ({ icon, title, to }) => (
+const NavItem = ({ icon, title, to, onNavigate }) => (
   <NavLink
     to={to}
+    onClick={() => onNavigate && onNavigate()}
     className={({ isActive }) =>
       `group flex items-center px-4 py-3 rounded-lg transition-all duration-200 cursor-pointer ${
         isActive
@@ -58,16 +59,16 @@ const NavItem = ({ icon, title, to }) => (
 );
 
 // Buyer Sidebar component
-const Buyersidebar = () => {
+const Buyersidebar = ({ onNavigate }) => {
   return (
     <div className="w-72 bg-[rgb(221,167,123)]/10 min-h-screen flex flex-col">
       <div className="bg-white rounded-xl shadow-sm p-6 mt-6 mx-4 flex-1 flex flex-col justify-between">
         <nav className="flex flex-col gap-5">
-          <NavItem icon={<DashboardIcon />} title="Dashboard" to="/buyer/dashboard" />
-          <NavItem icon={<PurchasedIcon />} title="Purchased Docs" to="/buyer/B_purchased" />
-          <NavItem icon={<SavedIcon />} title="Saved" to="/buyer/B_Saved" />
-          {/* <NavItem icon={<DownloadIcon />} title="Downloade's" to="/buyer/B_Downloaded" /> */}
-          <NavItem icon={<PaymentIcon />} title="Payment History" to="/buyer/B_Payment" />
+          <NavItem icon={<DashboardIcon />} title="Dashboard" to="/buyer/dashboard" onNavigate={onNavigate} />
+          <NavItem icon={<PurchasedIcon />} title="Purchased Docs" to="/buyer/B_purchased" onNavigate={onNavigate} />
+          <NavItem icon={<SavedIcon />} title="Saved" to="/buyer/B_Saved" onNavigate={onNavigate} />
+          {/* <NavItem icon={<DownloadIcon />} title="Downloade's" to="/buyer/B_Downloaded" onNavigate={onNavigate} /> */}
+          <NavItem icon={<PaymentIcon />} title="Payment History" to="/buyer/B_Payment" onNavigate={onNavigate} />
         </nav>
 
         <div className="text-xs text-center text-gray-500 mt-10">

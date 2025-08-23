@@ -38,9 +38,10 @@ const PaymentIcon = () => (
 );
 
 // NavItem component using NavLink only
-const NavItem = ({ icon, title, to }) => (
+const NavItem = ({ icon, title, to, onNavigate }) => (
   <NavLink
     to={to}
+    onClick={() => onNavigate && onNavigate()}
     className={({ isActive }) =>
       `group flex items-center px-3 md:px-4 py-3 md:py-3 rounded-lg transition-all duration-200 cursor-pointer touch-manipulation ${
         isActive
@@ -59,16 +60,16 @@ const NavItem = ({ icon, title, to }) => (
 );
 
 // Sidebar component
-const Sidebar = () => {
+const Sidebar = ({ onNavigate }) => {
   return (
     <div className="w-full md:w-64 bg-[rgb(221,167,123)]/10 h-full sticky top-0 overflow-hidden">
       <div className="bg-white h-full md:rounded-xl shadow-sm p-4 md:p-6 flex flex-col justify-start overflow-y-auto scrollbar-hide">
         <nav className="flex flex-col gap-2 md:gap-4">
-          <NavItem icon={<DashboardIcon />} title="Dashboard" to="/seller/dashboard" />
-          <NavItem icon={<UploadIcon />} title="Upload Material" to="/seller/S_upload" />
-          <NavItem icon={<MaterialsIcon />} title="All Materials" to="/seller/S_Sell" />
-          <NavItem icon={<SalesIcon />} title="Sales History" to="/seller/S_History" />
-          <NavItem icon={<PaymentIcon />} title="Payment Info" to="/seller/S_payment" />
+          <NavItem icon={<DashboardIcon />} title="Dashboard" to="/seller/dashboard" onNavigate={onNavigate} />
+          <NavItem icon={<UploadIcon />} title="Upload Material" to="/seller/S_upload" onNavigate={onNavigate} />
+          <NavItem icon={<MaterialsIcon />} title="All Materials" to="/seller/S_Sell" onNavigate={onNavigate} />
+          <NavItem icon={<SalesIcon />} title="Sales History" to="/seller/S_History" onNavigate={onNavigate} />
+          <NavItem icon={<PaymentIcon />} title="Payment Info" to="/seller/S_payment" onNavigate={onNavigate} />
         </nav>
       </div>
     </div>
