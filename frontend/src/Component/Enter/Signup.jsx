@@ -91,27 +91,27 @@ const Signup = () => {
   };
 
   return (
-    <div className="h-screen flex bg-slate-900 overflow-hidden">
+    <div className="min-h-screen flex bg-slate-900 overflow-hidden">
       {/* Left Side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-white overflow-y-auto scrollbar-hide ml-18">
-        <div className="w-full max-w-md">
-          <div className="text-center mb-6">
-            <div className="lg:hidden mb-4">
-              <img src="/i2.png" alt="EDULinker" className="w-14 h-auto mx-auto cursor-pointer" onClick={() => navigate('/')} />
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-6 bg-white overflow-y-auto scrollbar-hide">
+        <div className="w-full max-w-sm sm:max-w-md">
+          <div className="text-center mb-4 sm:mb-6">
+            <div className="lg:hidden mb-3 sm:mb-4">
+              <img src="/i2.png" alt="EDULinker" className="w-12 sm:w-14 h-auto mx-auto cursor-pointer" onClick={() => navigate('/')} />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Create Account</h2>
-            <p className="text-gray-600 text-sm">Join our learning community</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Create Account</h2>
+            <p className="text-gray-600 text-xs sm:text-sm">Join our learning community</p>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-600 text-sm">{error}</p>
+            <div className="mb-3 sm:mb-4 p-2 sm:p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-600 text-xs sm:text-sm">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 Full Name
               </label>
               <input
@@ -119,14 +119,14 @@ const Signup = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors text-sm outline-none"
+                className="w-full px-3 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors text-xs sm:text-sm outline-none"
                 placeholder="Enter your full name"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 Email Address
               </label>
               <input
@@ -134,14 +134,14 @@ const Signup = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors text-sm outline-none"
+                className="w-full px-3 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors text-xs sm:text-sm outline-none"
                 placeholder="Enter your email"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 Password
               </label>
               <div className="relative">
@@ -150,22 +150,22 @@ const Signup = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-3 py-2.5 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors text-sm outline-none"
+                  className="w-full px-3 py-2 sm:py-2.5 pr-8 sm:pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors text-xs sm:text-sm outline-none"
                   placeholder="Create a password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 p-1"
                 >
                   {showPassword ? (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                   ) : (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
                     </svg>
                   )}
@@ -174,7 +174,7 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 Confirm Password
               </label>
               <div className="relative">
@@ -183,22 +183,22 @@ const Signup = () => {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full px-3 py-2.5 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors text-sm outline-none"
+                  className="w-full px-3 py-2 sm:py-2.5 pr-8 sm:pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors text-xs sm:text-sm outline-none"
                   placeholder="Confirm your password"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 p-1"
                 >
                   {showConfirmPassword ? (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                   ) : (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
                     </svg>
                   )}
@@ -207,14 +207,14 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                 Account Type
               </label>
               <select
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
-                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors text-sm outline-none"
+                className="w-full px-3 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors text-xs sm:text-sm outline-none"
                 required
               >
                 <option value="">Choose your role</option>
@@ -225,14 +225,14 @@ const Signup = () => {
 
             <button
               type="submit"
-              className="w-full bg-custom-blue hover:opacity-90 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl mt-6"
+              className="w-full bg-custom-blue hover:opacity-90 text-white font-semibold py-2 sm:py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl mt-4 sm:mt-6 text-sm sm:text-base"
             >
               Create Account
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-600 text-sm">
+          <div className="mt-4 sm:mt-6 text-center">
+            <p className="text-gray-600 text-xs sm:text-sm">
               Already have an account?{" "}
               <a href="/Login" className="text-custom-blue hover:opacity-80 font-medium hover:underline">
                  Log in
@@ -245,23 +245,23 @@ const Signup = () => {
       {/* Right Side - Image/Pattern */}
       <div className="hidden lg:flex lg:w-1/2 bg-custom-blue relative">
         <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative z-10 flex flex-col justify-center items-center text-white p-12 h-full text-center ml-16">
-          <div className="mb-8">
-            <img src="/i2.png" alt="EDULinker" className="w-24 h-auto cursor-pointer mx-auto" onClick={() => navigate('/')} />
+        <div className="relative z-10 flex flex-col justify-center items-center text-white p-8 xl:p-12 h-full text-center">
+          <div className="mb-6 xl:mb-8">
+            <img src="/i2.png" alt="EDULinker" className="w-20 xl:w-24 h-auto cursor-pointer mx-auto" onClick={() => navigate('/')} />
           </div>
-          <h2 className="text-4xl font-bold mb-6 text-gray-200 drop-shadow-2xl leading-tight">Join EDULinker</h2>
-          <p className="text-xl text-white/90 mb-8 font-medium leading-relaxed">Connect, Learn, and Share Knowledge</p>
-          <div className="space-y-3">
-            <p className="text-xl text-white/80">
-              <span className="text-green-400 mr-3 text-xl">✓</span>
+          <h2 className="text-3xl xl:text-4xl font-bold mb-4 xl:mb-6 text-gray-200 drop-shadow-2xl leading-tight">Join EDULinker</h2>
+          <p className="text-lg xl:text-xl text-white/90 mb-6 xl:mb-8 font-medium leading-relaxed">Connect, Learn, and Share Knowledge</p>
+          <div className="space-y-2 xl:space-y-3">
+            <p className="text-lg xl:text-xl text-white/80">
+              <span className="text-green-400 mr-2 xl:mr-3 text-lg xl:text-xl">✓</span>
               Access thousands of study materials
             </p>
-            <p className="text-xl text-white/80">
-              <span className="text-green-400 mr-3 text-xl">✓</span>
+            <p className="text-lg xl:text-xl text-white/80">
+              <span className="text-green-400 mr-2 xl:mr-3 text-lg xl:text-xl">✓</span>
               Share your knowledge with others
             </p>
-            <p className="text-xl text-white/80">
-              <span className="text-green-400 mr-3 text-xl">✓</span>
+            <p className="text-lg xl:text-xl text-white/80">
+              <span className="text-green-400 mr-2 xl:mr-3 text-lg xl:text-xl">✓</span>
               Build your learning community
             </p>
           </div>

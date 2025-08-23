@@ -74,14 +74,14 @@ const Navbar = () => {
   return (
     <header className="w-full bg-cyan-700 text-white font-semibold shadow">
       <nav className="flex justify-end items-center h-5 text-white font-semibold bg-gray-900"></nav>
-      <div className="max-w-7xl mx-auto flex justify-between items-center h-20 px-4 md:px-8">
+      <div className="max-w-7xl mx-auto flex justify-between items-center h-16 sm:h-20 px-4 md:px-8">
         {/* Logo */}
-        <button onClick={() => navigate("/Home")}>
-          <img className="h-32 object-cover mb-10" src="/icon.png" alt="Logo" />
+        <button onClick={() => navigate("/Home")} className="flex-shrink-0">
+          <img className="h-20 sm:h-24 md:h-32 object-cover" src="/icon.png" alt="Logo" />
         </button>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex space-x-8 items-center">
+        <div className="hidden md:flex space-x-4 lg:space-x-8 items-center">
           {/* <Link to="/Home" className={`${location.pathname === "/Home" ? "underline font-bold" : ""}`}>Home</Link>
           <Link to="/About" className={`${location.pathname === "/About" ? "underline font-bold" : ""}`}>About</Link>
           <Link to="/Contact" className={`${location.pathname === "/Contact" ? "underline font-bold" : ""}`}>Contact</Link> */}
@@ -89,7 +89,7 @@ const Navbar = () => {
             <>
               <Link
                 to="/Home"
-                className={`${
+                className={`text-sm lg:text-base hover:underline transition ${
                   location.pathname === "/Home" ? "underline font-bold" : ""
                 }`}
               >
@@ -97,7 +97,7 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/About"
-                className={`${
+                className={`text-sm lg:text-base hover:underline transition ${
                   location.pathname === "/About" ? "underline font-bold" : ""
                 }`}
               >
@@ -105,7 +105,7 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/Contact"
-                className={`${
+                className={`text-sm lg:text-base hover:underline transition ${
                   location.pathname === "/Contact" ? "underline font-bold" : ""
                 }`}
               >
@@ -117,36 +117,36 @@ const Navbar = () => {
           {!user ? (
             <>
               <Link to="/Signup">
-                <button className="px-5 py-2 border border-white rounded-lg transition active:scale-90">
+                <button className="px-3 lg:px-5 py-2 border border-white rounded-lg transition active:scale-90 text-sm lg:text-base">
                   Sign up
                 </button>
               </Link>
               <Link to="/Login">
-                <button className="px-5 py-2 border border-white rounded-lg transition active:scale-90">
+                <button className="px-3 lg:px-5 py-2 border border-white rounded-lg transition active:scale-90 text-sm lg:text-base">
                   Log in
                 </button>
               </Link>
             </>
           ) : (
-            <div className="flex items-center justify-end w-full space-x-12">
+            <div className="flex items-center justify-end w-full space-x-4 lg:space-x-12">
               {/* Profile Icon with Dropdown */}
               <div className="relative">
                 <button
                   onClick={toggleProfileDropdown}
-                  className="w-10 h-10 rounded-full bg-white text-cyan-700 flex items-center justify-center font-bold shadow"
+                  className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-white text-cyan-700 flex items-center justify-center font-bold shadow text-sm lg:text-base"
                   title="Profile Options"
                 >
                   {user?.name?.charAt(0).toUpperCase()}
                 </button>
                 
                 {showProfileDropdown && (
-                  <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-custom-i-berry/20 z-50">
+                  <div className="absolute right-0 mt-2 w-36 lg:w-40 bg-white rounded-lg shadow-lg border border-custom-i-berry/20 z-50">
                     <button
                       onClick={() => {
                         setShowProfileDropdown(false);
                         navigate("/profile");
                       }}
-                      className="w-full px-4 py-2 text-left text-custom-blue hover:bg-custom-i-berry/10 rounded-t-lg font-medium"
+                      className="w-full px-3 lg:px-4 py-2 text-left text-custom-blue hover:bg-custom-i-berry/10 rounded-t-lg font-medium text-sm lg:text-base"
                     >
                       Profile
                     </button>
@@ -158,7 +158,7 @@ const Navbar = () => {
                         else if (user.role === "buyer") navigate("/buyer/dashboard");
                         else navigate("/Home");
                       }}
-                      className="w-full px-4 py-2 text-left text-custom-blue hover:bg-custom-i-berry/10 rounded-t-lg font-medium"
+                      className="w-full px-3 lg:px-4 py-2 text-left text-custom-blue hover:bg-custom-i-berry/10 font-medium text-sm lg:text-base"
                     >
                       Dashboard
                     </button>
@@ -168,7 +168,7 @@ const Navbar = () => {
                         setShowProfileDropdown(false);
                         setShowDeleteModal(true);
                       }}
-                      className="w-full px-4 py-2 text-left text-custom-brown hover:bg-red-50 rounded-b-lg font-medium"
+                      className="w-full px-3 lg:px-4 py-2 text-left text-custom-brown hover:bg-red-50 rounded-b-lg font-medium text-sm lg:text-base"
                     >
                       Delete Account
                     </button>
@@ -181,7 +181,7 @@ const Navbar = () => {
               {/* Logout */}
               <button
                 onClick={handleLogout}
-                className="px-5 py-2 border border-white rounded-lg transition hover:bg-white hover:text-cyan-700"
+                className="px-3 lg:px-5 py-2 border border-white rounded-lg transition hover:bg-white hover:text-cyan-700 text-sm lg:text-base"
               >
                 Log out
               </button>
@@ -190,28 +190,28 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu Toggle */}
-        <button className="md:hidden" onClick={toggleMenu}>
-          <i className="ri-menu-3-line text-2xl"></i>
+        <button className="md:hidden p-2" onClick={toggleMenu}>
+          <i className="ri-menu-3-line text-xl sm:text-2xl"></i>
         </button>
       </div>
 
       {/* Mobile Menu Panel */}
       {isMenuOpen && (
-        <div className="md:hidden bg-cyan-800 w-full px-6 pb-4">
-          <div className="flex flex-col space-y-4">
+        <div className="md:hidden bg-cyan-800 w-full px-4 sm:px-6 pb-4">
+          <div className="flex flex-col space-y-3 sm:space-y-4">
             {/* <Link to="/Home" onClick={toggleMenu}>Home</Link>
             <Link to="/About" onClick={toggleMenu}>About</Link>
             <Link to="/Contact" onClick={toggleMenu}>Contact</Link> */}
 
             {!user && (
               <>
-                <Link to="/Home" onClick={toggleMenu}>
+                <Link to="/Home" onClick={toggleMenu} className="py-2 text-sm sm:text-base hover:underline">
                   Home
                 </Link>
-                <Link to="/About" onClick={toggleMenu}>
+                <Link to="/About" onClick={toggleMenu} className="py-2 text-sm sm:text-base hover:underline">
                   About
                 </Link>
-                <Link to="/Contact" onClick={toggleMenu}>
+                <Link to="/Contact" onClick={toggleMenu} className="py-2 text-sm sm:text-base hover:underline">
                   Contact
                 </Link>
               </>
@@ -220,12 +220,12 @@ const Navbar = () => {
             {!user ? (
               <>
                 <Link to="/Signup" onClick={toggleMenu}>
-                  <button className="w-full py-2 border border-white rounded-lg">
+                  <button className="w-full py-2 sm:py-3 border border-white rounded-lg text-sm sm:text-base">
                     Sign up
                   </button>
                 </Link>
                 <Link to="/Login" onClick={toggleMenu}>
-                  <button className="w-full py-2 border border-white rounded-lg">
+                  <button className="w-full py-2 sm:py-3 border border-white rounded-lg text-sm sm:text-base">
                     Log in
                   </button>
                 </Link>
@@ -240,7 +240,7 @@ const Navbar = () => {
                       navigate("/buyer/dashboard");
                     else navigate("/Home");
                   }}
-                  className="w-full py-2 bg-white text-cyan-700 font-bold rounded-lg"
+                  className="w-full py-2 sm:py-3 bg-white text-cyan-700 font-bold rounded-lg text-sm sm:text-base"
                 >
                   {user.name}'s Dashboard
                 </button>
@@ -250,7 +250,7 @@ const Navbar = () => {
                     toggleMenu();
                     setShowDeleteModal(true);
                   }}
-                  className="w-full py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition mb-2"
+                  className="w-full py-2 sm:py-3 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition text-sm sm:text-base"
                 >
                   Delete Account
                 </button>
@@ -260,7 +260,7 @@ const Navbar = () => {
                     toggleMenu();
                     handleLogout();
                   }}
-                  className="w-full py-2 border border-white rounded-lg"
+                  className="w-full py-2 sm:py-3 border border-white rounded-lg text-sm sm:text-base"
                 >
                   Log out
                 </button>
@@ -272,26 +272,26 @@ const Navbar = () => {
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">⚠️</span>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-4 sm:p-6 w-full max-w-sm sm:max-w-md">
+            <div className="text-center mb-4 sm:mb-6">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                <span className="text-xl sm:text-2xl">⚠️</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-2">Delete Account</h3>
-              <p className="text-gray-600">Are you sure you want to delete your account? This action cannot be undone.</p>
+              <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">Delete Account</h3>
+              <p className="text-gray-600 text-sm sm:text-base">Are you sure you want to delete your account? This action cannot be undone.</p>
             </div>
             
-            <div className="flex gap-3">
+            <div className="flex gap-2 sm:gap-3">
               <button
                 onClick={() => setShowDeleteModal(false)}
-                className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+                className="flex-1 px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition text-sm sm:text-base"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteAccount}
-                className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+                className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm sm:text-base"
               >
                 Delete Account
               </button>
@@ -302,7 +302,7 @@ const Navbar = () => {
 
       {/* Notification */}
       {showNotification.show && (
-        <div className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg ${
+        <div className={`fixed top-4 right-4 z-50 px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg text-sm sm:text-base max-w-xs sm:max-w-sm ${
           showNotification.type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
         }`}>
           {showNotification.message}

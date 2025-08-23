@@ -192,37 +192,37 @@ const B_Saved = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6">
       {/* Header Section */}
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <div className="flex items-center gap-3 mb-2">
           <div className="p-2 bg-custom-blue/10 rounded-lg">
-            <FaBookmark className="w-6 h-6 text-custom-blue" />
+            <FaBookmark className="w-5 h-5 sm:w-6 sm:h-6 text-custom-blue" />
           </div>
-          <h1 className="text-3xl font-bold text-custom-blue">Saved Notes</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-custom-blue">Saved Notes</h1>
         </div>
-        <p className="text-gray-600 ml-14">Your collection of saved study materials</p>
-        <div className="w-24 h-1 bg-gradient-to-r from-custom-blue to-custom-i-berry ml-14 mt-2"></div>
+        <p className="text-gray-600 ml-0 sm:ml-14 text-sm sm:text-base">Your collection of saved study materials</p>
+        <div className="w-16 sm:w-24 h-1 bg-gradient-to-r from-custom-blue to-custom-i-berry ml-0 sm:ml-14 mt-2"></div>
       </div>
 
       {savedNotes.length > 0 ? (
         <>
           {/* Stats Section */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-            <div className="flex items-center justify-between">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 mb-6 sm:mb-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-lg font-semibold text-gray-800">Your Library</h3>
-                <p className="text-gray-600">You have {savedNotes.length} saved {savedNotes.length === 1 ? 'note' : 'notes'}</p>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-800">Your Library</h3>
+                <p className="text-gray-600 text-sm sm:text-base">You have {savedNotes.length} saved {savedNotes.length === 1 ? 'note' : 'notes'}</p>
               </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-custom-blue">{savedNotes.length}</div>
-                <div className="text-sm text-gray-500">Total Saved</div>
+              <div className="text-left sm:text-right">
+                <div className="text-xl sm:text-2xl font-bold text-custom-blue">{savedNotes.length}</div>
+                <div className="text-xs sm:text-sm text-gray-500">Total Saved</div>
               </div>
             </div>
           </div>
 
           {/* Notes Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {savedNotes.map((note) => {
               const isPurchased = purchasedNotes.includes(note.title);
               console.log(`Note: ${note.title}, isPurchased: ${isPurchased}`);
@@ -249,19 +249,19 @@ const B_Saved = () => {
           </div>
         </>
       ) : (
-        <div className="flex flex-col items-center justify-center min-h-[60vh] bg-white rounded-2xl shadow-sm border border-gray-200">
-          <div className="text-center max-w-md mx-auto p-8">
-            <div className="w-24 h-24 bg-gradient-to-br from-custom-blue/10 to-custom-i-berry/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <FaBookmark className="w-12 h-12 text-custom-blue/60" />
+        <div className="flex flex-col items-center justify-center min-h-[50vh] sm:min-h-[60vh] bg-white rounded-2xl shadow-sm border border-gray-200">
+          <div className="text-center max-w-md mx-auto p-6 sm:p-8">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-custom-blue/10 to-custom-i-berry/10 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+              <FaBookmark className="w-10 h-10 sm:w-12 sm:h-12 text-custom-blue/60" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-3">No Saved Notes Yet</h3>
-            <p className="text-gray-600 mb-6 leading-relaxed">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3">No Saved Notes Yet</h3>
+            <p className="text-gray-600 mb-6 leading-relaxed text-sm sm:text-base">
               Start building your personal library by saving study materials that interest you. 
               Browse through our collection and bookmark notes for easy access later.
             </p>
             <button 
               onClick={() => navigate('/Sellspage')}
-              className="bg-custom-blue text-white px-6 py-3 rounded-lg hover:bg-opacity-90 transition-all duration-200 font-medium"
+              className="bg-custom-blue text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-opacity-90 transition-all duration-200 font-medium text-sm sm:text-base"
             >
               Explore Notes
             </button>
@@ -271,18 +271,18 @@ const B_Saved = () => {
 
       {/* Phone Number Modal */}
       {showPhoneModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md border-l-4 border-custom-i-berry">
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-custom-i-berry/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">📱</span>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl p-4 sm:p-6 w-full max-w-sm sm:max-w-md border-l-4 border-custom-i-berry">
+            <div className="text-center mb-4 sm:mb-6">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-custom-i-berry/20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                <span className="text-xl sm:text-2xl">📱</span>
               </div>
-              <h3 className="text-xl font-bold text-custom-blue mb-2">Enter Phone Number</h3>
-              <p className="text-gray-600">We need your phone number to complete the purchase</p>
+              <h3 className="text-lg sm:text-xl font-bold text-custom-blue mb-2">Enter Phone Number</h3>
+              <p className="text-gray-600 text-sm sm:text-base">We need your phone number to complete the purchase</p>
             </div>
             
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-custom-brown mb-2">
+            <div className="mb-4 sm:mb-6">
+              <label className="block text-xs sm:text-sm font-medium text-custom-brown mb-2">
                 Phone Number
               </label>
               <input
@@ -290,25 +290,25 @@ const B_Saved = () => {
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 placeholder="Enter 10-digit phone number"
-                className="w-full px-4 py-3 border border-custom-i-berry/30 rounded-lg focus:ring-2 focus:ring-custom-i-berry focus:border-custom-i-berry outline-none"
+                className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-custom-i-berry/30 rounded-lg focus:ring-2 focus:ring-custom-i-berry focus:border-custom-i-berry outline-none text-sm sm:text-base"
                 maxLength="10"
               />
             </div>
             
-            <div className="flex gap-3">
+            <div className="flex gap-2 sm:gap-3">
               <button
                 onClick={() => {
                   setShowPhoneModal(false);
                   setPhoneNumber("");
                   setSelectedNote(null);
                 }}
-                className="flex-1 px-4 py-3 border border-custom-brown text-custom-brown rounded-lg hover:bg-custom-brown/10 transition"
+                className="flex-1 px-3 sm:px-4 py-2 sm:py-3 border border-custom-brown text-custom-brown rounded-lg hover:bg-custom-brown/10 transition text-sm sm:text-base"
               >
                 Cancel
               </button>
               <button
                 onClick={handlePhoneSubmit}
-                className="flex-1 px-4 py-3 bg-custom-i-berry text-white rounded-lg hover:bg-custom-brown transition"
+                className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-custom-i-berry text-white rounded-lg hover:bg-custom-brown transition text-sm sm:text-base"
               >
                 Continue
               </button>
@@ -319,26 +319,26 @@ const B_Saved = () => {
 
       {/* Login Required Modal */}
       {showLoginModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl border-l-4 border-custom-i-berry">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 w-full max-w-sm sm:max-w-md shadow-2xl border-l-4 border-custom-i-berry">
             <div className="text-center">
-              <div className="w-16 h-16 bg-custom-i-berry/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-custom-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-custom-i-berry/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-6 h-6 sm:w-8 sm:h-8 text-custom-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-custom-blue mb-2">Login Required</h3>
-              <p className="text-gray-600 mb-6">Please log in to access this feature</p>
-              <div className="flex gap-3">
+              <h3 className="text-lg sm:text-xl font-bold text-custom-blue mb-2">Login Required</h3>
+              <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">Please log in to access this feature</p>
+              <div className="flex gap-2 sm:gap-3">
                 <button
                   onClick={() => setShowLoginModal(false)}
-                  className="flex-1 px-4 py-2 border border-custom-brown text-custom-brown rounded-lg hover:bg-custom-brown/10"
+                  className="flex-1 px-3 sm:px-4 py-2 border border-custom-brown text-custom-brown rounded-lg hover:bg-custom-brown/10 text-sm sm:text-base"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => navigate("/Login")}
-                  className="flex-1 px-4 py-2 bg-custom-i-berry text-white rounded-lg hover:bg-custom-brown"
+                  className="flex-1 px-3 sm:px-4 py-2 bg-custom-i-berry text-white rounded-lg hover:bg-custom-brown text-sm sm:text-base"
                 >
                   Login
                 </button>

@@ -85,25 +85,25 @@ const CategoryManager = ({ onCategoryChange }) => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-sm border border-[rgb(221,167,123)]/20">
-      <h3 className="font-semibold text-[rgb(31,91,120)] text-base mb-4">
+    <div className="bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-sm border border-[rgb(221,167,123)]/20">
+      <h3 className="font-semibold text-[rgb(31,91,120)] text-sm sm:text-base mb-3 sm:mb-4">
         Manage Categories
       </h3>
       
       {/* Add Category */}
-      <div className="flex gap-2 mb-4">
+      <div className="flex flex-col sm:flex-row gap-2 mb-3 sm:mb-4">
         <input
           type="text"
           value={newCategory}
           onChange={(e) => setNewCategory(e.target.value)}
           placeholder="Add new category"
-          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:border-[rgb(148,93,94)] focus:outline-none text-sm"
+          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:border-[rgb(148,93,94)] focus:outline-none text-xs sm:text-sm"
           onKeyPress={(e) => e.key === 'Enter' && addCategory()}
         />
         <button
           onClick={addCategory}
           disabled={isLoading || !newCategory.trim()}
-          className="px-4 py-2 bg-[rgb(148,93,94)] text-white rounded-md hover:bg-[rgb(148,93,94)]/90 disabled:bg-gray-400 text-sm transition"
+          className="px-3 sm:px-4 py-2 bg-[rgb(148,93,94)] text-white rounded-md hover:bg-[rgb(148,93,94)]/90 disabled:bg-gray-400 text-xs sm:text-sm transition"
         >
           Add
         </button>
@@ -111,18 +111,18 @@ const CategoryManager = ({ onCategoryChange }) => {
 
       {/* Categories List */}
       <div className="space-y-2">
-        <p className="text-sm text-gray-600 mb-2">Your Categories ({categories.length}):</p>
-        <div className="max-h-48 overflow-y-auto">
+        <p className="text-xs sm:text-sm text-gray-600 mb-2">Your Categories ({categories.length}):</p>
+        <div className="max-h-32 sm:max-h-48 overflow-y-auto">
           {categories.map((category, index) => (
             <div
               key={index}
               className="flex justify-between items-center p-2 bg-gray-50 rounded-md hover:bg-gray-100 transition"
             >
-              <span className="text-sm text-[rgb(31,91,120)]">{category}</span>
+              <span className="text-xs sm:text-sm text-[rgb(31,91,120)] truncate flex-1 mr-2">{category}</span>
               <button
                 onClick={() => removeCategory(category)}
                 disabled={isLoading || categories.length <= 1}
-                className="text-red-500 hover:text-red-700 disabled:text-gray-400 text-sm px-2 py-1 rounded transition"
+                className="text-red-500 hover:text-red-700 disabled:text-gray-400 text-xs sm:text-sm px-2 py-1 rounded transition flex-shrink-0"
                 title={categories.length <= 1 ? "Must have at least one category" : "Remove category"}
               >
                 ✕
@@ -133,7 +133,7 @@ const CategoryManager = ({ onCategoryChange }) => {
       </div>
 
       {isLoading && (
-        <div className="mt-2 text-sm text-gray-500">
+        <div className="mt-2 text-xs sm:text-sm text-gray-500">
           Updating categories...
         </div>
       )}
