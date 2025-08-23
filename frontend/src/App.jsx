@@ -30,7 +30,7 @@
   import BuyerLayout from "./Component/BuyerDashboard/BuyerLayout";
   import BuyerProfile from "./Component/BuyerDashboard/BuyerProfile";
   import B_Purchased from "./Component/BuyerDashboard/B_Purchased";
-  import B_Saved from "./Component/BuyerDashboard/B_Saved";
+  import B_Saved from "./Component/BuyerDashboard/B_saved";
   // import B_Downloaded from "./Component/BuyerDashboard/B_Downloaded";
   import B_Payment from "./Component/BuyerDashboard/B_Payment";
  
