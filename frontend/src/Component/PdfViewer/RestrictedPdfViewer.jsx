@@ -11,7 +11,7 @@ const RestrictedPdfViewer = ({ materialId, onClose, onPurchaseRequired, userEmai
     const fetchPdfData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:7000/api/restricted-pdf/${materialId}?userEmail=${userEmail || ''}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/restricted-pdf/${materialId}?userEmail=${userEmail || ''}`);
         setPdfData(response.data);
       } catch (err) {
         console.error('Error fetching PDF data:', err);

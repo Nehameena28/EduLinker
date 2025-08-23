@@ -29,7 +29,7 @@ const S_Upload = () => {
     const fetchUserCategories = async () => {
       try {
         const userEmail = localStorage.getItem("email");
-        const response = await axios.get(`http://localhost:7000/api/seller/categories?email=${userEmail}`, {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/seller/categories?email=${userEmail}`, {
           withCredentials: true,
         });
         setUserCategories(response.data.categories || defaultCategories);
@@ -84,7 +84,7 @@ const S_Upload = () => {
     formData.append("uploadedBy", uploadedBy);
 
     try {
-      const response = await axios.post("http://localhost:7000/api/upload", formData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
         timeout: 300000,
