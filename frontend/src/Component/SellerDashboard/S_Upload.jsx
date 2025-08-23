@@ -4,6 +4,7 @@ import { useToast } from "../Toast/useToast";
 import ToastContainer from "../Toast/ToastContainer";
 import { FaChevronDown } from "react-icons/fa";
 
+
 const S_Upload = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -93,11 +94,8 @@ const S_Upload = () => {
         }
       });
 
-      let uploadedPdfUrl = response.data.pdfUrl || response.data.fileUrl || response.data.url || response.data.filename;
-      
-      if (uploadedPdfUrl && !uploadedPdfUrl.startsWith('http')) {
-        uploadedPdfUrl = `http://localhost:7000/uploads/${uploadedPdfUrl}`;
-      }
+      // Cloudinary returns the full URL directly
+      let uploadedPdfUrl = response.data.material?.pdf?.fullUrl || response.data.pdfUrl;
       
       if (uploadedPdfUrl) {
         setPdfUrl(uploadedPdfUrl);
@@ -235,6 +233,7 @@ const S_Upload = () => {
                     Select File
                   </label>
                 </div>
+               
               </div>
 
               {/* Progress Bar */}

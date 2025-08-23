@@ -41,31 +41,49 @@ const S_History = () => {
   }, [userEmail]);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">History Dashboard</h1>
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-custom-blue/10 rounded-lg">
+              <svg className="w-6 h-6 text-custom-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+              </svg>
+            </div>
+            <h1 className="text-3xl font-bold text-custom-blue">History Dashboard</h1>
+          </div>
+          <p className="text-gray-600 ml-14">Track your uploads and sales activity</p>
+          <div className="w-24 h-1 bg-gradient-to-r from-custom-blue to-custom-i-berry ml-14 mt-2"></div>
+        </div>
 
         {/* Tab Navigation */}
-        <div className="bg-white rounded-lg shadow-md mb-6">
-          <div className="flex border-b">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 mb-6 overflow-hidden">
+          <div className="flex">
             <button
               onClick={() => setActiveTab('uploads')}
-              className={`px-6 py-4 font-medium ${
+              className={`flex-1 px-6 py-4 font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
                 activeTab === 'uploads'
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'text-custom-blue bg-custom-blue/5 border-b-2 border-custom-blue'
+                  : 'text-gray-500 hover:text-custom-blue hover:bg-gray-50'
               }`}
             >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+              </svg>
               Upload History ({uploadHistory.length})
             </button>
             <button
               onClick={() => setActiveTab('sales')}
-              className={`px-6 py-4 font-medium ${
+              className={`flex-1 px-6 py-4 font-semibold transition-all duration-200 flex items-center justify-center gap-2 ${
                 activeTab === 'sales'
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'text-custom-blue bg-custom-blue/5 border-b-2 border-custom-blue'
+                  : 'text-gray-500 hover:text-custom-blue hover:bg-gray-50'
               }`}
             >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+              </svg>
               Sales History ({salesHistory.length})
             </button>
           </div>
@@ -86,7 +104,7 @@ const S_History = () => {
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-md">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             {/* Upload History Tab */}
             {activeTab === 'uploads' && (
               <div className="p-6">

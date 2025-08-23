@@ -7,11 +7,8 @@ const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const multer = require("multer");
 const path = require("path");
-const fs = require('fs');
 const nodemailer = require('nodemailer');
-const { PDFDocument } = require('pdf-lib');
 
 
 
@@ -23,7 +20,8 @@ const SavedNote = require("./models/SaveNotes.js");
 const Payment = require("./models/Payment.js"); 
 
 // Routes
-const uploadRoutes = require("./routes/upload");
+const cloudinaryUploadRoutes = require("./routes/cloudinaryUpload");
+const directCloudinaryUploadRoutes = require("./routes/directCloudinaryUpload");
 const paymentRoutes = require("./routes/paymentRoutes");
 
 
@@ -41,7 +39,7 @@ app.use(cookieParser());
 app.use(express.json());
 // app.use(cors());
 app.use(cors({
-  origin: "http://localhost:5173", // frontend origin
+  origin: process.env.FRONTEND_URL || "http://localhost:5173", // frontend origin
   credentials: true,              // allow cookies
 }));
 
@@ -261,19 +259,12 @@ app.delete("/api/user/:id", async (req, res) => {
 
 
 
-// Serve static files from uploads directory
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// No local file serving needed - using Cloudinary only
 
-// Add CORS headers for file access
-app.use('/uploads', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
-
-// Use upload routes
-app.use("/api/upload", uploadRoutes);
+// Use Cloudinary upload routes
+app.use("/api/upload", directCloudinaryUploadRoutes);
+app.use("/api/cloudinary-upload", cloudinaryUploadRoutes);
+app.use("/api/direct-upload", directCloudinaryUploadRoutes);
 
 
 // GET /api/seller/notes - Get user-specific materials
@@ -298,28 +289,19 @@ app.delete("/seller/notes/:id", async (req, res) => {
   try {
     const { id } = req.params;
     
-    // Find the note first to get the file path
+    // Find the note first to get the file info
     const note = await StudyMaterial.findById(id);
     if (!note) {
       return res.status(404).json({ message: "Note not found" });
     }
     
-    // Delete both preview and full PDF files
-    const fs = require('fs');
-    if (note.pdf) {
-      // Delete full PDF
-      if (note.pdf.fullUrl) {
-        const fullFilePath = path.join(__dirname, note.pdf.fullUrl);
-        if (fs.existsSync(fullFilePath)) {
-          fs.unlinkSync(fullFilePath);
-        }
-      }
-      // Delete preview PDF
-      if (note.pdf.previewUrl) {
-        const previewFilePath = path.join(__dirname, note.pdf.previewUrl);
-        if (fs.existsSync(previewFilePath)) {
-          fs.unlinkSync(previewFilePath);
-        }
+    // Delete from Cloudinary
+    if (note.pdf && note.pdf.public_id) {
+      const cloudinary = require('cloudinary').v2;
+      try {
+        await cloudinary.uploader.destroy(note.pdf.public_id, { resource_type: 'raw' });
+      } catch (cloudinaryError) {
+        console.error('Cloudinary deletion error:', cloudinaryError);
       }
     }
     
@@ -496,7 +478,7 @@ app.get('/api/all-materials', async (req, res) => {
   }
 });
 
-// PDF Preview endpoint - serves only first 3 pages
+// PDF Preview endpoint - Cloudinary only
 app.get('/api/preview-pdf/:materialId', async (req, res) => {
   try {
     const { materialId } = req.params;
@@ -519,92 +501,19 @@ app.get('/api/preview-pdf/:materialId', async (req, res) => {
       hasPurchased = !!purchase;
     }
     
-    const pdfPath = path.join(__dirname, material.pdf.url);
-    
-    // If purchased, serve full PDF
-    if (hasPurchased) {
-      if (fs.existsSync(pdfPath)) {
-        return res.sendFile(pdfPath);
-      }
+    const pdfUrl = material.pdf?.fullUrl;
+    if (!pdfUrl) {
+      return res.status(404).json({ error: 'PDF file not found' });
     }
     
-    // For preview, create a 3-page version
-    if (fs.existsSync(pdfPath)) {
-      try {
-        const { PDFDocument } = require('pdf-lib');
-        const existingPdfBytes = fs.readFileSync(pdfPath);
-        const pdfDoc = await PDFDocument.load(existingPdfBytes);
-        
-        // Create new PDF with only first 4 pages
-        const newPdf = await PDFDocument.create();
-        const totalPages = pdfDoc.getPageCount();
-        const previewPages = Math.min(4, totalPages);
-        
-        // Add first 4 pages only
-        for (let i = 0; i < previewPages; i++) {
-          const [copiedPage] = await newPdf.copyPages(pdfDoc, [i]);
-          newPdf.addPage(copiedPage);
-        }
-        
-        // Add one purchase message page if there are more pages
-        if (totalPages > 4) {
-          const page = newPdf.addPage();
-          const { width, height } = page.getSize();
-          
-          // White background
-          page.drawRectangle({
-            x: 0,
-            y: 0,
-            width: width,
-            height: height,
-            color: { r: 1, g: 1, b: 1 }
-          });
-          
-          // Purchase message
-          page.drawText('🔒 PURCHASE REQUIRED', {
-            x: width / 2 - 120,
-            y: height / 2 + 50,
-            size: 24,
-            color: { r: 0.8, g: 0.2, b: 0.2 }
-          });
-          
-          page.drawText('You have viewed 4 pages out of ' + totalPages, {
-            x: width / 2 - 100,
-            y: height / 2,
-            size: 16,
-            color: { r: 0.3, g: 0.3, b: 0.3 }
-          });
-          
-          page.drawText('Buy this note to access all content', {
-            x: width / 2 - 110,
-            y: height / 2 - 40,
-            size: 14,
-            color: { r: 0.5, g: 0.5, b: 0.5 }
-          });
-        }
-        
-        // Add headers for frontend modal trigger
-        res.setHeader('X-Total-Pages', pdfDoc.getPageCount().toString());
-        res.setHeader('X-Preview-Pages', '4');
-        res.setHeader('X-Material-Title', material.title);
-        res.setHeader('X-Material-Price', material.price.toString());
-        res.setHeader('X-Material-Category', material.category);
-        
-        const pdfBytes = await newPdf.save();
-        
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `inline; filename="preview_${material.title}.pdf"`);
-        res.send(Buffer.from(pdfBytes));
-        
-      } catch (pdfError) {
-        console.error('PDF processing error:', pdfError);
-        // Fallback to original PDF with headers
-        res.setHeader('X-Preview-Mode', 'true');
-        res.sendFile(pdfPath);
-      }
-    } else {
-      res.status(404).json({ error: 'PDF file not found' });
-    }
+    // Add headers for frontend modal trigger
+    res.setHeader('X-Preview-Mode', hasPurchased ? 'false' : 'true');
+    res.setHeader('X-Material-Title', material.title);
+    res.setHeader('X-Material-Price', material.price.toString());
+    res.setHeader('X-Material-Category', material.category);
+    
+    // Redirect to Cloudinary URL
+    return res.redirect(pdfUrl);
     
   } catch (error) {
     console.error('PDF preview error:', error);
@@ -641,6 +550,73 @@ app.get('/api/check-purchase/:materialId', async (req, res) => {
   } catch (error) {
     console.error('Purchase check error:', error);
     res.status(500).json({ error: 'Failed to check purchase status' });
+  }
+});
+
+// Restricted PDF viewer endpoint
+app.get('/api/restricted-pdf/:materialId', async (req, res) => {
+  try {
+    const { materialId } = req.params;
+    const { userEmail } = req.query;
+    
+    // Try to find by ID first
+    let material = await StudyMaterial.findById(materialId);
+    
+    // If not found by ID, try to find by title (for saved notes)
+    if (!material) {
+      const savedNote = await SavedNote.findById(materialId);
+      if (savedNote) {
+        material = await StudyMaterial.findOne({ title: savedNote.title });
+      }
+    }
+    
+    if (!material) {
+      return res.status(404).json({ error: 'Material not found' });
+    }
+    
+    let hasPurchased = false;
+    if (userEmail) {
+      const purchase = await Payment.findOne({ 
+        buyerEmail: userEmail, 
+        itemTitle: material.title,
+        status: 'completed' 
+      });
+      hasPurchased = !!purchase;
+    }
+    
+    const pdfUrl = material.pdf?.fullUrl;
+    if (!pdfUrl) {
+      return res.status(404).json({ error: 'PDF not found' });
+    }
+    
+    // For purchased items, return full PDF URL
+    if (hasPurchased) {
+      return res.json({ 
+        pdfUrl,
+        isPurchased: true,
+        previewOnly: false
+      });
+    }
+    
+    // For non-purchased items, return limited preview URL
+    // Google Docs viewer with page range parameter (pages 1-3)
+    const previewUrl = `${pdfUrl}#page=1&view=FitH&toolbar=0&navpanes=0&scrollbar=0`;
+    
+    return res.json({ 
+      pdfUrl: previewUrl,
+      isPurchased: false,
+      previewOnly: true,
+      previewPages: 3,
+      material: {
+        title: material.title,
+        price: material.price,
+        category: material.category,
+        id: material._id
+      }
+    });
+  } catch (error) {
+    console.error('Restricted PDF error:', error);
+    res.status(500).json({ error: 'Failed to load PDF' });
   }
 });
 
@@ -682,7 +658,7 @@ app.get('/api/buyer/payments', async (req, res) => {
   }
 });
 
-// Download purchased PDF endpoint
+// Download purchased PDF endpoint - Cloudinary only
 app.get('/api/download-pdf/:materialId', async (req, res) => {
   try {
     const { materialId } = req.params;
@@ -709,26 +685,15 @@ app.get('/api/download-pdf/:materialId', async (req, res) => {
       return res.status(403).json({ error: 'Purchase required to download' });
     }
     
-    // Get the full PDF path
-    const pdfUrl = material.pdf?.fullUrl || material.pdf?.url;
+    // Get the Cloudinary PDF URL
+    const pdfUrl = material.pdf?.fullUrl;
     if (!pdfUrl) {
       return res.status(404).json({ error: 'PDF file not found in database' });
     }
     
-    const pdfPath = path.join(__dirname, pdfUrl);
-    
-    // Check if file exists
-    if (!fs.existsSync(pdfPath)) {
-      console.error('PDF file not found at path:', pdfPath);
-      return res.status(404).json({ error: 'PDF file not found on server' });
-    }
-    
-    // Set headers for download
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="${material.title}.pdf"`);
-    
-    // Send file
-    res.sendFile(pdfPath);
+    // Redirect to Cloudinary URL with download flag
+    const downloadUrl = pdfUrl.replace('/upload/', '/upload/fl_attachment/');
+    return res.redirect(downloadUrl);
     
   } catch (error) {
     console.error('Download error:', error);

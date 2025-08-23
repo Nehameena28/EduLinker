@@ -201,28 +201,11 @@
    };
 
    const handleViewPdf = (note, noteId) => {
-     const isPurchased = purchasedNotes.includes(noteId);
-     // Handle both old and new PDF structures
-     let pdfUrl;
-     if (isPurchased) {
-       pdfUrl = note.pdf?.fullUrl || note.pdf?.url; // fallback to old structure
-     } else {
-       pdfUrl = note.pdf?.previewUrl || note.pdf?.url; // fallback to old structure
-     }
-     
-     if (!pdfUrl) {
+     if (!note.pdf?.fullUrl) {
        showToast("PDF not available", "warning");
        return;
      }
      
-     let fullUrl = pdfUrl;
-     if (!pdfUrl.startsWith('http')) {
-       fullUrl = `http://localhost:7000${pdfUrl}`;
-     }
-     
-
-     
-     setCurrentPdfUrl(fullUrl);
      setCurrentNoteId(noteId);
      setShowPdfViewer(true);
    };
@@ -305,8 +288,8 @@
                    description={note.description}
                    price={note.price}
                    category={note.category}
-                   fileName={(note.pdf?.fullUrl || note.pdf?.url)?.split("/").pop() || note.fileName || "Preview PDF"}
-                   previewUrl={purchasedNotes.includes(note._id) ? (note.pdf?.fullUrl || note.pdf?.url) : (note.pdf?.previewUrl || note.pdf?.url)}
+                   fileName={note.pdf?.fullUrl?.split("/").pop() || note.fileName || "Preview PDF"}
+                   previewUrl={note.pdf?.fullUrl}
                    onViewPdf={() => handleViewPdf(note, note._id)}
                    isPurchased={purchasedNotes.includes(note._id)}
                    onPurchaseRequired={() => {
@@ -422,28 +405,28 @@
        {/* Purchase Required Modal */}
        {showPurchaseModal && selectedNoteForPurchase && (
          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-           <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl border-l-4 border-orange-500">
+           <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl border-l-4 border-blue-600">
              <div className="text-center">
-               <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                 <svg className="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                 <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                  </svg>
                </div>
-               <h3 className="text-2xl font-bold text-orange-600 mb-3">🔒 Purchase Required</h3>
+               <h3 className="text-2xl font-bold text-blue-600 mb-3">🔒 Purchase Required</h3>
                <p className="text-gray-600 mb-4">You've reached the preview limit (4 pages)</p>
-               <div className="bg-orange-50 rounded-lg p-4 mb-6">
-                 <h4 className="font-semibold text-orange-800 mb-2">{selectedNoteForPurchase.title}</h4>
-                 <p className="text-sm text-orange-700 mb-2">Category: {selectedNoteForPurchase.category}</p>
-                 <p className="text-lg font-bold text-orange-600">Price: ₹{selectedNoteForPurchase.price}</p>
+               <div className="bg-blue-50 rounded-lg p-4 mb-6">
+                 <h4 className="font-semibold text-blue-800 mb-2">{selectedNoteForPurchase.title}</h4>
+                 <p className="text-sm text-gray-700 mb-2">Category: {selectedNoteForPurchase.category}</p>
+                 <p className="text-lg font-bold text-blue-600">Price: ₹{selectedNoteForPurchase.price}</p>
                </div>
-               <p className="text-gray-500 text-sm mb-6">Buy this note to access the complete content</p>
+               <p className="text-gray-500 text-sm mb-6">Purchase this note to access the complete content</p>
                <div className="flex gap-3">
                  <button
                    onClick={() => {
                      setShowPurchaseModal(false);
                      setSelectedNoteForPurchase(null);
                    }}
-                   className="flex-1 px-4 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50"
+                   className="flex-1 px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-all duration-300"
                  >
                    Cancel
                  </button>
@@ -452,9 +435,9 @@
                      setShowPurchaseModal(false);
                      handleBuyNow(selectedNoteForPurchase);
                    }}
-                   className="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
+                   className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300 font-semibold"
                  >
-                   Buy Now
+                   Purchase Full Access
                  </button>
                </div>
              </div>
@@ -465,9 +448,13 @@
        <ToastContainer toasts={toasts} removeToast={removeToast} />
        {showPdfViewer && (
          <RestrictedPdfViewer
-           pdfUrl={currentPdfUrl}
+           materialId={currentNoteId}
            onClose={() => setShowPdfViewer(false)}
-           isPurchased={purchasedNotes.includes(currentNoteId)}
+           userEmail={user?.email}
+           onPurchaseRequired={(material) => {
+             setSelectedNoteForPurchase(material);
+             setShowPurchaseModal(true);
+           }}
          />
        )}
      </div>

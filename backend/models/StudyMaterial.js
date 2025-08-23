@@ -7,9 +7,8 @@ const StudyMaterialSchema = new mongoose.Schema({
   price: { type: Number, required: true },
 
   pdf: {
-    fullUrl: { type: String, required: true },
-    previewUrl: { type: String, required: true },
-    public_id: { type: String, required: true },
+    fullUrl: { type: String, required: true }, // Cloudinary URL
+    public_id: { type: String, required: true }, // Cloudinary public_id
   },
 
   cover: {

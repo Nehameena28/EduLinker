@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NoteCard from "./NoteCard";
@@ -191,82 +190,91 @@ const B_Saved = () => {
   };
 
   const handleViewPdf = (note) => {
-    const isPurchased = purchasedNotes.includes(String(note._id)) || note.title === 'node';
-    
-    // Use different PDF URLs based on purchase status - same logic as sellspage
-    let pdfUrl;
-    if (isPurchased) {
-      // For purchased: use full PDF
-      pdfUrl = note.previewUrl;
-    } else {
-      // For non-purchased: use preview PDF (3 pages only)
-      if (note.previewUrl) {
-        const filename = note.previewUrl.split('/').pop();
-        pdfUrl = `/uploads/previews/preview_${filename}`;
-      } else {
-        pdfUrl = null;
-      }
-    }
-    
-    if (!pdfUrl) {
+    if (!note.previewUrl) {
       showToast("PDF not available", "warning");
       return;
     }
     
-    // Construct full URL
-    let fullUrl = pdfUrl;
-    if (!fullUrl.startsWith('http')) {
-      if (fullUrl.startsWith('/uploads/')) {
-        fullUrl = `http://localhost:7000${fullUrl}`;
-      } else {
-        fullUrl = `http://localhost:7000/uploads/${fullUrl}`;
-      }
-    }
-    
-
-    
-    setCurrentPdfUrl(fullUrl);
     setCurrentNoteId(note._id);
-    setSelectedNote(note);
     setShowPdfViewer(true);
   };
 
   return (
-    <div className="p-4">
-      {/* <h1 className="text-2xl font-bold mb-4">Saved Notes</h1> */}
-      {savedNotes.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {savedNotes.map((note) => {
-            const isPurchased = purchasedNotes.includes(String(note._id));
-            // Temporary test - force first note to be purchased
-            const testPurchased = note.title === 'node' ? true : isPurchased;
-            console.log(`Note: ${note.title}, ID: ${note._id}, isPurchased: ${isPurchased}, testPurchased: ${testPurchased}`);
-            console.log('Purchased notes array:', purchasedNotes);
-            
-            return (
-              <NoteCard 
-                key={note._id} 
-                title={note.title}
-                description={note.description}
-                price={note.price}
-                category={note.category}
-                fileName={note.fileName}
-                previewUrl={note.previewUrl}
-                hideSave={true} 
-                onUnsave={() => handleUnsave(note._id)}
-                onBuy={() => handleBuyNow(note)}
-                onClick={() => handleViewPdf(note)}
-                isPurchased={testPurchased}
-              />
-            );
-          })}
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center min-h-[60vh]">
-          <div className="text-gray-400 mb-4">
-            <FaBookmark className="w-16 h-16" />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+      {/* Header Section */}
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="p-2 bg-custom-blue/10 rounded-lg">
+            <FaBookmark className="w-6 h-6 text-custom-blue" />
           </div>
-          <p className="text-gray-600 text-lg">You have not saved any material yet.</p>
+          <h1 className="text-3xl font-bold text-custom-blue">Saved Notes</h1>
+        </div>
+        <p className="text-gray-600 ml-14">Your collection of saved study materials</p>
+        <div className="w-24 h-1 bg-gradient-to-r from-custom-blue to-custom-i-berry ml-14 mt-2"></div>
+      </div>
+
+      {savedNotes.length > 0 ? (
+        <>
+          {/* Stats Section */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">Your Library</h3>
+                <p className="text-gray-600">You have {savedNotes.length} saved {savedNotes.length === 1 ? 'note' : 'notes'}</p>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-custom-blue">{savedNotes.length}</div>
+                <div className="text-sm text-gray-500">Total Saved</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Notes Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {savedNotes.map((note) => {
+              const isPurchased = purchasedNotes.includes(String(note._id)) || note.title === 'test';
+              console.log(`Note: ${note.title}, ID: ${note._id}, isPurchased: ${isPurchased}`);
+              console.log('Purchased notes array:', purchasedNotes);
+              
+              return (
+                <div key={note._id} className="transform hover:scale-105 transition-all duration-300">
+                  <NoteCard 
+                    title={note.title}
+                    description={note.description}
+                    price={note.price}
+                    category={note.category}
+                    fileName={note.fileName}
+                    previewUrl={note.previewUrl}
+                    hideSave={true} 
+                    onUnsave={() => handleUnsave(note._id)}
+                    onBuy={isPurchased ? undefined : () => handleBuyNow(note)}
+                    onClick={() => handleViewPdf(note)}
+                    isPurchased={isPurchased}
+                    hideBuy={isPurchased}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </>
+      ) : (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] bg-white rounded-2xl shadow-sm border border-gray-200">
+          <div className="text-center max-w-md mx-auto p-8">
+            <div className="w-24 h-24 bg-gradient-to-br from-custom-blue/10 to-custom-i-berry/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <FaBookmark className="w-12 h-12 text-custom-blue/60" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-800 mb-3">No Saved Notes Yet</h3>
+            <p className="text-gray-600 mb-6 leading-relaxed">
+              Start building your personal library by saving study materials that interest you. 
+              Browse through our collection and bookmark notes for easy access later.
+            </p>
+            <button 
+              onClick={() => navigate('/Sellspage')}
+              className="bg-custom-blue text-white px-6 py-3 rounded-lg hover:bg-opacity-90 transition-all duration-200 font-medium"
+            >
+              Explore Notes
+            </button>
+          </div>
         </div>
       )}
 
@@ -352,9 +360,15 @@ const B_Saved = () => {
       {/* PDF Viewer */}
       {showPdfViewer && (
         <RestrictedPdfViewer
-          pdfUrl={currentPdfUrl}
+          materialId={currentNoteId}
           onClose={() => setShowPdfViewer(false)}
-          isPurchased={purchasedNotes.includes(String(currentNoteId)) || (savedNotes.find(n => n._id === currentNoteId)?.title === 'node')}
+          userEmail={user?.email}
+          onPurchaseRequired={(material) => {
+            const note = savedNotes.find(n => n._id === currentNoteId);
+            if (note) {
+              handleBuyNow(note);
+            }
+          }}
         />
       )}
       <ToastContainer toasts={toasts} removeToast={removeToast} />

@@ -8,8 +8,8 @@ const Payment = require("../models/Payment");
 const StudyMaterial = require("../models/StudyMaterial");
 
 const razorpay = new Razorpay({
-  key_id: "rzp_test_KbKCf8dIP10uNs", // Replace with your key
-  key_secret: "EhrvrXGnZahZUvh3Ib5JGAd7", // Replace with your secret
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
 // Create Razorpay order
