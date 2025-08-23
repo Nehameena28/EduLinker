@@ -24,7 +24,7 @@
   import S_Upload from "./Component/SellerDashboard/S_Upload";
   import S_Sell from "./Component/SellerDashboard/S_Sell";
   import S_History from "./Component/SellerDashboard/S_History";
-  import S_Payment from "./Component/SellerDashboard/S_Payment";
+  import S_Payment from "./Component/SellerDashboard/S_payment";
   
 
   import BuyerLayout from "./Component/BuyerDashboard/BuyerLayout";
