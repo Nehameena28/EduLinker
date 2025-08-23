@@ -23,7 +23,7 @@ const CategoryManager = ({ onCategoryChange }) => {
 
   const fetchUserCategories = async () => {
     try {
-      const response = await axios.get(`http://localhost:7000/api/seller/categories?email=${userEmail}`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/seller/categories?email=${userEmail}`, {
         withCredentials: true,
       });
       setCategories(response.data.categories || defaultCategories);
@@ -42,7 +42,7 @@ const CategoryManager = ({ onCategoryChange }) => {
     setIsLoading(true);
     try {
       const updatedCategories = [...categories, newCategory.trim()];
-      await axios.post("http://localhost:7000/api/seller/categories", {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/seller/categories`, {
         email: userEmail,
         categories: updatedCategories
       }, { withCredentials: true });
@@ -68,7 +68,7 @@ const CategoryManager = ({ onCategoryChange }) => {
     setIsLoading(true);
     try {
       const updatedCategories = categories.filter(cat => cat !== categoryToRemove);
-      await axios.post("http://localhost:7000/api/seller/categories", {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/seller/categories`, {
         email: userEmail,
         categories: updatedCategories
       }, { withCredentials: true });

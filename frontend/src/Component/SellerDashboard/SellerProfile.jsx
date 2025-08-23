@@ -28,22 +28,22 @@ const SellerProfile = () => {
         setIsLoading(true);
        
         // Fetch payment data for total sales
-        const paymentsRes = await axios.get(`http://localhost:7000/api/seller/payments?email=${userEmail}`, {
+        const paymentsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/seller/payments?email=${userEmail}`, {
           withCredentials: true,
         });
        
         // Fetch materials count
-        const materialsRes = await axios.get(`http://localhost:7000/api/materials/count?email=${userEmail}`, {
+        const materialsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/materials/count?email=${userEmail}`, {
           withCredentials: true,
         });
 
         // Fetch recent materials
-        const materialsListRes = await axios.get(`http://localhost:7000/seller/notes?email=${userEmail}`, {
+        const materialsListRes = await axios.get(`${import.meta.env.VITE_API_URL}/seller/notes?email=${userEmail}`, {
           withCredentials: true,
         });
 
         // Fetch categories count
-        const categoriesRes = await axios.get(`http://localhost:7000/api/seller/categories?email=${userEmail}`, {
+        const categoriesRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/seller/categories?email=${userEmail}`, {
           withCredentials: true,
         });
        
