@@ -39,7 +39,7 @@ const Profile = () => {
 
   const handleSave = async () => {
     try {
-      const response = await axios.put(`http://localhost:7000/api/user/${user.id}`, formData, {
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/user/${user.id}`, formData, {
         withCredentials: true
       });
       

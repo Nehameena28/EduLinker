@@ -24,7 +24,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:7000/api/logout", {
+      await axios.get(`${import.meta.env.VITE_API_URL}/api/logout`, {
         withCredentials: true,
       });
 
@@ -48,7 +48,7 @@ const Navbar = () => {
 
   const handleDeleteAccount = async () => {
     try {
-      await axios.delete(`http://localhost:7000/api/user/${user.id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/user/${user.id}`, {
         withCredentials: true,
       });
       
