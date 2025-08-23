@@ -30,11 +30,11 @@ const BuyerProfile = () => {
     const fetchData = async () => {
       try {
         // Fetch saved notes count
-        const savedRes = await axios.get(`http://localhost:7000/api/saved-notes/${userId}`);
+        const savedRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/saved-notes/${userId}`);
         setSavedCount(savedRes.data.length);
 
         // Fetch purchased items and payments
-        const paymentsRes = await axios.get(`http://localhost:7000/api/buyer/payments?email=${userEmail}`, {
+        const paymentsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/buyer/payments?email=${userEmail}`, {
           withCredentials: true,
         });
         setPurchasedCount(paymentsRes.data.payments.length);
