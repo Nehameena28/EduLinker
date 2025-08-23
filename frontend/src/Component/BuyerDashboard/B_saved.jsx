@@ -44,27 +44,19 @@ const B_Saved = () => {
         
         setSavedNotes(savedRes.data);
         
-        // Handle purchased notes
-        let purchasedIds = [];
+        // Handle purchased notes - match by title since that's what's stored in payments
+        let purchasedTitles = [];
         if (purchasedRes.data) {
           if (Array.isArray(purchasedRes.data)) {
-            purchasedIds = purchasedRes.data.map(item => {
-              // Check multiple possible fields for the note ID
-              const noteId = item.noteId || item.note_id || item.note || item.itemId || item._id || item.id;
-              console.log('Purchased item:', item, 'Extracted noteId:', noteId);
-              return String(noteId);
-            }).filter(Boolean);
+            purchasedTitles = purchasedRes.data.map(item => item.itemTitle || item.title).filter(Boolean);
           } else if (purchasedRes.data.purchases) {
-            purchasedIds = purchasedRes.data.purchases.map(item => {
-              const noteId = item.noteId || item.note_id || item.note || item.itemId || item._id || item.id;
-              console.log('Purchased item:', item, 'Extracted noteId:', noteId);
-              return String(noteId);
-            }).filter(Boolean);
+            purchasedTitles = purchasedRes.data.purchases.map(item => item.itemTitle || item.title).filter(Boolean);
           }
         }
         
-        console.log('Processed purchased IDs:', purchasedIds);
-        setPurchasedNotes(purchasedIds);
+        console.log('Purchased titles:', purchasedTitles);
+        setPurchasedNotes(purchasedTitles);
+
       } catch (error) {
         console.error("Failed to fetch data:", error);
       }
@@ -150,15 +142,15 @@ const B_Saved = () => {
               if (user?.email) {
                 try {
                   const purchasedRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/buyer/purchased?email=${user.email}`, { withCredentials: true });
-                  let purchasedIds = [];
+                  let purchasedTitles = [];
                   if (purchasedRes.data) {
                     if (Array.isArray(purchasedRes.data)) {
-                      purchasedIds = purchasedRes.data.map(item => String(item._id || item.id || item)).filter(Boolean);
+                      purchasedTitles = purchasedRes.data.map(item => item.itemTitle || item.title).filter(Boolean);
                     } else if (purchasedRes.data.purchases) {
-                      purchasedIds = purchasedRes.data.purchases.map(item => String(item._id || item.id || item)).filter(Boolean);
+                      purchasedTitles = purchasedRes.data.purchases.map(item => item.itemTitle || item.title).filter(Boolean);
                     }
                   }
-                  setPurchasedNotes(purchasedIds);
+                  setPurchasedNotes(purchasedTitles);
                 } catch (err) {
                   console.error('Failed to refresh purchased notes:', err);
                 }
@@ -232,9 +224,8 @@ const B_Saved = () => {
           {/* Notes Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {savedNotes.map((note) => {
-              const isPurchased = purchasedNotes.includes(String(note._id)) || note.title === 'test';
-              console.log(`Note: ${note.title}, ID: ${note._id}, isPurchased: ${isPurchased}`);
-              console.log('Purchased notes array:', purchasedNotes);
+              const isPurchased = purchasedNotes.includes(note.title);
+              console.log(`Note: ${note.title}, isPurchased: ${isPurchased}`);
               
               return (
                 <div key={note._id} className="transform hover:scale-105 transition-all duration-300">
