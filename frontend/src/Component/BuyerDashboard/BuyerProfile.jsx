@@ -15,8 +15,8 @@ const BuyerProfile = () => {
   const [showAllActivity, setShowAllActivity] = useState(false);
 
   const stats = [
-    { title: "Purchased Docs", value: String(purchasedCount)},
-    { title: "Saved Docs", value: String(savedCount) },
+    { title: "Purchased Notes", value: String(purchasedCount)},
+    { title: "Saved Notes", value: String(savedCount) },
     { title: "Total Spent", value: `₹${totalSpent}` },
   ];
 
@@ -76,7 +76,7 @@ const BuyerProfile = () => {
           👋 Hello, {username}!
         </h2>
         <Link to="/Sellspage" className="w-full md:w-auto">
-          <button className="w-full bg-custom-i-berry text-white hover:opacity-90 px-4 py-2 md:px-6 md:py-3 rounded-lg text-base md:text-lg">
+          <button className="w-full bg-custom-blue text-white hover:opacity-90 px-4 py-2 md:px-6 md:py-3 rounded-lg text-base md:text-lg">
             Explore Notes
           </button>
         </Link>

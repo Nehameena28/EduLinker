@@ -68,12 +68,12 @@ const Login = () => {
       <div className="hidden lg:flex lg:w-1/2 bg-custom-blue relative">
         <div className="absolute inset-0 bg-black/20"></div>
 
-        <div className="relative z-10 flex flex-col justify-center items-center text-white p-12">
+        <div className="relative z-10 flex flex-col justify-center items-center text-white p-12 text-center ml-20">
           <div className="mb-8">
-            <img src="/i2.png" alt="EDULinker" className="w-24 h-auto cursor-pointer" onClick={() => navigate('/')} />
+            <img src="/i2.png" alt="EDULinker" className="w-24 h-auto cursor-pointer mx-auto" onClick={() => navigate('/')} />
           </div>
-          <h1 className="text-4xl font-bold mb-4 text-center">Welcome to EDULinker</h1>
-          <p className="text-xl text-center text-white/80">Your gateway to knowledge sharing</p>
+          <h2 className="text-4xl font-bold mb-4">Welcome to EDULinker</h2>
+          <p className="text-xl text-white/80">Your gateway to knowledge sharing</p>
         </div>
       </div>
 
@@ -104,7 +104,7 @@ const Login = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors outline-none"
                 placeholder="Enter your email"
                 required
               />
@@ -120,7 +120,7 @@ const Login = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors"
+                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue transition-colors outline-none"
                   placeholder="Enter your password"
                   required
                 />

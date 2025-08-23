@@ -14,16 +14,16 @@ const S_NoteCard = ({
   isPurchased = false,
 }) => {
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 border border-gray-100 hover:scale-105 hover:shadow-xl transform cursor-pointer">
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 border border-gray-100 hover:scale-105 hover:shadow-xl transform cursor-pointer h-[480px] flex flex-col">
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-[rgba(31,91,120,0.9)] to-[rgba(31,91,120,1)] h-32 flex items-center px-6">
+      <div className="bg-gradient-to-r from-[rgba(31,91,120,0.9)] to-[rgba(31,91,120,1)] h-32 flex items-center px-6 flex-shrink-0">
         <div className="flex items-center">
           <div className="bg-[rgb(221,167,123)] w-12 h-12 rounded-lg flex items-center justify-center mr-4">
             <FaBook className="text-white text-xl" />
           </div>
           <div>
             {/* <h1 className="text-xl font-bold text-white">{title}</h1> */}
-            <h2 className="text-xl font-bold text-white">{title}</h2>
+            <h2 className="text-xl font-bold text-white line-clamp-2">{title}</h2>
             <div className="flex items-center mt-1">
               <span className="bg-white/20 text-xs text-white px-2 py-1 rounded">
                 {category}
@@ -34,18 +34,18 @@ const S_NoteCard = ({
       </div>
 
       {/* Body */}
-      <div className="p-5">
-        <p className="text-sm text-gray-600 mb-4">{description}</p>
+      <div className="p-5 flex-1 flex flex-col">
+        <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-shrink-0">{description}</p>
 
         {/* PDF Preview */}
-        <div className="mb-4" onClick={onViewPdf}>
+        <div className="mb-4 flex-1" onClick={onViewPdf}>
           <h3 className="text-sm font-semibold text-[rgb(148,93,94)] mb-2">
             PDF PREVIEW
           </h3>
           <div className="border-2 border-dashed border-[rgb(221,167,123)] rounded-lg h-24 bg-[rgba(221,167,123,0.05)] flex items-center justify-center hover:bg-[rgba(221,167,123,0.1)] transition-all duration-200 cursor-pointer">
             <div className="text-center">
               <FaFilePdf className="text-2xl text-[rgb(148,93,94)] mb-1 mx-auto" />
-              <p className="text-xs font-medium text-gray-700">{fileName}</p>
+              <p className="text-xs font-medium text-gray-700 truncate">{fileName}</p>
               <p className="text-xs text-gray-500">
                 {isPurchased ? "Click to view full PDF" : "Click to preview"}
               </p>
@@ -54,7 +54,7 @@ const S_NoteCard = ({
         </div>
 
         {/* Bottom Actions */}
-        <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-3 mt-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-3 mt-auto">
           {/* Price */}
           <div className="text-sm font-semibold text-[rgb(148,93,94)]">
             Price: ₹{price}

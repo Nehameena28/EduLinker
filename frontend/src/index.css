@@ -4,6 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Remove default browser outline on all form elements */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none !important;
+}
+
 .img{
     object-fit: cover;
     object-position: center;

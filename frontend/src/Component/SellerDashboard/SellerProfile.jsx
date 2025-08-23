@@ -6,7 +6,7 @@ import CategoryManager from "./CategoryManager";
 const SellerProfile = () => {
   const [stats, setStats] = useState([
     { title: "Total Sales", value: "₹0" },
-    { title: "Total Files", value: "0" },
+    { title: "Total Notes", value: "0" },
     { title: "Categories", value: "0" },
   ]);
   const [recentActivity, setRecentActivity] = useState([]);
@@ -53,7 +53,7 @@ const SellerProfile = () => {
         // Update stats
         setStats([
           { title: "Total Sales", value: `₹${totalSales}` },
-          { title: "Total Files", value: totalFiles.toString() },
+          { title: "Total Notes", value: totalFiles.toString() },
           { title: "Categories", value: totalCategories.toString() },
         ]);
        

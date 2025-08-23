@@ -235,54 +235,14 @@
 
    return (
      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-       <div className="relative h-[440px] flex items-center justify-center px-4 sm:px-6 overflow-hidden">
-         {/* Background Image */}
-         <div 
-           className="absolute inset-0 w-full h-full bg-cover bg-center"
-           style={{
-             backgroundImage: "url('/buyer-bg.jpg')"
-           }}
-         ></div>
+       <div className="relative">
+         <img src="/img/sellespage.png" className="w-full h-[80vh] object-cover" />
 
-
-         
-
-         
-         {/* Animated Particles Overlay */}
-         <div className="absolute inset-0 opacity-30">
-           <div className="absolute top-20 left-10 w-2 h-2 bg-[rgb(221,167,123)] rounded-full animate-bounce-slow"></div>
-           <div className="absolute top-32 right-20 w-3 h-3 bg-white rounded-full animate-bounce-medium"></div>
-           <div className="absolute bottom-40 left-1/4 w-1 h-1 bg-[rgb(221,167,123)] rounded-full animate-bounce-fast"></div>
-           <div className="absolute bottom-20 right-1/3 w-2 h-2 bg-white rounded-full animate-bounce-slow"></div>
-           <div className="absolute top-1/2 left-20 w-1 h-1 bg-[rgb(221,167,123)] rounded-full animate-bounce-medium"></div>
-           <div className="absolute top-1/3 right-10 w-2 h-2 bg-white rounded-full animate-bounce-fast"></div>
-         </div>
-         
-         <style jsx>{`
-           @keyframes bounce-slow {
-             0%, 100% { transform: translateY(0px) scale(1); opacity: 0.7; }
-             50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
-           }
-           @keyframes bounce-medium {
-             0%, 100% { transform: translateY(0px) scale(1); opacity: 0.6; }
-             50% { transform: translateY(-15px) scale(1.1); opacity: 1; }
-           }
-           @keyframes bounce-fast {
-             0%, 100% { transform: translateY(0px) scale(1); opacity: 0.5; }
-             50% { transform: translateY(-10px) scale(1.3); opacity: 1; }
-           }
-           .animate-bounce-slow { animation: bounce-slow 4s ease-in-out infinite; }
-           .animate-bounce-medium { animation: bounce-medium 3s ease-in-out infinite; }
-           .animate-bounce-fast { animation: bounce-fast 2s ease-in-out infinite; }
-         `}</style>
-         <div className="relative z-10 text-center w-full max-w-3xl mx-auto">
-           {/* <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg mb-4">
-             Turn Your Knowledge Into Income
-           </h1> */}
-           <p className="text-white text-base sm:text-lg mb-6 px-2 sm:px-0">
-             Upload your notes, reach learners around the world, and start earning today with EduLinker.
-           </p>
-           <div className="relative flex flex-col sm:flex-row items-center bg-white rounded-full shadow-lg border-2 border-gray-300 overflow-hidden w-full hover:shadow-xl hover:border-blue-500 focus-within:shadow-xl focus-within:border-blue-600 transition-all duration-300">
+         <div className="absolute inset-0 bg-black/50"></div>
+         <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-6">
+           <h1 className="text-4xl font-bold text-custom-i-berry drop-shadow-lg">Turn Your Knowledge Into Income</h1>
+           <p className="mt-4 text-lg">Upload your notes, reach learners worldwide, and start earning with EduLinker.</p>
+           <div className="mt-6 relative flex flex-col sm:flex-row items-center bg-white rounded-full shadow-lg border-2 border-gray-300 overflow-hidden w-full max-w-3xl hover:shadow-xl hover:border-blue-500 focus-within:shadow-xl focus-within:border-blue-600 transition-all duration-300">
              <div className="flex items-center flex-grow">
                <svg className="w-5 h-5 text-gray-400 ml-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />

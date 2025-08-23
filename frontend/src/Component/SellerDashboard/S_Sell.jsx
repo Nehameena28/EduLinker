@@ -70,10 +70,6 @@ const S_Sell = () => {
   };
 
   const handleDeleteNote = async (noteId) => {
-    if (!window.confirm("Are you sure you want to delete this note?")) {
-      return;
-    }
-
     try {
       await axios.delete(`http://localhost:7000/seller/notes/${noteId}`, {
         withCredentials: true,
