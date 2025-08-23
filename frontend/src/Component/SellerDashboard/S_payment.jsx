@@ -14,7 +14,7 @@ const S_payment = () => {
         setIsLoading(true);
         console.log('Fetching payments for:', userEmail);
         
-        const res = await axios.get(`http://localhost:7000/api/seller/payments?email=${userEmail}`, {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/seller/payments?email=${userEmail}`, {
           withCredentials: true,
         });
         

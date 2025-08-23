@@ -17,7 +17,7 @@ const S_Sell = () => {
     const fetchNotes = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(`http://localhost:7000/seller/notes?email=${userEmail}`, {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/seller/notes?email=${userEmail}`, {
           withCredentials: true,
         });
 
@@ -80,7 +80,7 @@ const S_Sell = () => {
 
   const handleDeleteNote = async (noteId) => {
     try {
-      await axios.delete(`http://localhost:7000/seller/notes/${noteId}`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/seller/notes/${noteId}`, {
         withCredentials: true,
       });
       setNotes(notes.filter(note => note._id !== noteId));
