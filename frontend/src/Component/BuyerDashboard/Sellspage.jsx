@@ -40,7 +40,7 @@
      }
 
      try {
-       await axios.post("http://localhost:7000/api/save-note", {
+       await axios.post(`${import.meta.env.VITE_API_URL}/api/save-note`, {
          userId,
          title: note.title,
          description: note.description,
@@ -65,7 +65,7 @@
 
    const handlePayment = async (note) => {
      try {
-       const res = await axios.post(`http://localhost:7000/api/payment`, {
+       const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/payment`, {
          noteId: note._id,
          userId,
          amount: note.price
@@ -101,7 +101,7 @@
    const processPayment = async (note, phone) => {
 
      try {
-       const res = await axios.post("http://localhost:7000/api/payment/checkout", {
+       const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/payment/checkout`, {
          amount: note.price * 100,
        });
 
@@ -118,7 +118,7 @@
          order_id: order.id,
          handler: async function (response) {
            try {
-             const verifyRes = await axios.post("http://localhost:7000/api/payment/verify", {
+             const verifyRes = await axios.post(`${import.meta.env.VITE_API_URL}/api/payment/verify`, {
                razorpay_order_id: response.razorpay_order_id,
                razorpay_payment_id: response.razorpay_payment_id,
                razorpay_signature: response.razorpay_signature,
@@ -174,8 +174,8 @@
          console.log("Fetching all study materials...");
          
          const [notesRes, purchasedRes] = await Promise.all([
-           axios.get("http://localhost:7000/api/all-materials", { withCredentials: true }),
-           user?.email ? axios.get(`http://localhost:7000/api/buyer/purchased?email=${user.email}`, { withCredentials: true }).catch(() => ({ data: [] })) : Promise.resolve({ data: [] })
+           axios.get(`${import.meta.env.VITE_API_URL}/api/all-materials`, { withCredentials: true }),
+           user?.email ? axios.get(`${import.meta.env.VITE_API_URL}/api/buyer/purchased?email=${user.email}`, { withCredentials: true }).catch(() => ({ data: [] })) : Promise.resolve({ data: [] })
          ]);
          
          console.log("Fetched data:", notesRes.data);

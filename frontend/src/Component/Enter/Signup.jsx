@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useToast } from "../Toast/useToast";
 import ToastContainer from "../Toast/ToastContainer";
+import { API_ENDPOINTS } from "../../config/api";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -68,7 +69,7 @@ const Signup = () => {
 
     try {
       const { confirmPassword, ...dataToSend } = formData;
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/Signup`, dataToSend, {
+      const res = await axios.post(API_ENDPOINTS.SIGNUP, dataToSend, {
         withCredentials: true,
       });
 

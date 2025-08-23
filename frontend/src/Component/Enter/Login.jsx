@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useToast } from "../Toast/useToast";
 import ToastContainer from "../Toast/ToastContainer";
+import { API_ENDPOINTS } from "../../config/api";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ const Login = () => {
     }
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/Login`, formData, {
+      const res = await axios.post(API_ENDPOINTS.LOGIN, formData, {
         withCredentials: true,
       });
 
