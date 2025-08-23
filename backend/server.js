@@ -40,6 +40,8 @@ app.use(express.json());
 // app.use(cors());
 app.use(cors({
   origin: function (origin, callback) {
+    console.log('CORS request from origin:', origin);
+    
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
@@ -52,6 +54,7 @@ app.use(cors({
     // Allow specific frontend URL from env
     if (origin === process.env.FRONTEND_URL) return callback(null, true);
     
+    console.log('CORS blocked origin:', origin);
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,

@@ -116,14 +116,22 @@ const S_Upload = () => {
       fileInputs.forEach(input => input.value = '');
 
     } catch (error) {
+      console.error('Upload error details:', error);
+      console.error('API URL being used:', import.meta.env.VITE_API_URL);
+      console.error('Error type:', error.name);
+      console.error('Error message:', error.message);
+      
       if (error.code === 'ECONNABORTED') {
-        showToast("Upload timeout. Please check your connection and try again.", "error");
+        showToast("Upload timeout. File too large or slow connection.", "error");
       } else if (error.response) {
-        showToast(`Upload failed: ${error.response.data.message || 'Server error'}`, "error");
+        console.error('Server response:', error.response.status, error.response.data);
+        showToast(`Upload failed: ${error.response.data.message || `Server error (${error.response.status})`}`, "error");
       } else if (error.request) {
-        showToast("Network error. Please check if the server is running on port 7000.", "error");
+        console.error('Request failed:', error.request);
+        showToast(`Network error. Cannot connect to ${import.meta.env.VITE_API_URL}. Check if server is running.`, "error");
       } else {
-        showToast("Upload failed. Check console for details.", "error");
+        console.error('Unknown error:', error);
+        showToast(`Upload failed: ${error.message}`, "error");
       }
     } finally {
       setIsUploading(false);
