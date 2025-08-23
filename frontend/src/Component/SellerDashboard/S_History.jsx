@@ -17,12 +17,12 @@ const S_History = () => {
         setIsLoading(true);
         
         // Fetch upload history
-        const uploadsRes = await axios.get(`http://localhost:7000/seller/notes?email=${userEmail}`, {
+        const uploadsRes = await axios.get(`${import.meta.env.VITE_API_URL}/seller/notes?email=${userEmail}`, {
           withCredentials: true,
         });
         
         // Fetch sales history
-        const salesRes = await axios.get(`http://localhost:7000/api/seller/payments?email=${userEmail}`, {
+        const salesRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/seller/payments?email=${userEmail}`, {
           withCredentials: true,
         });
         
