@@ -48,65 +48,9 @@ It includes secure authentication, role-based access, a dynamic dashboard, AI-po
 - Netlify (Frontend)  
 - Vercel (Frontend/Backend)  
 - Git & GitHub  
-- VS Code  
+- VS Code
 
----
 
-## ⚙️ Installation & Setup  
-
-### 1️⃣ Clone the Repository  
-```bash
-git clone https://github.com/<your-username>/EduLinker.git
-cd EduLinker
-2️⃣ Install Dependencies
-Backend
-bash
-Copy code
-cd backend
-npm install
-Frontend
-bash
-Copy code
-cd frontend
-npm install
-3️⃣ Environment Variables
-Create a .env file in both backend and frontend folders and add:
-
-env
-Copy code
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
-RAZORPAY_KEY_ID=your_key
-RAZORPAY_KEY_SECRET=your_secret
-4️⃣ Run the Project
-Backend
-bash
-Copy code
-npm run dev
-Frontend
-bash
-Copy code
-npm start
-💡 Skills
-Frontend Development: React.js, Tailwind CSS, HTML, CSS, JavaScript (ES6+)
-
-Backend Development: Node.js, Express.js
-
-Database Management: MongoDB (CRUD operations, Mongoose)
-
-Authentication & Security: JWT (JSON Web Token), Role-Based Authentication
-
-Payment Integration: Razorpay
-
-API Handling: REST APIs, Axios
-
-AI Integration: AI Agent for search & recommendations
-
-Version Control & Collaboration: Git, GitHub (branching, pull requests, collaboration)
-
-Deployment & Hosting: Vercel, Netlify, Render
-
-Development Tools: VS Code, npm, Postman
 
 📧 Contact Me
 Feel free to reach out via:
@@ -120,3 +64,44 @@ Feel free to reach out via:
 📖 About
 EduLinker is more than just a notes platform – it’s a marketplace for learning resources.
 It enables students to find quality notes, and allows educators/creators to share knowledge and earn money in a secure, user-friendly environment.
+
+
+---
+
+## ⚙️ Installation & Setup  
+
+### 1️⃣ Clone the Repository  
+```bash
+git clone https://github.com/<your-username>/EduLinker.git
+cd EduLinker
+
+2️⃣ Install Dependencies
+
+Backend
+
+cd backend
+npm install
+
+Frontend
+
+cd frontend
+npm install
+
+3️⃣ Environment Variables
+Create a .env file in both backend and frontend folders and add:
+
+env
+Copy code
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+RAZORPAY_KEY_ID=your_key
+RAZORPAY_KEY_SECRET=your_secret
+
+4️⃣ Run the Project
+
+Backend
+npm run dev
+
+Frontend
+npm start
+
