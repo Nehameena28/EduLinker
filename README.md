@@ -59,7 +59,8 @@ Feel free to reach out via:
 
 💼 LinkedIn: www.linkedin.com/in/contact-neha-meena
 
-💻 GitHub: github.com/Nehameena28
+💻 GitHub: www.github.com/Nehameena28
+
 
 📖 About
 EduLinker is more than just a notes platform – it’s a marketplace for learning resources.
