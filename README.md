@@ -1,64 +1,113 @@
+📘 EduLinker – Empowering Knowledge Sharing
 
-📚 EduLinker - Empowering Knowledge Sharing
+EduLinker is a modern MERN stack platform where students and educators can buy and sell study notes in PDF format.
+It includes secure authentication, role-based access, a dynamic dashboard, AI-powered search, and an integrated payment gateway for seamless transactions.
 
-EduLinker is a modern platform built using the MERN Stack (MongoDB, Express.js, React.js, and Node.js), designed to connect learners and educators by facilitating the buying and selling of study materials in PDF format. It allows seamless communication, providing features like asking doubts and downloading purchased notes for enhanced learning experiences.
+🚀 Features
 
-🌟 Features
-Buy and Sell Study Materials
+🛒 Buy & Sell Study Materials – Upload and sell notes in PDF format, or purchase from different categories.
 
-Users can upload and sell their study materials in PDF format.
-Buyers can browse, view, and purchase notes from a variety of categories.
-Doubt Resolution
+🔐 Role-Based Authentication – Secure signup/login with JWT for students and sellers.
 
-Download Purchased Notes
+📂 Dynamic Dashboard –
 
-After purchase, users can download the notes in PDF format to their personal devices.
-User Authentication
+Sellers: Upload materials, track sales, manage buyers' queries.
 
-Secure user login and registration using JWT (JSON Web Token) for authentication.
-Responsive UI
+Buyers: Purchase notes, download PDFs, and manage purchases.
 
-Fully responsive design built with React.js and styled components for a seamless user experience on any device.
-Dynamic Dashboard
+💳 Secure Payments – Integrated with Razorpay for safe transactions.
 
-For Sellers: Manage uploaded materials, view sales, and respond to buyers' questions.
-For Buyers: Track purchases, download notes.
-Secure Payments
+🤖 AI Agent – Smart search & personalized recommendations to improve user experience.
 
-Integrated secure payment gateway to enable safe transactions.
+🔎 Advanced Search & Filter – Quickly find relevant study materials.
 
-Integrate AI 
-to Enhance User Experience
+📱 Responsive UI – Built with React + Tailwind CSS, fully optimized for mobile & desktop.
 
-Search and Filter
+⚡ Fast & Scalable – Powered by Node.js + Express.js backend and MongoDB database.
 
-Advanced search functionality to quickly find the right study material.
-
-🛠️ Technologies Used
+🛠️ Tech Stack
 
 Frontend
 
 React.js
+
 Tailwind CSS
+
+Axios
 
 Backend
 
 Node.js
+
 Express.js
+
 Database
+
 MongoDB
-Others
 
-JWT for Authentication
-Payment Gateway Integration (Razorpay)
+Authentication & Security
 
+JWT (JSON Web Token)
 
-📧 Contact
+Payments
 
-Email: khushivrma07@gmail.com
+Razorpay
 
-LinkedIn:https://www.linkedin.com/in/khushiiverma/
+AI Agent
 
-GitHub:  https://github.com/khushi-verma07
+Integrated for search and recommendation features
 
+Deployment
 
+Netlify (Frontend)
+
+Vercel (Frontend/Backend)
+
+Version Control: Git & GitHub
+
+Development Environment: VS Code
+
+⚙️ Installation & Setup
+1️⃣ Clone the Repository
+git clone https://github.com/<your-username>/EduLinker.git
+cd EduLinker
+
+2️⃣ Install Dependencies
+Backend
+cd backend
+npm install
+
+Frontend
+cd frontend
+npm install
+
+3️⃣ Environment Variables
+
+Create a .env file in both backend and frontend folders and add:
+
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+RAZORPAY_KEY_ID=your_key
+RAZORPAY_KEY_SECRET=your_secret
+
+4️⃣ Run the Project
+Backend
+npm run dev
+
+Frontend
+npm start
+
+📧 Contact Me
+
+Feel free to reach out via:
+
+📞 Email: neham.bba2023@ssism.org
+
+💼 LinkedIn: www.linkedin.com/in/contact-neha-meena
+
+💻 GitHub: github.com/Nehameena28
+
+📖 About
+
+EduLinker is more than just a notes platform – it’s a marketplace for learning resources.
+It enables students to find quality notes, and allows educators/creators to share knowledge and earn money in a secure, user-friendly environment.
