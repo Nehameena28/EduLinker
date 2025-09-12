@@ -20,6 +20,22 @@ It includes secure authentication, role-based access, a dynamic dashboard, AI-po
 
 ---
 
+## 📸 Demo / Screenshots  
+
+### 🏠 Homepage  
+![Homepage](./public/homepage.png)
+
+
+
+### 🛒 Seller Dashboard 
+![Product Page](./public/seller.png)
+
+
+### 🛒 Buyer Dashboard 
+![Product Page](./public/buyer.png)
+
+---
+
 ## 🛠️ Tech Stack  
 
 **Frontend**  
@@ -52,14 +68,6 @@ It includes secure authentication, role-based access, a dynamic dashboard, AI-po
 
 
 
-📧 Contact Me
-Feel free to reach out via:
-
-📞 Email: neham.bba2023@ssism.org
-
-💼 LinkedIn: www.linkedin.com/in/contact-neha-meena
-
-💻 GitHub: www.github.com/Nehameena28
 
 
 📖 About
@@ -105,4 +113,16 @@ npm run dev
 
 Frontend
 npm start
+
+
+---
+## 📞 Contact Me  
+
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:neham.bba2023@ssism.org)  
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/contact-neha-meena)  
+[![GitHub](https://img.shields.io/badge/GitHub-171515?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Nehameena28)  
+
+
+
+
 
