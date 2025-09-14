@@ -20,21 +20,6 @@ It includes secure authentication, role-based access, a dynamic dashboard, AI-po
 
 ---
 
-## 📸 Demo / Screenshots  
-
-### 🏠 Homepage  
-![Homepage](./public/homepage.png)
-
-
-
-### 🛒 Seller Dashboard 
-![Product Page](./public/seller.png)
-
-
-### 🛒 Buyer Dashboard 
-![Product Page](./public/buyer.png)
-
----
 
 ## 🛠️ Tech Stack  
 
