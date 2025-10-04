@@ -223,7 +223,7 @@
 
          <div className="absolute inset-0 bg-black/50"></div>
          <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 sm:px-6">
-           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-custom-i-berry drop-shadow-lg mb-2 sm:mb-0">Turn Your Knowledge Into Income</h1>
+           <h2 className="text-5xl font-bold text-white drop-shadow-2xl">Turn Your Knowledge Into Income</h2>
            <p className="mt-2 sm:mt-4 text-sm sm:text-base lg:text-lg max-w-2xl">Upload your notes, reach learners worldwide, and start earning with EduLinker.</p>
            <div className="mt-4 sm:mt-6 relative flex flex-col sm:flex-row items-center bg-white rounded-full shadow-lg border-2 border-gray-300 overflow-hidden w-full max-w-xs sm:max-w-2xl lg:max-w-3xl hover:shadow-xl hover:border-blue-500 focus-within:shadow-xl focus-within:border-blue-600 transition-all duration-300">
              <div className="flex items-center flex-grow w-full">
